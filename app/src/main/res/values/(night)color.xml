@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark Mode Colors -->
+    <color name="colorPrimaryNight">#BB86FC</color> <!-- Softer Purple -->
+    <color name="colorSecondaryNight">#03DAC5</color> <!-- Teal still works well -->
+    <color name="colorTertiaryNight">#3700B3</color>  <!-- Dark purple (backup/accent) -->
+
+    <color name="backgroundNight">#121212</color>  <!-- Almost black -->
+    <color name="textPrimaryNight">#FFFFFFFF</color> <!-- White text -->
+</resources>
