@@ -2,6 +2,10 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.HandWorks_Mobile" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/colorPrimaryNight</item>
+        <item name="colorSecondary">@color/colorSecondaryNight</item>
+        <item name="colorTertiary">@color/colorTertiaryNight</item>
+        <item name="android:colorBackground">@color/backgroundNight</item>
+        <item name="android:textColorPrimary">@color/textPrimaryNight</item>
     </style>
 </resources>

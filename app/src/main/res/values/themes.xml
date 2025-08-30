@@ -1,8 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.HandWorks_Mobile" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/colorPrimaryDay</item>
+        <item name="colorSecondary">@color/colorSecondaryDay</item>
+        <item name="colorTertiary">@color/colorTertiaryDay</item>
+        <item name="android:colorBackground">@color/backgroundDay</item>
+        <item name="android:textColorPrimary">@color/textPrimaryDay</item>
     </style>
 
     <style name="Theme.HandWorks_Mobile" parent="Base.Theme.HandWorks_Mobile" />
