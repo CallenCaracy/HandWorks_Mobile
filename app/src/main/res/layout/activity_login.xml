@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FDFDFD"
+    android:background="@color/background"
     tools:context=".pages.auth.Login">
 
     <!-- Logo -->
@@ -14,7 +14,7 @@
         android:layout_width="233dp"
         android:layout_height="144dp"
         android:contentDescription="Handworks Cleaning Services Logo"
-        android:src="@drawable/handworks_logo"
+        android:src="@drawable/handworks_logo_transparent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="DuplicateIds,HardcodedText" />
@@ -42,11 +42,12 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="40dp"
         android:text="Email"
-        android:textColor="#000000"
+        android:textColor="@color/textPrimary"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/logo" />
+        app:layout_constraintTop_toBottomOf="@id/logo"
+        tools:ignore="HardcodedText"/>
 
     <!-- Email Field -->
     <com.google.android.material.textfield.TextInputLayout
@@ -57,8 +58,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
         app:boxBackgroundMode="outline"
-        app:boxBackgroundColor="#D3D3D3"
-        app:boxStrokeColor="@android:color/transparent"
+        app:boxBackgroundColor="@color/inputPrimary"
+        app:boxStrokeColor="@color/colorPrimary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/emailLabel">
@@ -67,11 +68,12 @@
             android:id="@+id/emailField"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:textColor="@color/black"
+            android:textColor="@color/textPrimary"
             android:hint="Enter your email address"
             android:inputType="textEmailAddress"
             android:padding="12dp"
-            android:textColorHint="#777777" />
+            android:textColorHint="#777777"
+            tools:ignore="HardcodedText"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Password Label -->
@@ -82,11 +84,12 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="20dp"
         android:text="Password"
-        android:textColor="#000000"
+        android:textColor="@color/textPrimary"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/emailLayout" />
+        app:layout_constraintTop_toBottomOf="@id/emailLayout"
+        tools:ignore="HardcodedText"/>
 
     <!-- Password Field -->
     <com.google.android.material.textfield.TextInputLayout
@@ -98,8 +101,8 @@
         android:layout_marginEnd="24dp"
         app:endIconMode="password_toggle"
         app:boxBackgroundMode="outline"
-        app:boxBackgroundColor="#D3D3D3"
-        app:boxStrokeColor="@android:color/transparent"
+        app:boxBackgroundColor="@color/inputPrimary"
+        app:boxStrokeColor="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/passwordLabel">
@@ -108,11 +111,12 @@
             android:id="@+id/passwordField"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:textColor="@color/black"
+            android:textColor="@color/textPrimary"
             android:hint="Enter your password"
             android:inputType="textPassword"
             android:padding="12dp"
-            android:textColorHint="#777777" />
+            android:textColorHint="#777777"
+            tools:ignore="HardcodedText"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Forgot Password Section -->
@@ -133,9 +137,10 @@
             android:contentDescription="Info icon"
             android:background="@drawable/social_circle_blue"
             android:padding="4dp"
-            android:tint="@color/white"
+            app:tint="@color/whiten"
             android:src="@drawable/vertical_bars_icon_2"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            tools:ignore="HardcodedText"/>
 
         <Button
             android:id="@+id/btnForgotPassword"
@@ -149,7 +154,8 @@
             android:padding="0dp"
             android:minHeight="0dp"
             android:minWidth="0dp"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            tools:ignore="HardcodedText"/>
     </LinearLayout>
 
     <!-- Sign In Button -->
@@ -166,7 +172,8 @@
         android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/forgotPasswordContainer" />
+        app:layout_constraintTop_toBottomOf="@id/forgotPasswordContainer"
+        tools:ignore="HardcodedText"/>
 
     <!-- Divider -->
     <TextView
@@ -179,7 +186,8 @@
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnSignIn" />
+        app:layout_constraintTop_toBottomOf="@id/btnSignIn"
+        tools:ignore="HardcodedText"/>
 
     <View
         android:layout_width="60dp"
@@ -218,8 +226,9 @@
             android:background="@drawable/social_circle_blue"
             android:contentDescription="Facebook"
             android:padding="10dp"
-            android:tint="@color/white"
-            android:src="@drawable/facebook_icon" />
+            app:tint="@color/whiten"
+            android:src="@drawable/facebook_icon"
+            tools:ignore="HardcodedText"/>
 
         <ImageView
             android:id="@+id/googleBtn"
@@ -230,27 +239,21 @@
             android:background="@drawable/social_circle_blue"
             android:contentDescription="Google"
             android:padding="10dp"
-            android:tint="@color/white"
-            android:src="@drawable/google_icon" />
+            app:tint="@color/whiten"
+            android:src="@drawable/google_icon"
+            tools:ignore="HardcodedText"/>
     </LinearLayout>
 
     <!-- Sign Up Prompt -->
     <LinearLayout
-        android:id="@+id/signUpContainer"
+        android:id="@+id/noAccountContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="40dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Don’t have an account?"
-            android:textColor="#000000"
-            android:textSize="13sp" />
 
         <ImageView
             android:layout_width="18dp"
@@ -261,23 +264,35 @@
             android:contentDescription="Info icon"
             android:padding="4dp"
             android:layout_gravity="center"
-            android:tint="@color/white"
-            android:src="@drawable/vertical_bars_icon_2" />
+            app:tint="@color/whiten"
+            android:src="@drawable/vertical_bars_icon_2"
+            tools:ignore="HardcodedText"/>
 
-        <Button
-            android:id="@+id/btnSignUp"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sign Up"
-            android:textColor="#279AF0"
+            android:text="Don’t have an account?"
+            android:textColor="@color/textPrimary"
             android:textSize="13sp"
-            android:textStyle="bold"
-            android:background="@android:color/transparent"
-            android:elevation="0dp"
-            android:padding="0dp"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
-            android:textAllCaps="false" />
+            tools:ignore="HardcodedText"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Please contact admin for registration"
+            android:textColor="@color/textPrimary"
+            android:textSize="13sp"
+            tools:ignore="HardcodedText"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

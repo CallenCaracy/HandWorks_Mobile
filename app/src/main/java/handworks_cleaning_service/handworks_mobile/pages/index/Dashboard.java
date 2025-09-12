@@ -1,7 +1,6 @@
 package handworks_cleaning_service.handworks_mobile.pages.index;
 
 import android.os.Bundle;
-import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,14 +19,11 @@ import handworks_cleaning_service.handworks_mobile.fragments.ChatFragment;
 import handworks_cleaning_service.handworks_mobile.fragments.HistoryFragment;
 import handworks_cleaning_service.handworks_mobile.fragments.HomeFragment;
 import handworks_cleaning_service.handworks_mobile.fragments.NotificationFragment;
-import handworks_cleaning_service.handworks_mobile.fragments.ProfileFragment;
-import handworks_cleaning_service.handworks_mobile.utils.ThemeUtil;
+import handworks_cleaning_service.handworks_mobile.fragments.SettingsFragment;
 
 public class Dashboard extends AppCompatActivity {
     ActivityDashboardBinding binding;
     BottomNavigationView bottomNav;
-    Button dayMode;
-    Button nightMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +34,9 @@ public class Dashboard extends AppCompatActivity {
         binding = ActivityDashboardBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         bottomNav = findViewById(R.id.bottomNavigationView);
-        replaceFrameFragment(new HomeFragment());
+        if (savedInstanceState == null) {
+            replaceFrameFragment(new HomeFragment());
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(bottomNav, (v, insets) -> {
             int bottomInset = insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom;
@@ -57,17 +55,11 @@ public class Dashboard extends AppCompatActivity {
                 replaceFrameFragment(new ChatFragment());
             } else if (id == R.id.notificationIcon) {
                 replaceFrameFragment(new NotificationFragment());
-            } else if (id == R.id.accountIcon) {
-                replaceFrameFragment(new ProfileFragment());
+            } else if (id == R.id.settingsIcon) {
+                replaceFrameFragment(new SettingsFragment());
             }
             return true;
         });
-
-        dayMode = findViewById(R.id.dayBtn);
-        nightMode = findViewById(R.id.nightBtn);
-
-        dayMode.setOnClickListener(v -> ThemeUtil.setTheme(this, false));
-        nightMode.setOnClickListener(v -> ThemeUtil.setTheme(this, true));
     }
 
     private void replaceFrameFragment(Fragment fragment){

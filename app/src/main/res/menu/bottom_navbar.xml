@@ -27,8 +27,8 @@
         tools:ignore="HardcodedText"/>
 
     <item
-        android:id="@+id/accountIcon"
-        android:title="Profile"
-        android:icon="@drawable/account_icon"
+        android:id="@+id/settingsIcon"
+        android:title="Settings"
+        android:icon="@drawable/settings_icon"
         tools:ignore="HardcodedText"/>
 </menu>
