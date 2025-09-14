@@ -6,6 +6,9 @@
     tools:context=".fragments.ChatFragment">
 
     <!-- TODO: Update blank fragment layout -->
+    <include
+        layout="@layout/header" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
