@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="?android:attr/windowBackground"
-    tools:context=".fragments.SettingsFragment">
+    tools:context=".ui.fragments.SettingsFragment">
 
     <!-- Header -->
     <include
