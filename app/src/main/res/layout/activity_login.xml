@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".pages.auth.Login">
+    tools:context=".ui.pages.auth.Login">
 
     <!-- Logo -->
     <ImageView
@@ -175,74 +175,17 @@
         app:layout_constraintTop_toBottomOf="@id/forgotPasswordContainer"
         tools:ignore="HardcodedText"/>
 
-    <!-- Divider -->
-    <TextView
-        android:id="@+id/orDivider"
+    <ProgressBar
+        android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="or Sign In with"
-        android:textColor="#279AF0"
-        android:textSize="14sp"
+        android:layout_marginEnd="411dp"
+        android:layout_marginBottom="731dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnSignIn"
-        tools:ignore="HardcodedText"/>
-
-    <View
-        android:layout_width="60dp"
-        android:layout_height="1dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="12dp"
-        android:background="#2C6B2F"
-        app:layout_constraintEnd_toStartOf="@id/orDivider"
-        app:layout_constraintTop_toTopOf="@id/orDivider" />
-
-    <View
-        android:layout_width="60dp"
-        android:layout_height="1dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="8dp"
-        android:background="#2C6B2F"
-        app:layout_constraintStart_toEndOf="@id/orDivider"
-        app:layout_constraintTop_toTopOf="@id/orDivider" />
-
-    <!-- Social Buttons -->
-    <LinearLayout
-        android:id="@+id/socialButtons"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/orDivider">
-
-        <ImageView
-            android:id="@+id/fbBtn"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:clickable="true"
-            android:background="@drawable/social_circle_blue"
-            android:contentDescription="Facebook"
-            android:padding="10dp"
-            app:tint="@color/whiten"
-            android:src="@drawable/facebook_icon"
-            tools:ignore="HardcodedText"/>
-
-        <ImageView
-            android:id="@+id/googleBtn"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:clickable="true"
-            android:layout_marginStart="16dp"
-            android:background="@drawable/social_circle_blue"
-            android:contentDescription="Google"
-            android:padding="10dp"
-            app:tint="@color/whiten"
-            android:src="@drawable/google_icon"
-            tools:ignore="HardcodedText"/>
-    </LinearLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Sign Up Prompt -->
     <LinearLayout
