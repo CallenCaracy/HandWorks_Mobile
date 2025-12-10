@@ -2,11 +2,9 @@ package handworks_cleaning_service.handworks_mobile.ui.pages.auth;
 
 import static handworks_cleaning_service.handworks_mobile.utils.Constant.MAX_RETRIES;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,12 +19,10 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.clerk.api.Clerk;
-import com.clerk.api.signin.SignIn;
-
-import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
+import handworks_cleaning_service.handworks_mobile.data.dto.LoginRequest;
 import handworks_cleaning_service.handworks_mobile.ui.pages.index.Dashboard;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
@@ -37,6 +33,7 @@ public class Login extends AppCompatActivity {
     private ProgressBar progressBar;
     private Button signInBtn;
     private AuthViewModel authViewModel;
+    protected LoginRequest request;
     private int retryCount = 0;
 
     @Override
@@ -99,19 +96,15 @@ public class Login extends AppCompatActivity {
         });
 
         signInBtn.setOnClickListener(v -> {
-            String email = emailEditText.getText().toString().trim();
-            String password = passwordEditText.getText().toString();
+            request.email = emailEditText.getText().toString().trim();
+            request.password = passwordEditText.getText().toString();
 
-            if (email.isEmpty() || password.isEmpty()) {
+            if (request.email.isEmpty() || request.password.isEmpty()) {
                 Toast.makeText(this, "Email and password are required.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            login(email, password);
+            authViewModel.signIn(request);
         });
-    }
-
-    private void login(String email, String password) {
-        authViewModel.signIn(email, password);
     }
 }
