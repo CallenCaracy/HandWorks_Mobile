@@ -31,7 +31,7 @@ public class LandingPage extends AppCompatActivity {
             return insets;
         });
 
-        ViewPager2 viewPager = findViewById(R.id.sliderImage);
+        ViewPager2 viewPager = findViewById(R.id.viewPager);
 
         List<Integer> sliderImages = Arrays.asList(
                 R.drawable.group_photo,
