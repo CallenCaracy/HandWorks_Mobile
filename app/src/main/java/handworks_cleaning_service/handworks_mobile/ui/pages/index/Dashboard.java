@@ -22,7 +22,6 @@ import handworks_cleaning_service.handworks_mobile.ui.fragments.NotificationFrag
 import handworks_cleaning_service.handworks_mobile.ui.fragments.SettingsFragment;
 
 public class Dashboard extends AppCompatActivity {
-    private BottomNavigationView bottomNav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +31,7 @@ public class Dashboard extends AppCompatActivity {
         EdgeToEdge.enable(this);
         ActivityDashboardBinding binding = ActivityDashboardBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        bottomNav = findViewById(R.id.bottomNavigationView);
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
         if (savedInstanceState == null) {
             replaceFrameFragment(new HomeFragment());
         }

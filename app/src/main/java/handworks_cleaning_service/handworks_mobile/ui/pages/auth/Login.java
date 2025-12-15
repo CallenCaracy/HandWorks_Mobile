@@ -1,6 +1,7 @@
 package handworks_cleaning_service.handworks_mobile.ui.pages.auth;
 
 import static handworks_cleaning_service.handworks_mobile.utils.Constant.MAX_RETRIES;
+import static handworks_cleaning_service.handworks_mobile.utils.NetworkConnectivity.isInternetAvailable;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -51,6 +52,13 @@ public class Login extends AppCompatActivity {
     }
 
     private void waitForSessionReady() {
+        if (!isInternetAvailable(this)) {
+            setContentView(R.layout.activity_login);
+            setupLoginUI();
+            Toast.makeText(this,"No internet connection", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         if (retryCount >= MAX_RETRIES) {
             setContentView(R.layout.activity_login);
             setupLoginUI();
@@ -96,6 +104,10 @@ public class Login extends AppCompatActivity {
         });
 
         signInBtn.setOnClickListener(v -> {
+            if (!isInternetAvailable(this)) {
+                Toast.makeText(this, "Please connect to the internet", Toast.LENGTH_SHORT).show();
+                return;
+            }
             request.email = emailEditText.getText().toString().trim();
             request.password = passwordEditText.getText().toString();
 

@@ -43,6 +43,9 @@ public class LandingPage extends AppCompatActivity {
         viewPager.setAdapter(adapter);
 
         Button getStarted = findViewById(R.id.btnGetStarted);
-        NavigationUtil.navigateTo(this, Login.class);
+        Button learnMore = findViewById(R.id.btnLearnMore);
+
+        getStarted.setOnClickListener(v -> NavigationUtil.navigateTo(this, Login.class));
+        learnMore.setOnClickListener(v -> NavigationUtil.navigateTo(this, LearnMore.class));
     }
 }
