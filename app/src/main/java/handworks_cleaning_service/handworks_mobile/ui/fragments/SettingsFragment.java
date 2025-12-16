@@ -11,6 +11,9 @@ import android.widget.Button;
 
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.utils.ThemeUtil;
+import static handworks_cleaning_service.handworks_mobile.utils.Constant.THEME_DARK;
+import static handworks_cleaning_service.handworks_mobile.utils.Constant.THEME_LIGHT;
+import static handworks_cleaning_service.handworks_mobile.utils.Constant.THEME_SYSTEM;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -65,11 +68,13 @@ public class SettingsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
+        Button systemMode = view.findViewById(R.id.systemBtn);
         Button dayMode = view.findViewById(R.id.dayBtn);
         Button nightMode = view.findViewById(R.id.nightBtn);
 
-        dayMode.setOnClickListener(v -> ThemeUtil.setTheme(requireContext(), false));
-        nightMode.setOnClickListener(v -> ThemeUtil.setTheme(requireContext(), true));
+        systemMode.setOnClickListener(v -> ThemeUtil.setTheme(requireContext(), THEME_SYSTEM));
+        dayMode.setOnClickListener(v -> ThemeUtil.setTheme(requireContext(), THEME_LIGHT));
+        nightMode.setOnClickListener(v -> ThemeUtil.setTheme(requireContext(), THEME_DARK));
 
         return view;
     }

@@ -50,11 +50,23 @@
         android:gravity="center">
 
         <Button
+            android:id="@+id/systemBtn"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="System"
+            tools:ignore="HardcodedText" />
+
+        <View
+            android:layout_width="8dp"
+            android:layout_height="match_parent" />
+
+        <Button
             android:id="@+id/dayBtn"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Day Mode"
+            android:text="Day"
             tools:ignore="HardcodedText" />
 
         <View
@@ -66,7 +78,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Night Mode"
+            android:text="Night"
             tools:ignore="HardcodedText" />
     </LinearLayout>
 

@@ -9,30 +9,56 @@
     tools:context=".ui.pages.auth.Login">
 
     <!-- Logo -->
-    <ImageView
-        android:id="@+id/logo"
-        android:layout_width="233dp"
-        android:layout_height="144dp"
-        android:contentDescription="Handworks Cleaning Services Logo"
-        android:src="@drawable/handworks_logo_v2"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="DuplicateIds,HardcodedText" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/handworks_logo"
+            android:layout_width="100dp"
+            android:layout_height="102dp"
+            android:contentDescription="Handworks Logo"
+            android:src="@drawable/handworks_logo_v2"
+            tools:ignore="HardcodedText" />
+
+    </androidx.cardview.widget.CardView>
 
     <!-- Title -->
     <TextView
         android:id="@+id/Login"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="24dp"
-        android:text="Login"
-        android:textColor="#279AF0"
-        android:textSize="29sp"
+        android:layout_marginTop="24dp"
+        android:text="Welcome Back"
+        android:textColor="@color/colorTertiary"
+        android:textSize="28sp"
         android:textStyle="bold"
+        android:textAlignment="center"
+        app:layout_constraintTop_toBottomOf="@id/cardView"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="HardcodedText,MissingConstraints" />
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/loginSubtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="Sign in to continue keeping spaces clean"
+        android:textColor="@color/textPrimary"
+        android:textSize="14sp"
+        android:textAlignment="center"
+        app:layout_constraintTop_toBottomOf="@id/Login"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="HardcodedText" />
 
     <!-- Email Label -->
     <TextView
@@ -40,13 +66,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:text="Email"
         android:textColor="@color/textPrimary"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/logo"
+        app:layout_constraintTop_toBottomOf="@id/loginSubtitle"
         tools:ignore="HardcodedText"/>
 
     <!-- Email Field -->

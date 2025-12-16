@@ -26,7 +26,6 @@
             android:layout_height="102dp"
             android:contentDescription="Handworks Logo"
             android:src="@drawable/handworks_logo_v2"
-
             tools:ignore="HardcodedText" />
 
     </androidx.cardview.widget.CardView>
