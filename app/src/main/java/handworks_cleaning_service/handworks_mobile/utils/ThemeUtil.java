@@ -46,4 +46,10 @@ public class ThemeUtil {
 
         applyTheme(context);
     }
+
+    public static int getTheme(Context context) {
+        SharedPreferences prefs =
+                context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        return prefs.getInt(KEY_THEME, THEME_SYSTEM);
+    }
 }

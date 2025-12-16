@@ -1,6 +1,8 @@
 package handworks_cleaning_service.handworks_mobile.data.repository
 
 import com.clerk.api.signin.SignIn
+import com.clerk.api.Clerk
+import com.clerk.api.network.serialization.ClerkResult
 import handworks_cleaning_service.handworks_mobile.data.dto.LoginRequest
 import handworks_cleaning_service.handworks_mobile.data.remote.AuthApi
 import handworks_cleaning_service.handworks_mobile.utils.Result
@@ -25,6 +27,15 @@ class AuthRepository @Inject constructor() : AuthApi {
             signInResult
         } catch (e: Exception) {
             Result.Failure(e)
+        }
+    }
+
+    override suspend fun signOut(): ClerkResult<Unit, Throwable> {
+        return try {
+            Clerk.signOut()
+            ClerkResult.Success(Unit, tags = mapOf())
+        } catch (e: Exception) {
+            ClerkResult.Failure(e)
         }
     }
 }

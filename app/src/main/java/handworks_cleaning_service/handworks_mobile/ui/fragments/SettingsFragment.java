@@ -2,14 +2,21 @@ package handworks_cleaning_service.handworks_mobile.ui.fragments;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import handworks_cleaning_service.handworks_mobile.R;
+import handworks_cleaning_service.handworks_mobile.ui.pages.auth.Login;
+import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
+import handworks_cleaning_service.handworks_mobile.utils.AuthUiState;
+import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
 import handworks_cleaning_service.handworks_mobile.utils.ThemeUtil;
 import static handworks_cleaning_service.handworks_mobile.utils.Constant.THEME_DARK;
 import static handworks_cleaning_service.handworks_mobile.utils.Constant.THEME_LIGHT;
@@ -68,14 +75,74 @@ public class SettingsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
+        AuthViewModel viewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         Button systemMode = view.findViewById(R.id.systemBtn);
         Button dayMode = view.findViewById(R.id.dayBtn);
         Button nightMode = view.findViewById(R.id.nightBtn);
+        Button logoutBtn = view.findViewById(R.id.btnLogout);
 
-        systemMode.setOnClickListener(v -> ThemeUtil.setTheme(requireContext(), THEME_SYSTEM));
-        dayMode.setOnClickListener(v -> ThemeUtil.setTheme(requireContext(), THEME_LIGHT));
-        nightMode.setOnClickListener(v -> ThemeUtil.setTheme(requireContext(), THEME_DARK));
+        systemMode.setOnClickListener(v -> {
+            ThemeUtil.setTheme(requireContext(), THEME_SYSTEM);
+            updateThemeButtons(THEME_SYSTEM, systemMode, dayMode, nightMode);
+        });
+
+        dayMode.setOnClickListener(v -> {
+            ThemeUtil.setTheme(requireContext(), THEME_LIGHT);
+            updateThemeButtons(THEME_LIGHT, systemMode, dayMode, nightMode);
+        });
+
+        nightMode.setOnClickListener(v -> {
+            ThemeUtil.setTheme(requireContext(), THEME_DARK);
+            updateThemeButtons(THEME_DARK, systemMode, dayMode, nightMode);
+        });
+
+        logoutBtn.setOnClickListener(v -> new AlertDialog.Builder(v.getContext())
+            .setTitle("Logout")
+            .setMessage("Are you sure you want to logout?")
+            .setPositiveButton("Yes", (dialog, which) -> viewModel.signOut())
+            .setNegativeButton("No", null)
+            .show());
+
+        viewModel.getUiState().observe(getViewLifecycleOwner(), state -> {
+            if (state instanceof AuthUiState.SignedOut) {
+                NavigationUtil.navigateTo(requireActivity(), Login.class);
+            } else if (state instanceof AuthUiState.Error) {
+                Toast.makeText(getContext(), ((AuthUiState.Error) state).getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return view;
     }
+
+    private void updateThemeButtons(int activeTheme, Button systemBtn, Button dayBtn, Button nightBtn) {
+        resetButton(systemBtn);
+        resetButton(dayBtn);
+        resetButton(nightBtn);
+
+        switch (activeTheme) {
+            case THEME_LIGHT:
+                highlightButton(dayBtn);
+                break;
+
+            case THEME_DARK:
+                highlightButton(nightBtn);
+                break;
+
+            case THEME_SYSTEM:
+            default:
+                highlightButton(systemBtn);
+                break;
+        }
+    }
+
+    private void highlightButton(Button button) {
+        button.setAlpha(1f);
+        button.setEnabled(false);
+    }
+
+    private void resetButton(Button button) {
+        button.setAlpha(0.6f);
+        button.setEnabled(true);
+    }
+
 }
