@@ -3,6 +3,7 @@ package handworks_cleaning_service.handworks_mobile.data.repository
 import com.clerk.api.signin.SignIn
 import com.clerk.api.Clerk
 import com.clerk.api.network.serialization.ClerkResult
+import com.clerk.api.session.Session
 import handworks_cleaning_service.handworks_mobile.data.dto.LoginRequest
 import handworks_cleaning_service.handworks_mobile.data.remote.AuthApi
 import handworks_cleaning_service.handworks_mobile.utils.Result
@@ -28,6 +29,10 @@ class AuthRepository @Inject constructor() : AuthApi {
         } catch (e: Exception) {
             Result.Failure(e)
         }
+    }
+
+    override suspend fun getSession(): Session? {
+        return Clerk.session
     }
 
     override suspend fun signOut(): ClerkResult<Unit, Throwable> {

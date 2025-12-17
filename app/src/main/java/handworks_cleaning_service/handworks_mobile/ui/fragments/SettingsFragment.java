@@ -15,7 +15,7 @@ import android.widget.Toast;
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.ui.pages.auth.Login;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
-import handworks_cleaning_service.handworks_mobile.utils.AuthUiState;
+import handworks_cleaning_service.handworks_mobile.utils.uistate.AuthUiState;
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
 import handworks_cleaning_service.handworks_mobile.utils.ThemeUtil;
 import static handworks_cleaning_service.handworks_mobile.utils.Constant.THEME_DARK;

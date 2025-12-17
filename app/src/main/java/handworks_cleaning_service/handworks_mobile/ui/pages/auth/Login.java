@@ -1,11 +1,8 @@
 package handworks_cleaning_service.handworks_mobile.ui.pages.auth;
 
-import static handworks_cleaning_service.handworks_mobile.utils.Constant.MAX_RETRIES;
 import static handworks_cleaning_service.handworks_mobile.utils.NetworkConnectivity.isInternetAvailable;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,15 +16,14 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.clerk.api.Clerk;
-
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.data.dto.LoginRequest;
 import handworks_cleaning_service.handworks_mobile.ui.pages.index.Dashboard;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
-import handworks_cleaning_service.handworks_mobile.utils.AuthUiState;
+import handworks_cleaning_service.handworks_mobile.utils.uistate.AuthUiState;
+import handworks_cleaning_service.handworks_mobile.utils.uistate.SessionUiState;
 
 @AndroidEntryPoint
 public class Login extends AppCompatActivity {
@@ -35,7 +31,6 @@ public class Login extends AppCompatActivity {
     private Button signInBtn;
     private AuthViewModel authViewModel;
     protected LoginRequest request;
-    private int retryCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,46 +42,31 @@ public class Login extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
-        waitForSessionReady();
-    }
-
-    private void waitForSessionReady() {
-        if (!isInternetAvailable(this)) {
-            setContentView(R.layout.activity_login);
-            setupLoginUI();
-            Toast.makeText(this,"No internet connection", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        if (retryCount >= MAX_RETRIES) {
-            setContentView(R.layout.activity_login);
-            setupLoginUI();
-            return;
-        }
-        retryCount++;
-
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            var session = Clerk.INSTANCE.getSession();
-            if (session != null) {
-                NavigationUtil.navigateTo(Login.this, Dashboard.class);
+        authViewModel.getSessionState().observe(this, uiState -> {
+            if (uiState instanceof SessionUiState.Loading) {
+                setContentView(R.layout.activity_general_loading);
+            } else if (uiState instanceof SessionUiState.Ready) {
+                NavigationUtil.navigateTo(this, Dashboard.class);
                 finish();
-            } else {
-                waitForSessionReady();
+            } else if (uiState instanceof SessionUiState.Error) {
+                setContentView(R.layout.activity_login);
+                setupLoginUI();
+                Toast.makeText(this, ((SessionUiState.Error) uiState).getMessage(), Toast.LENGTH_LONG).show();
             }
-        }, 500);
+        });
+        authViewModel.waitForSessionReady();
     }
 
     private void setupLoginUI() {
-        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-
         EditText emailEditText = findViewById(R.id.emailField);
         EditText passwordEditText = findViewById(R.id.passwordField);
         signInBtn = findViewById(R.id.btnSignIn);
         progressBar = findViewById(R.id.progressBar);
 
 
-        authViewModel.getUiState().observe(this, uiState -> {
+        authViewModel.getAuthState().observe(this, uiState -> {
             if (uiState instanceof AuthUiState.Loading) {
                 progressBar.setVisibility(View.VISIBLE);
                 signInBtn.setEnabled(false);
