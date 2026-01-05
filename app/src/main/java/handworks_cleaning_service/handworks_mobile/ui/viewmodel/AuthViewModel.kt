@@ -1,5 +1,6 @@
 package handworks_cleaning_service.handworks_mobile.ui.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.internal.updateLiveLiteralValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.lifecycle.LiveData
@@ -52,8 +53,9 @@ class AuthViewModel @Inject constructor(private val repository: AuthRepository) 
             val session = pollSessionWithRetry()
             if (session != null) {
                 _sessionState.value = SessionUiState.Ready(session)
+                Log.e("Clerk Session Token", _sessionState.value.toString())
             } else {
-                _sessionState.value = SessionUiState.Error("Session not available")
+                _sessionState.value = SessionUiState.Error("Account Session Error")
             }
         }
     }

@@ -3,6 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:fitsSystemWindows="true"
+    android:paddingTop="?attr/actionBarSize"
+    android:paddingBottom="?android:attr/actionBarSize"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
@@ -13,7 +16,6 @@
         android:id="@+id/cardView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         app:cardCornerRadius="16dp"
         app:cardElevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -146,7 +148,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Forgot Password Section -->
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/forgotPasswordContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -157,32 +159,39 @@
         app:layout_constraintTop_toBottomOf="@id/passwordLayout">
 
         <ImageView
+            android:id="@+id/imageView"
             android:layout_width="18dp"
             android:layout_height="18dp"
-            android:layout_marginEnd="4dp"
-            android:contentDescription="Info icon"
-            android:background="@drawable/social_circle_blue"
-            android:padding="4dp"
-            app:tint="@color/whiten"
-            android:src="@drawable/vertical_bars_icon_2"
             android:layout_gravity="center"
-            tools:ignore="HardcodedText"/>
+            android:background="@drawable/social_circle_blue"
+            android:contentDescription="Info icon"
+            android:padding="4dp"
+            android:src="@drawable/vertical_bars_icon_2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/whiten"
+            tools:ignore="HardcodedText" />
 
         <Button
             android:id="@+id/btnForgotPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Forgot Password?"
-            android:textColor="#279AF0"
-            android:textSize="14sp"
             android:background="@android:color/transparent"
             android:elevation="0dp"
-            android:padding="0dp"
-            android:minHeight="0dp"
             android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:padding="0dp"
+            android:text="Forgot Password?"
             android:textAllCaps="false"
-            tools:ignore="HardcodedText"/>
-    </LinearLayout>
+            android:textColor="#279AF0"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="HardcodedText" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Sign In Button -->
     <Button
@@ -214,28 +223,29 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Sign Up Prompt -->
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/noAccountContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/MessageDescription"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
+            android:id="@+id/imageView3"
             android:layout_width="18dp"
             android:layout_height="18dp"
+            android:layout_gravity="center"
             android:background="@drawable/social_circle_blue"
-            android:layout_marginStart="6dp"
-            android:layout_marginEnd="4dp"
             android:contentDescription="Info icon"
             android:padding="4dp"
-            android:layout_gravity="center"
-            app:tint="@color/whiten"
             android:src="@drawable/vertical_bars_icon_2"
-            tools:ignore="HardcodedText"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/whiten"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -243,13 +253,17 @@
             android:text="Don’t have an account?"
             android:textColor="@color/textPrimary"
             android:textSize="13sp"
-            tools:ignore="HardcodedText"/>
-    </LinearLayout>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView3"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="HardcodedText" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/MessageDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -261,7 +275,11 @@
             android:text="Please contact admin for registration"
             android:textColor="@color/textPrimary"
             android:textSize="13sp"
-            tools:ignore="HardcodedText"/>
-    </LinearLayout>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="HardcodedText" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

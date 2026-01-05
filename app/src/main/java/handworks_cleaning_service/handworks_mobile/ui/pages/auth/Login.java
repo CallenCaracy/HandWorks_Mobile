@@ -43,6 +43,7 @@ public class Login extends AppCompatActivity {
             return insets;
         });
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        request = new LoginRequest();
 
         authViewModel.getSessionState().observe(this, uiState -> {
             if (uiState instanceof SessionUiState.Loading) {

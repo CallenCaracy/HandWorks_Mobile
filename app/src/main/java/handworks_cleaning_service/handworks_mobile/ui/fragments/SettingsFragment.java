@@ -1,5 +1,7 @@
 package handworks_cleaning_service.handworks_mobile.ui.fragments;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -12,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.ui.pages.auth.Login;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
@@ -27,6 +30,7 @@ import static handworks_cleaning_service.handworks_mobile.utils.Constant.THEME_S
  * Use the {@link SettingsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+@AndroidEntryPoint
 public class SettingsFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -37,6 +41,7 @@ public class SettingsFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private AuthViewModel authViewModel;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -67,6 +72,7 @@ public class SettingsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
     }
 
     @Override
@@ -75,11 +81,13 @@ public class SettingsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        AuthViewModel viewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         Button systemMode = view.findViewById(R.id.systemBtn);
         Button dayMode = view.findViewById(R.id.dayBtn);
         Button nightMode = view.findViewById(R.id.nightBtn);
         Button logoutBtn = view.findViewById(R.id.btnLogout);
+
+        int activeTheme = ThemeUtil.getTheme(requireContext());
+        updateThemeButtons(activeTheme, systemMode, dayMode, nightMode);
 
         systemMode.setOnClickListener(v -> {
             ThemeUtil.setTheme(requireContext(), THEME_SYSTEM);
@@ -99,11 +107,11 @@ public class SettingsFragment extends Fragment {
         logoutBtn.setOnClickListener(v -> new AlertDialog.Builder(v.getContext())
             .setTitle("Logout")
             .setMessage("Are you sure you want to logout?")
-            .setPositiveButton("Yes", (dialog, which) -> viewModel.signOut())
+            .setPositiveButton("Yes", (dialog, which) -> authViewModel.signOut())
             .setNegativeButton("No", null)
             .show());
 
-        viewModel.getUiState().observe(getViewLifecycleOwner(), state -> {
+        authViewModel.getAuthState().observe(getViewLifecycleOwner(), state -> {
             if (state instanceof AuthUiState.SignedOut) {
                 NavigationUtil.navigateTo(requireActivity(), Login.class);
             } else if (state instanceof AuthUiState.Error) {

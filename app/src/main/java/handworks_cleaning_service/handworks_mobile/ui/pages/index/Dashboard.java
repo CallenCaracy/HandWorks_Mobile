@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.databinding.ActivityDashboardBinding;
 import handworks_cleaning_service.handworks_mobile.ui.fragments.ChatFragment;
@@ -21,6 +22,7 @@ import handworks_cleaning_service.handworks_mobile.ui.fragments.HomeFragment;
 import handworks_cleaning_service.handworks_mobile.ui.fragments.NotificationFragment;
 import handworks_cleaning_service.handworks_mobile.ui.fragments.SettingsFragment;
 
+@AndroidEntryPoint
 public class Dashboard extends AppCompatActivity {
 
     @Override

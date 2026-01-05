@@ -55,6 +55,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="System"
+            android:textColor="@color/textPrimary"
             tools:ignore="HardcodedText" />
 
         <View
@@ -67,6 +68,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="Day"
+            android:textColor="@color/textPrimary"
             tools:ignore="HardcodedText" />
 
         <View
@@ -79,6 +81,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="Night"
+            android:textColor="@color/textPrimary"
             tools:ignore="HardcodedText" />
     </LinearLayout>
 
