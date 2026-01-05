@@ -29,8 +29,6 @@ It is directly connected to the backend microservices through a secured API gate
 - **Build Tool:** Gradle (Kotlin DSL configuration)  
 - **Backend Communication:**  
   - REST API Gateway (Gin, Go)  
-  - GraphQL endpoints  
-  - gRPC for real-time job assignment  
 - **Media Handling:** Cloudinary (before/after photos)  
 - **Authentication:** Clerk (OAuth 2.0 + JWT)  
 
