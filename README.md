@@ -85,17 +85,43 @@ flowchart TD
 
 ---
 
-## Repository Structure
+## Outer Repository Structure
 
 ```
 employee-frontend/
- ├── app/                     # Main Android app code
- │   ├── java/                # Java source files
- │   ├── res/                 # Layouts (XML), Drawables, Strings
- │   └── manifest/            # AndroidManifest.xml
- ├── gradle/                  # Build scripts
- ├── build.gradle.kts         # Gradle config (Kotlin DSL)
- └── README.md                # This file
+ ├── app/                       # Main Android app code
+ │   ├── java/                   # Java source files
+ │   ├── res/                    # Layouts (XML), Drawables, Strings
+ │   └── manifest/               # AndroidManifest.xml
+ ├── gradle/                    # Build scripts
+ ├── build.gradle.kts           # Gradle config (Kotlin DSL)
+ └── README.md                  # This file
+```
+
+## Inner Repository Structure
+
+```
+app/
+ ├───data                   # Handles all data sources and business models
+ │   ├───dto                 # Data Transfer Objects (used for API requests/responses)
+ │   ├───models              # Core app models representing entities
+ │   │   └───employee         # Employee-related models
+ │   ├───remote              # API service interfaces and network layer
+ │   └───repository          # Repository classes that mediate between data sources & ViewModels
+ ├───di                     # Dependency Injection & Retrofit setup
+ ├───ui                     # All UI-related code
+ │   ├───adapters            # RecyclerView adapters and other UI adapters
+ │   ├───fragments           # Reusable fragments for different parts of the UI
+ │   ├───pages               # Full-screen pages / activities or composable screens
+ │   │   ├───auth             # Login, registration, password reset screens
+ │   │   ├───chat             # Chat or messaging screens
+ │   │   ├───index            # Main landing/home screens after login
+ │   │   ├───settings         # App settings screens
+ │   │   └───user             # User profile and account management screens
+ │   └───viewmodel           # ViewModel classes managing UI logic and state
+ └───utils                  # Helper classes and utility functions
+     └───uistate             # UI state interfaces used for implementation of LiveData or StateFlow
+
 ```
 
 ---
