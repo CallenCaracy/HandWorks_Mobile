@@ -3,12 +3,17 @@ package handworks_cleaning_service.handworks_mobile.ui.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.clerk.api.session.Session;
+
 import handworks_cleaning_service.handworks_mobile.R;
+import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
+import handworks_cleaning_service.handworks_mobile.utils.uistate.SessionUiState;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +30,7 @@ public class HomeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private AuthViewModel authViewModel;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -55,12 +61,21 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_settings, container, false);
+
+        authViewModel.getSessionState().observe(getViewLifecycleOwner(), sessionUiState -> {
+            if (sessionUiState instanceof SessionUiState.Ready) {
+                Session session = ((SessionUiState.Ready) sessionUiState).getSession();
+                // Use the session here
+            }
+        });
+        return view;
     }
 }
