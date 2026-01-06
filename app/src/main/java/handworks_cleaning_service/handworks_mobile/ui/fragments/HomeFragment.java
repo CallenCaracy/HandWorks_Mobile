@@ -8,11 +8,15 @@ import androidx.lifecycle.ViewModelProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.clerk.api.session.Session;
 
+import java.util.Date;
+
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
+import handworks_cleaning_service.handworks_mobile.utils.DateUtil;
 import handworks_cleaning_service.handworks_mobile.utils.uistate.SessionUiState;
 
 /**
@@ -69,13 +73,22 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        Date date = new Date();
+
+        TextView cleanerNameDisplay = view.findViewById(R.id.cleanerNameDisplay);
+        TextView totalTaskDisplay = view.findViewById(R.id.summaryTaskNumberDisplay); // Later
+        TextView dateDisplay = view.findViewById(R.id.dateDisplay);
 
         authViewModel.getSessionState().observe(getViewLifecycleOwner(), sessionUiState -> {
             if (sessionUiState instanceof SessionUiState.Ready) {
                 Session session = ((SessionUiState.Ready) sessionUiState).getSession();
-                // Use the session here
+                cleanerNameDisplay.setText("Cleaner " + session.getUser().getFirstName());
             }
         });
+
+        String dateFormatted = DateUtil.formatDateFromIntToString(date);
+        dateDisplay.setText("As of " + dateFormatted);
+
         return view;
     }
 }
