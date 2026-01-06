@@ -1,8 +1,6 @@
 package handworks_cleaning_service.handworks_mobile.ui.viewmodel
 
 import android.util.Log
-import androidx.compose.runtime.internal.updateLiveLiteralValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.clerk.api.Clerk
 import com.clerk.api.session.Session
 import com.clerk.api.signin.SignIn
+import com.clerk.api.user.get
 import dagger.hilt.android.lifecycle.HiltViewModel
 import handworks_cleaning_service.handworks_mobile.data.dto.LoginRequest
 import handworks_cleaning_service.handworks_mobile.data.repository.AuthRepository
