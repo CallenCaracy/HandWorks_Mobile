@@ -29,6 +29,8 @@
         android:src="@drawable/pfp_placeholder"
         android:background="@drawable/circle_background"
         android:scaleType="centerCrop"
+        android:clickable="true"
+        android:focusable="true"
         android:contentDescription="@string/user_profile_picture"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

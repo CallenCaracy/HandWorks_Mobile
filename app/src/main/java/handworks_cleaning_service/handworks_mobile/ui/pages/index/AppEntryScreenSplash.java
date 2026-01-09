@@ -37,6 +37,7 @@ public class AppEntryScreenSplash extends AppCompatActivity {
 
         findViewById(R.id.main).postDelayed(() -> {
             if (Clerk.INSTANCE.getSession() != null) {
+                Log.d("ClerkSessionToken", Clerk.INSTANCE.getSession().toString());
                 progressBar.setVisibility(View.GONE);
                 NavigationUtil.navigateTo(this, Dashboard.class);
             } else {

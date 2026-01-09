@@ -24,6 +24,8 @@ import handworks_cleaning_service.handworks_mobile.ui.fragments.HistoryFragment;
 import handworks_cleaning_service.handworks_mobile.ui.fragments.HomeFragment;
 import handworks_cleaning_service.handworks_mobile.ui.fragments.NotificationFragment;
 import handworks_cleaning_service.handworks_mobile.ui.fragments.SettingsFragment;
+import handworks_cleaning_service.handworks_mobile.ui.pages.user.UserProfile;
+import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
 
 @AndroidEntryPoint
 public class Dashboard extends AppCompatActivity {
@@ -59,6 +61,8 @@ public class Dashboard extends AppCompatActivity {
                 .error(R.drawable.pfp_placeholder)
                 .circleCrop()
                 .into(userPfp);
+
+        userPfp.setOnClickListener(v -> NavigationUtil.navigateNoFinishTo(this, UserProfile.class));
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
