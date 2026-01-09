@@ -22,9 +22,7 @@ public class RepositoryModule {
 
     @Provides
     @Singleton
-    public UserRepository provideUserRepository(UserApi userApi) {
-        return new UserRepository(userApi);
-    }
+    public UserRepository provideUserRepository(UserApi userApi) { return new UserRepository(userApi); }
 
 }
 

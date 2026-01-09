@@ -61,4 +61,6 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     kapt(libs.hilt.android.compiler)
+    implementation(libs.glide.v4151)
+    annotationProcessor(libs.compiler)
 }

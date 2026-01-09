@@ -1,6 +1,7 @@
 package handworks_cleaning_service.handworks_mobile.ui.pages.index;
 
 import android.os.Bundle;
+import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.Glide;
+import com.clerk.api.Clerk;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -43,6 +46,19 @@ public class Dashboard extends AppCompatActivity {
             v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), bottomInset);
             return insets;
         });
+
+        ImageView userPfp = findViewById(R.id.userPfp);
+        String userPfpUrl = null;
+        if (Clerk.INSTANCE.getSession() != null && Clerk.INSTANCE.getSession().getUser() != null) {
+            userPfpUrl = Clerk.INSTANCE.getSession().getUser().getImageUrl();
+        }
+
+        Glide.with(this)
+                .load(userPfpUrl)
+                .placeholder(R.drawable.pfp_placeholder)
+                .error(R.drawable.pfp_placeholder)
+                .circleCrop()
+                .into(userPfp);
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
