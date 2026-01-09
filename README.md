@@ -21,6 +21,31 @@ It is directly connected to the backend microservices through a secured API gate
 
 ---
 
+## Versioning
+
+### 0.0.x - Initial project setup.
+- 0.0.1: Light, Dark, System Theme Modes added
+- 0.0.2: Top Header Bar feature added
+- 0.0.3: Bottom Navigation Bar feature added
+- 0.0.4: Blueprint of initial fragment pages home, history, chat, notification, and settings added
+- 0.0.5: Login added
+- 0.0.6: Bug fixes in Dashboard and login
+- 0.0.7: Settings improvements with theme controls and UI/UX
+
+### 0.1.x - Huge refactoring and implementation of design patterns, UI overhaul, cleaning code, and structuring.
+- 0.1.1: Design pattern shift from generic to MVVM with Dependency Injection and Repository Pattern
+- 0.1.2: Project Structure changes and dependency additions (Hilt & retrofit) and adjustments from minSdk 25 to 26
+
+### 0.2.x - Clerk Auth Api implementation and Kotlin integration to the code base for authenticating throughout the mobile application.
+- 0.2.1: New dependency added Clerk, KSP, Kapt, and Kotlin
+- 0.2.2: Clerk initialized
+- 0.2.3: Added Continuous Integration yml file and bugs
+- 0.2.4: Landing and learn more page feature added
+- 0.2.5: Sign out, forgot password added
+- 0.2.6: Refactors and improvements of clerk api integrations
+
+---
+
 ## Tech Stack
 
 - **Language:** Java  
