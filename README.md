@@ -63,8 +63,8 @@ It is directly connected to the backend microservices through a secured API gate
 
 ### Prerequisites
 - Android Studio (latest version)  
-- Minimum SDK: **API 24 (Nougat, Android 7.0)**  
-- Java 8+  
+- Minimum SDK: **API 26 (Nougat, Android 7.0)**  
+- Java 17+  
 
 ### Setup Instructions
 ```bash
