@@ -5,15 +5,22 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.clerk.api.Clerk;
 import com.clerk.api.session.Session;
 
 import java.util.Date;
+import java.util.Objects;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.DateUtil;
@@ -24,6 +31,8 @@ import handworks_cleaning_service.handworks_mobile.utils.uistate.SessionUiState;
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+
+@AndroidEntryPoint
 public class HomeFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -34,7 +43,6 @@ public class HomeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private AuthViewModel authViewModel;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -65,29 +73,23 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_settings, container, false);
-        Date date = new Date();
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         TextView cleanerNameDisplay = view.findViewById(R.id.cleanerNameDisplay);
-        TextView totalTaskDisplay = view.findViewById(R.id.summaryTaskNumberDisplay); // Later
+        TextView totalTaskDisplay = view.findViewById(R.id.summaryTaskNumberDisplay);
         TextView dateDisplay = view.findViewById(R.id.dateDisplay);
 
-        authViewModel.getSessionState().observe(getViewLifecycleOwner(), sessionUiState -> {
-            if (sessionUiState instanceof SessionUiState.Ready) {
-                Session session = ((SessionUiState.Ready) sessionUiState).getSession();
-                cleanerNameDisplay.setText("Cleaner " + session.getUser().getFirstName());
-            }
-        });
-
+        Date date = new Date();
         String dateFormatted = DateUtil.formatDateFromIntToString(date);
-        dateDisplay.setText("As of " + dateFormatted);
+        String firstName = Objects.requireNonNull(Objects.requireNonNull(Clerk.INSTANCE.getSession()).getUser()).getFirstName();
+
+        dateDisplay.setText(getString(R.string.as_of_display, dateFormatted));
+        cleanerNameDisplay.setText(getString(R.string.cleaner_name_display, (firstName != null ? firstName : "Error")));
 
         return view;
     }

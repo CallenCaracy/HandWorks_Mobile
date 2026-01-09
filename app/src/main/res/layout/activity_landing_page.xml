@@ -24,9 +24,8 @@
             android:id="@+id/handworks_logo"
             android:layout_width="100dp"
             android:layout_height="102dp"
-            android:contentDescription="Handworks Logo"
-            android:src="@drawable/handworks_logo_v2"
-            tools:ignore="HardcodedText" />
+            android:contentDescription="@string/handworks_logo"
+            android:src="@drawable/handworks_logo_v2" />
 
     </androidx.cardview.widget.CardView>
 
@@ -36,19 +35,18 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="17dp"
-        android:text="Welcome!\nThanks for keeping spaces clean.\nGlad to have you on the team."
+        android:text="@string/welcome_n_thanks_for_keeping_spaces_clean_n_glad_to_have_you_on_the_team"
         android:textColor="@color/textPrimary"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView"
-        tools:ignore="HardcodedText" />
+        app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
     <TextView
         android:id="@+id/description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Our team of experienced and certified cleaners takes great pride in providing quality service with a smile."
+        android:text="@string/our_team_of_experienced_and_certified_cleaners_takes_great_pride_in_providing_quality_service_with_a_smile"
         android:textColor="@color/textPrimary"
         android:textSize="14sp"
         app:layout_constraintTop_toBottomOf="@id/titleMain"
@@ -56,14 +54,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginTop="16dp"
-        tools:ignore="HardcodedText" />
+        android:layout_marginTop="16dp" />
 
     <Button
         android:id="@+id/btnGetStarted"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Get Started"
+        android:text="@string/get_started"
         android:textColor="#FFFFFF"
         android:backgroundTint="@color/colorTertiary"
         app:layout_constraintTop_toBottomOf="@id/description"
@@ -71,22 +68,20 @@
         app:layout_constraintEnd_toStartOf="@id/btnLearnMore"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="24dp"
-        tools:ignore="HardcodedText" />
+        android:layout_marginTop="24dp" />
 
     <!-- Learn More Button -->
     <Button
         android:id="@+id/btnLearnMore"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Learn More"
+        android:text="@string/learn_more"
         android:textColor="#000000"
         android:backgroundTint="@color/colorSecondary"
         app:layout_constraintTop_toTopOf="@id/btnGetStarted"
         app:layout_constraintStart_toEndOf="@id/btnGetStarted"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="24dp"
-        tools:ignore="HardcodedText" />
+        android:layout_marginEnd="24dp" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
@@ -104,10 +99,9 @@
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:contentDescription="Farmer Image"
+            android:contentDescription="@string/cleaner_image"
             android:scaleType="centerCrop"
-            android:src="@drawable/group_photo"
-            tools:ignore="HardcodedText" />
+            android:src="@drawable/group_photo" />
     </androidx.cardview.widget.CardView>
 
     <TextView
@@ -116,11 +110,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginBottom="20dp"
-        android:text="© Handworks Cleaning Services 2025"
+        android:text="@string/handworks_cleaning_services_2025"
         android:textColor="#555555"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="HardcodedText" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,79 @@
 <resources>
+    <!--  General Strings Region  -->
     <string name="app_name">HandWorks Mobile</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="handworks_logo">Handworks Logo</string>
+    <string name="get_started">Get Started</string>
+    <string name="handworks_cleaning_services_2025">© Handworks Cleaning Services 2025</string>
+    <!--  General Strings EndRegion  -->
+
+    <!--  Login Activity Region  -->
+    <string name="please_contact_admin_for_registration">Please contact admin for registration</string>
+    <string name="don_t_have_an_account">Don’t have an account?</string>
+    <string name="info_icon">Info icon</string>
+    <string name="sign_in">Sign In</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="enter_your_password">Enter your password</string>
+    <string name="password">Password</string>
+    <string name="enter_your_email_address">Enter your email address</string>
+    <string name="email">Email</string>
+    <string name="sign_in_to_continue_keeping_spaces_clean">Sign in to continue keeping spaces clean</string>
+    <string name="welcome_back">Welcome Back</string>
+    <!--  Login Activity EndRegion  -->
+
+    <!--  Learn More Activity Region  -->
+    <string name="about_handworks">About Handworks</string>
+    <string name="professional_cleaning_built_on_trust_quality_and_care">Professional cleaning built on trust, quality, and care.</string>
+    <string name="our_office">Our Office</string>
+    <string name="handworks_cleaning_service_map_location">Handworks Cleaning Service Map Location</string>
+    <string name="our_services">Our Services</string>
+    <string name="residential_cleaning_n_office_and_commercial_cleaning_n_deep_cleaning_and_sanitization_n_eco_friendly_cleaning_options">• Residential Cleaning\n• Office and Commercial Cleaning\n• Deep Cleaning and Sanitization\n• Eco-friendly Cleaning Options</string>
+    <string name="our_values">Our Values</string>
+    <string name="we_believe_in_reliability_attention_to_detail_and_treating_every_space_as_if_it_were_our_own">We believe in reliability, attention to detail, and treating every space as if it were our own.</string>
+    <string name="service_areas">Service Areas</string>
+    <string name="cebu_city">• Cebu City</string>
+    <string name="talisay">• Talisay</string>
+    <string name="carcar">• Carcar</string>
+    <string name="minglanilla">• Minglanilla</string>
+    <string name="mandaue_city">• Mandaue City</string>
+    <string name="back">Back</string>
+    <!--  Learn More Activity EndRegion  -->
+
+    <!--  Landing Activity EndRegion  -->
+    <string name="welcome_n_thanks_for_keeping_spaces_clean_n_glad_to_have_you_on_the_team">Welcome!\nThanks for keeping spaces clean.\nGlad to have you on the team.</string>
+    <string name="our_team_of_experienced_and_certified_cleaners_takes_great_pride_in_providing_quality_service_with_a_smile">Our team of experienced and certified cleaners takes great pride in providing quality service with a smile.</string>
+    <string name="learn_more">Learn More</string>
+    <string name="cleaner_image">Cleaner Image</string>
+    <!--  Landing Activity EndRegion  -->
+
+    <!--  Home Fragment Region  -->
+    <string name="cleaner_name_display">Cleaner %1$s</string>
+    <string name="as_of_display">As of %1$s</string>
+    <!--  Home Fragment EndRegion  -->
+
+    <!--  Settings Fragment Region  -->
+    <string name="account">Account</string>
+    <string name="you_will_need_to_sign_in_again_to_access_your_account">You will need to sign in again to access your account.</string>
+    <string name="log_out">Log Out</string>
+    <string name="night">Night</string>
+    <string name="day">Day</string>
+    <string name="system">System</string>
+    <string name="appearance">Appearance</string>
+    <string name="settings">Settings</string>
+    <!--  Settings Fragment EndRegion  -->
+
+    <!--  slider_item.xml Region  -->
+    <string name="user_pfp">User PFP</string>
+    <!--  slider_item.xml EndRegion  -->
+
+    <!--  header.xml Region  -->
+    <string name="handworks_cleaning">Handworks Cleaning</string>
+    <string name="user_profile_picture">User Profile Picture</string>
+    <!--  header.xml EndRegion  -->
+
+    <!--  New Strings Region  -->
+    <string name="placeholder">Placeholder</string>
+    <!--  New Strings EndRegion  -->
+
+
 </resources>

@@ -1,7 +1,9 @@
 package handworks_cleaning_service.handworks_mobile.ui.pages.index;
 
 import android.os.Bundle;
-import android.widget.Button;
+import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,28 +11,38 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.clerk.api.Clerk;
+
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.ui.pages.auth.Login;
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
 
-public class LearnMore extends AppCompatActivity {
-    public Button getStarted, backToLanding;
+public class AppEntryScreenSplash extends AppCompatActivity {
+
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_learn_more);
+        setContentView(R.layout.activity_app_entry_screen_splash);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        getStarted = findViewById(R.id.btnGoToLogIn);
-        backToLanding = findViewById(R.id.btnGoBackToLanding);
+        progressBar = findViewById(R.id.progressBarLoading);
+        progressBar.setVisibility(View.VISIBLE);
 
-        getStarted.setOnClickListener(v -> NavigationUtil.navigateTo(this, AppEntryScreenSplash.class));
-        backToLanding.setOnClickListener(v -> NavigationUtil.navigateTo(this, LandingPage.class));
+        findViewById(R.id.main).postDelayed(() -> {
+            if (Clerk.INSTANCE.getSession() != null) {
+                progressBar.setVisibility(View.GONE);
+                NavigationUtil.navigateTo(this, Dashboard.class);
+            } else {
+                progressBar.setVisibility(View.GONE);
+                NavigationUtil.navigateTo(this, Login.class);
+            }
+        }, 400);
     }
 }

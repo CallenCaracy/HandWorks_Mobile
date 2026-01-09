@@ -36,7 +36,7 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_general_loading);
+        setContentView(R.layout.activity_login);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -44,51 +44,17 @@ public class Login extends AppCompatActivity {
         });
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         request = new LoginRequest();
-
-        authViewModel.getSessionState().observe(this, uiState -> {
-            if (uiState instanceof SessionUiState.Loading) {
-                setContentView(R.layout.activity_general_loading);
-            } else if (uiState instanceof SessionUiState.Ready) {
-                NavigationUtil.navigateTo(this, Dashboard.class);
-                finish();
-            } else if (uiState instanceof SessionUiState.Error) {
-                setContentView(R.layout.activity_login);
-                setupLoginUI();
-                Toast.makeText(this, ((SessionUiState.Error) uiState).getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-        authViewModel.waitForSessionReady();
-    }
-
-    private void setupLoginUI() {
         EditText emailEditText = findViewById(R.id.emailField);
         EditText passwordEditText = findViewById(R.id.passwordField);
         signInBtn = findViewById(R.id.btnSignIn);
         progressBar = findViewById(R.id.progressBar);
-
-
-        authViewModel.getAuthState().observe(this, uiState -> {
-            if (uiState instanceof AuthUiState.Loading) {
-                progressBar.setVisibility(View.VISIBLE);
-                signInBtn.setEnabled(false);
-            } else {
-                progressBar.setVisibility(View.GONE);
-                signInBtn.setEnabled(true);
-                if (uiState instanceof AuthUiState.Success) {
-                    Toast.makeText(this, "Welcome!", Toast.LENGTH_SHORT).show();
-                    NavigationUtil.navigateTo(this, Dashboard.class);
-                } else if (uiState instanceof AuthUiState.Error) {
-                    String error = ((AuthUiState.Error) uiState).getMessage();
-                    Toast.makeText(this, "Login failed: " + error, Toast.LENGTH_LONG).show();
-                }
-            }
-        });
 
         signInBtn.setOnClickListener(v -> {
             if (!isInternetAvailable(this)) {
                 Toast.makeText(this, "Please connect to the internet", Toast.LENGTH_SHORT).show();
                 return;
             }
+
             request.email = emailEditText.getText().toString().trim();
             request.password = passwordEditText.getText().toString();
 
@@ -98,6 +64,28 @@ public class Login extends AppCompatActivity {
             }
 
             authViewModel.signIn(request);
+        });
+        observeAuthState();
+    }
+    private void observeAuthState() {
+        authViewModel.getAuthState().observe(this, uiState -> {
+            if (uiState instanceof AuthUiState.Loading) {
+                progressBar.setVisibility(View.VISIBLE);
+                signInBtn.setEnabled(false);
+                return;
+            }
+
+            progressBar.setVisibility(View.GONE);
+            signInBtn.setEnabled(true);
+
+            if (uiState instanceof AuthUiState.Success) {
+                Toast.makeText(this, "Welcome!", Toast.LENGTH_SHORT).show();
+                NavigationUtil.navigateTo(this, Dashboard.class);
+                finish();
+            } else if (uiState instanceof AuthUiState.Error) {
+                String error = ((AuthUiState.Error) uiState).getMessage();
+                Toast.makeText(this, "Login failed: " + error, Toast.LENGTH_LONG).show();
+            }
         });
     }
 }

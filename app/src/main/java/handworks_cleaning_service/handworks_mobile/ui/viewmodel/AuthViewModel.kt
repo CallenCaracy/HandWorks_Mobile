@@ -52,7 +52,6 @@ class AuthViewModel @Inject constructor(private val repository: AuthRepository) 
             val session = pollSessionWithRetry()
             if (session != null) {
                 _sessionState.value = SessionUiState.Ready(session)
-                Log.e("Clerk Session Token", _sessionState.value.toString())
             } else {
                 _sessionState.value = SessionUiState.Error("Account Session Error")
             }
