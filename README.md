@@ -34,7 +34,7 @@ It is directly connected to the backend microservices through a secured API gate
 
 ### 0.1.x - Huge refactoring and implementation of design patterns, UI overhaul, cleaning code, and structuring.
 - 0.1.1: Design pattern shift from generic to MVVM with Dependency Injection and Repository Pattern
-- 0.1.2: Project Structure changes and dependency additions (Hilt & retrofit) and adjustments from minSdk 25 to 26
+- 0.1.2: Project Structure changes and dependency additions (Hilt & retrofit) and adjustments from minSdk 24 to 26
 
 ### 0.2.x - Clerk Auth Api implementation and Kotlin integration to the code base for authenticating throughout the mobile application.
 - 0.2.1: New dependency added Clerk, KSP, Kapt, and Kotlin
@@ -48,9 +48,9 @@ It is directly connected to the backend microservices through a secured API gate
 
 ## Tech Stack
 
-- **Language:** Java  
+- **Language:** Java & Kotlin  
 - **UI Layouts:** XML  
-- **Framework/SDK:** Android SDK (API 24+ Nougat recommended)  
+- **Framework/SDK:** Android SDK (API 26+ Nougat recommended)  
 - **Build Tool:** Gradle (Kotlin DSL configuration)  
 - **Backend Communication:**  
   - REST API Gateway (Gin, Go)  
