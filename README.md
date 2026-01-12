@@ -21,16 +21,39 @@ It is directly connected to the backend microservices through a secured API gate
 
 ---
 
+## Versioning
+
+### 0.0.x - Initial project setup.
+- 0.0.1: Light, Dark, System Theme Modes added
+- 0.0.2: Top Header Bar feature added
+- 0.0.3: Bottom Navigation Bar feature added
+- 0.0.4: Blueprint of initial fragment pages home, history, chat, notification, and settings added
+- 0.0.5: Login added
+- 0.0.6: Bug fixes in Dashboard and login
+- 0.0.7: Settings improvements with theme controls and UI/UX
+
+### 0.1.x - Huge refactoring and implementation of design patterns, UI overhaul, cleaning code, and structuring.
+- 0.1.1: Design pattern shift from generic to MVVM with Dependency Injection and Repository Pattern
+- 0.1.2: Project Structure changes and dependency additions (Hilt & retrofit) and adjustments from minSdk 24 to 26
+
+### 0.2.x - Clerk Auth Api implementation and Kotlin integration to the code base for authenticating throughout the mobile application.
+- 0.2.1: New dependency added Clerk, KSP, Kapt, and Kotlin
+- 0.2.2: Clerk initialized
+- 0.2.3: Added Continuous Integration yml file and bugs
+- 0.2.4: Landing and learn more page feature added
+- 0.2.5: Sign out, forgot password added
+- 0.2.6: Refactors and improvements of clerk api integrations
+
+---
+
 ## Tech Stack
 
-- **Language:** Java  
+- **Language:** Java & Kotlin  
 - **UI Layouts:** XML  
-- **Framework/SDK:** Android SDK (API 24+ Nougat recommended)  
+- **Framework/SDK:** Android SDK (API 26+ Nougat recommended)  
 - **Build Tool:** Gradle (Kotlin DSL configuration)  
 - **Backend Communication:**  
   - REST API Gateway (Gin, Go)  
-  - GraphQL endpoints  
-  - gRPC for real-time job assignment  
 - **Media Handling:** Cloudinary (before/after photos)  
 - **Authentication:** Clerk (OAuth 2.0 + JWT)  
 
@@ -40,8 +63,8 @@ It is directly connected to the backend microservices through a secured API gate
 
 ### Prerequisites
 - Android Studio (latest version)  
-- Minimum SDK: **API 24 (Nougat, Android 7.0)**  
-- Java 8+  
+- Minimum SDK: **API 26 (Nougat, Android 7.0)**  
+- Java 17+  
 
 ### Setup Instructions
 ```bash
@@ -85,17 +108,43 @@ flowchart TD
 
 ---
 
-## Repository Structure
+## Outer Repository Structure
 
 ```
 employee-frontend/
- ├── app/                     # Main Android app code
- │   ├── java/                # Java source files
- │   ├── res/                 # Layouts (XML), Drawables, Strings
- │   └── manifest/            # AndroidManifest.xml
- ├── gradle/                  # Build scripts
- ├── build.gradle.kts         # Gradle config (Kotlin DSL)
- └── README.md                # This file
+ ├── app/                       # Main Android app code
+ │   ├── java/                   # Java source files
+ │   ├── res/                    # Layouts (XML), Drawables, Strings
+ │   └── manifest/               # AndroidManifest.xml
+ ├── gradle/                    # Build scripts
+ ├── build.gradle.kts           # Gradle config (Kotlin DSL)
+ └── README.md                  # This file
+```
+
+## Inner Repository Structure
+
+```
+app/
+ ├───data                   # Handles all data sources and business models
+ │   ├───dto                 # Data Transfer Objects (used for API requests/responses)
+ │   ├───models              # Core app models representing entities
+ │   │   └───employee         # Employee-related models
+ │   ├───remote              # API service interfaces and network layer
+ │   └───repository          # Repository classes that mediate between data sources & ViewModels
+ ├───di                     # Dependency Injection & Retrofit setup
+ ├───ui                     # All UI-related code
+ │   ├───adapters            # RecyclerView adapters and other UI adapters
+ │   ├───fragments           # Reusable fragments for different parts of the UI
+ │   ├───pages               # Full-screen pages / activities or composable screens
+ │   │   ├───auth             # Login, registration, password reset screens
+ │   │   ├───chat             # Chat or messaging screens
+ │   │   ├───index            # Main landing/home screens after login
+ │   │   ├───settings         # App settings screens
+ │   │   └───user             # User profile and account management screens
+ │   └───viewmodel           # ViewModel classes managing UI logic and state
+ └───utils                  # Helper classes and utility functions
+     └───uistate             # UI state interfaces used for implementation of LiveData or StateFlow
+
 ```
 
 ---

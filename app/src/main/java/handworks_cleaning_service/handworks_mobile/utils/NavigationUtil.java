@@ -10,5 +10,10 @@ public class NavigationUtil {
         currentActivity.startActivity(intent);
         currentActivity.finish();
     }
+
+    public static void navigateNoFinishTo(Activity currentActivity, Class<?> targetActivity) {
+        Intent intent = new Intent(currentActivity, targetActivity);
+        currentActivity.startActivity(intent);
+    }
 }
 

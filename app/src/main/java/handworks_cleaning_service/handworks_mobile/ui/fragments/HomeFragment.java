@@ -7,14 +7,25 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.clerk.api.Clerk;
+
+import java.util.Date;
+import java.util.Objects;
+
+
+import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
+import handworks_cleaning_service.handworks_mobile.utils.DateUtil;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+
+@AndroidEntryPoint
 public class HomeFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -60,7 +71,19 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        TextView cleanerNameDisplay = view.findViewById(R.id.cleanerNameDisplay);
+        TextView totalTaskDisplay = view.findViewById(R.id.summaryTaskNumberDisplay);
+        TextView dateDisplay = view.findViewById(R.id.dateDisplay);
+
+        Date date = new Date();
+        String dateFormatted = DateUtil.formatDateFromIntToString(date);
+        String firstName = Objects.requireNonNull(Objects.requireNonNull(Clerk.INSTANCE.getSession()).getUser()).getFirstName();
+
+        dateDisplay.setText(getString(R.string.as_of_display, dateFormatted));
+        cleanerNameDisplay.setText(getString(R.string.cleaner_name_display, (firstName != null ? firstName : "Error")));
+
+        return view;
     }
 }
