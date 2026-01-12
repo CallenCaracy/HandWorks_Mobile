@@ -237,7 +237,7 @@
         android:layout_marginTop="10dp"
         android:backgroundTint="@color/colorSecondary"
         android:text="@string/back"
-        app:icon="@drawable/back"
+        app:icon="@drawable/outline_chevron_left"
         app:iconGravity="textStart"
         app:iconPadding="8dp"
         app:iconTint="@color/textSecondary"

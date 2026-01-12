@@ -6,4 +6,6 @@ public class Constant {
     public static final int THEME_SYSTEM = 0;
     public static final int THEME_LIGHT  = 1;
     public static final int THEME_DARK   = 2;
+    public static final int TYPE_HEADER = 0;
+    public static final int TYPE_ITEM = 1;
 }

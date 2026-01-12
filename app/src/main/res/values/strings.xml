@@ -9,7 +9,12 @@
 
     <!--  User Profile Activity Region  -->
     <string name="profile">Profile</string>
-    <string name="your_name">Your Name</string>
+    <string name="your_firstname">Your FirstName</string>
+    <string name="your_lastname">Your LastName</string>
+    <string name="_1_year_ago">1 year ago</string>
+    <string name="joined">Joined</string>
+    <string name="continue_this">Continue</string>
+    <string name="sign_out">Sign Out</string>
     <!--  User Profile Activity EndRegion  -->
 
     <!--  Login Activity Region  -->
@@ -59,7 +64,7 @@
     <!--  Settings Fragment Region  -->
     <string name="account">Account</string>
     <string name="you_will_need_to_sign_in_again_to_access_your_account">You will need to sign in again to access your account.</string>
-    <string name="log_out">Log Out</string>
+
     <string name="night">Night</string>
     <string name="day">Day</string>
     <string name="system">System</string>
