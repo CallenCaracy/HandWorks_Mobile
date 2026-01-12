@@ -34,6 +34,7 @@ import handworks_cleaning_service.handworks_mobile.ui.pages.auth.Login;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.Constant;
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
+import handworks_cleaning_service.handworks_mobile.utils.ThemeUtil;
 import handworks_cleaning_service.handworks_mobile.utils.uistate.AuthUiState;
 
 public class UserProfile extends AppCompatActivity {
@@ -109,7 +110,18 @@ public class UserProfile extends AppCompatActivity {
                     // open notifications
                     break;
                 case "Dark Mode":
-                    // toggle dark mode
+                    ThemeUtil.setTheme(this, Constant.THEME_DARK);
+                    Toast.makeText(this, "Dark Mode activated", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "Light Mode":
+                    ThemeUtil.setTheme(this, Constant.THEME_LIGHT);
+                    Toast.makeText(this, "Light Mode activated", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "System Mode":
+                    ThemeUtil.setTheme(this, Constant.THEME_SYSTEM);
+                    Toast.makeText(this, "System Mode activated", Toast.LENGTH_SHORT).show();
                     break;
             }
         });

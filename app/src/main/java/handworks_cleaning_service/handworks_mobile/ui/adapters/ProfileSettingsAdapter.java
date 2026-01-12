@@ -14,6 +14,7 @@ import java.util.List;
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.ui.models.ProfileItem;
 import handworks_cleaning_service.handworks_mobile.utils.Constant;
+import handworks_cleaning_service.handworks_mobile.utils.ThemeUtil;
 
 public class ProfileSettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -52,12 +53,19 @@ public class ProfileSettingsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ProfileItem item = items.get(position);
 
-        if (holder instanceof HeaderVH) {
-            ((HeaderVH) holder).title.setText(item.title);
-        } else {
-            ItemVH vh = (ItemVH) holder;
+        if (holder instanceof ItemVH vh) {
             vh.title.setText(item.title);
             vh.icon.setImageResource(item.iconRes);
+
+            // Highlight active theme
+            int activeTheme = ThemeUtil.getTheme(vh.itemView.getContext());
+            if ((item.title.equals("Dark Mode") && activeTheme == Constant.THEME_DARK) ||
+                    (item.title.equals("Light Mode") && activeTheme == Constant.THEME_LIGHT) ||
+                    (item.title.equals("System Mode") && activeTheme == Constant.THEME_SYSTEM)) {
+                vh.itemView.setAlpha(1f);
+            } else if (item.title.equals("Dark Mode") || item.title.equals("Light Mode") || item.title.equals("System Mode")) {
+                vh.itemView.setAlpha(0.6f); // dim inactive themes
+            }
 
             vh.itemView.setOnClickListener(v -> listener.onItemClick(item));
         }
