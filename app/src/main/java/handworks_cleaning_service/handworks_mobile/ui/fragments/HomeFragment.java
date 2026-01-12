@@ -3,28 +3,21 @@ package handworks_cleaning_service.handworks_mobile.ui.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.clerk.api.Clerk;
-import com.clerk.api.session.Session;
 
 import java.util.Date;
 import java.util.Objects;
 
-import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
-import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.DateUtil;
-import handworks_cleaning_service.handworks_mobile.utils.uistate.SessionUiState;
 
 /**
  * A simple {@link Fragment} subclass.

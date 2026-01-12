@@ -2,6 +2,7 @@ package handworks_cleaning_service.handworks_mobile.ui.pages.user;
 
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +28,10 @@ public class UserProfile extends AppCompatActivity {
         });
 
         ImageView back = findViewById(R.id.btnExitProfile);
+        TextView cleanerName = findViewById(R.id.cleanerFullNameDisplay);
+
+        cleanerName.setText("John Doe");
+
         back.setOnClickListener(v -> finish());
     }
 }

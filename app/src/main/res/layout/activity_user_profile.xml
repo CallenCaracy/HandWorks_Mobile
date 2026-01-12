@@ -9,26 +9,30 @@
     tools:context=".ui.pages.user.UserProfile">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/profileHeader"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/btnExitProfile"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:backgroundTint="@color/colorTertiary"
-            android:padding="4dp"
             android:layout_marginStart="4dp"
             android:layout_marginTop="4dp"
-            android:drawableTint="@color/background"
-            android:src="@drawable/back"
-            android:clickable="true"
-            android:focusable="true"
-            android:tint="@color/textPrimary"
             android:background="@drawable/circle"
+            android:backgroundTint="@color/colorTertiary"
+            android:contentDescription="@string/back"
+            android:clickable="true"
+            android:drawableTint="@color/background"
+            android:focusable="true"
+            android:padding="4dp"
+            android:src="@drawable/back"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintVertical_bias="0.5" />
 
         <TextView
@@ -36,13 +40,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/profile"
-            android:textStyle="bold"
             android:textSize="20sp"
-            app:layout_constraintTop_toTopOf="parent"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.5" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/cleanerFullNameDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/your_name"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileHeader" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,6 +9,7 @@
 
     <!--  User Profile Activity Region  -->
     <string name="profile">Profile</string>
+    <string name="your_name">Your Name</string>
     <!--  User Profile Activity EndRegion  -->
 
     <!--  Login Activity Region  -->
