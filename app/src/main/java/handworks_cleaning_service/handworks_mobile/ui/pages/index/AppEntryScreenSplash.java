@@ -3,7 +3,9 @@ package handworks_cleaning_service.handworks_mobile.ui.pages.index;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -72,13 +74,18 @@ public class AppEntryScreenSplash extends AppCompatActivity {
     private void showRetryUI() {
         progressBar.setVisibility(View.GONE);
 
-        Snackbar.make(
-                findViewById(R.id.main),
-                "Still checking session. Check your internet.",
-                Snackbar.LENGTH_INDEFINITE
-        ).setAction("Retry", v -> {
+        TextView message = findViewById(R.id.tvRetryMessage);
+        Button retryButton = findViewById(R.id.btnRetry);
+
+        message.setVisibility(View.VISIBLE);
+        retryButton.setVisibility(View.VISIBLE);
+
+        retryButton.setOnClickListener(v -> {
+            message.setVisibility(View.GONE);
+            retryButton.setVisibility(View.GONE);
             progressBar.setVisibility(View.VISIBLE);
+
             checkClerkSessionWithRetry();
-        }).show();
+        });
     }
 }
