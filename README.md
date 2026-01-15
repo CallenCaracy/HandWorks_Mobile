@@ -43,7 +43,7 @@ It is directly connected to the backend microservices through a secured API gate
 - 0.2.4: Landing and learn more page feature added
 - 0.2.5: Sign out, forgot password added
 - 0.2.6: Refactors and improvements of clerk api integrations
-- 0.2.7: Migrate settings activity into user profile page, landing page only seen once and get session clerk in splash loading added retry logic
+- 0.2.7: Migrate settings activity into user profile page, landing page only seen once and get session clerk in splash loading added retry logic and checks valid authentication
 
 ---
 
