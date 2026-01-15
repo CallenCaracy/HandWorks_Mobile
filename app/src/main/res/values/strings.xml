@@ -5,6 +5,7 @@
     <string name="handworks_logo">Handworks Logo</string>
     <string name="get_started">Get Started</string>
     <string name="handworks_cleaning_services_2025">© Handworks Cleaning Services 2025</string>
+    <string name="forgot_password">Forgot Password?</string>
     <!--  General Strings EndRegion  -->
 
     <!--  User Profile Activity Region  -->
@@ -23,7 +24,6 @@
     <string name="don_t_have_an_account">Don’t have an account?</string>
     <string name="info_icon">Info icon</string>
     <string name="sign_in">Sign In</string>
-    <string name="forgot_password">Forgot Password?</string>
     <string name="enter_your_password">Enter your password</string>
     <string name="password">Password</string>
     <string name="enter_your_email_address">Enter your email address</string>
@@ -50,28 +50,24 @@
     <string name="back">Back</string>
     <!--  Learn More Activity EndRegion  -->
 
-    <!--  Landing Activity EndRegion  -->
+    <!--  Forgot Password Activity StartRegion  -->
+    <string name="don_t_worry_we_ll_reset_your_password_and_send_you_a_n_link_to_create_a_new_one">Don’t worry, We’ll reset your password and send you a\n link to create a new one : )</string>
+    <string name="send_reset_link">Send Reset Link</string>
+    <string name="resend_email">Resend email</string>
+    <string name="didn_t_receive_the_email">Didn\'t receive the email?</string>
+    <!--  Forgot Password Activity EndRegion  -->
+
+    <!--  Landing Activity StartRegion  -->
     <string name="welcome_n_thanks_for_keeping_spaces_clean_n_glad_to_have_you_on_the_team">Welcome!\nThanks for keeping spaces clean.\nGlad to have you on the team.</string>
     <string name="our_team_of_experienced_and_certified_cleaners_takes_great_pride_in_providing_quality_service_with_a_smile">Our team of experienced and certified cleaners takes great pride in providing quality service with a smile.</string>
     <string name="learn_more">Learn More</string>
     <string name="cleaner_image">Cleaner Image</string>
     <!--  Landing Activity EndRegion  -->
 
-    <!--  Home Fragment Region  -->
+    <!--  Home Fragment StartRegion  -->
     <string name="cleaner_name_display">Cleaner %1$s</string>
     <string name="as_of_display">As of %1$s</string>
     <!--  Home Fragment EndRegion  -->
-
-    <!--  Settings Fragment Region  -->
-    <string name="account">Account</string>
-    <string name="you_will_need_to_sign_in_again_to_access_your_account">You will need to sign in again to access your account.</string>
-
-    <string name="night">Night</string>
-    <string name="day">Day</string>
-    <string name="system">System</string>
-    <string name="appearance">Appearance</string>
-    <string name="settings">Settings</string>
-    <!--  Settings Fragment EndRegion  -->
 
     <!--  slider_item.xml Region  -->
     <string name="user_pfp">User PFP</string>
