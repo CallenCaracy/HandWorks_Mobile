@@ -35,15 +35,26 @@ public class AppEntryScreenSplash extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBarLoading);
         progressBar.setVisibility(View.VISIBLE);
 
-        findViewById(R.id.main).postDelayed(() -> {
-            if (Clerk.INSTANCE.getSession() != null) {
-                Log.d("ClerkSessionToken", Clerk.INSTANCE.getSession().toString());
-                progressBar.setVisibility(View.GONE);
-                NavigationUtil.navigateTo(this, Dashboard.class);
-            } else {
-                progressBar.setVisibility(View.GONE);
-                NavigationUtil.navigateTo(this, Login.class);
-            }
-        }, 400);
+        checkClerkSessionWithRetry();
+    }
+
+    private void checkClerkSessionWithRetry() {
+        final int maxRetries = 3;
+        final int retryDelay = 800;
+        checkSession(0, maxRetries, retryDelay);
+    }
+
+    private void checkSession(int attempt, int maxRetries, int retryDelay) {
+        if (Clerk.INSTANCE.getSession() != null) {
+            Log.d("ClerkSessionToken", Clerk.INSTANCE.getSession().toString());
+            progressBar.setVisibility(View.GONE);
+            NavigationUtil.navigateTo(this, Dashboard.class);
+        } else if (attempt < maxRetries) {
+            findViewById(R.id.main).postDelayed(() ->
+                    checkSession(attempt + 1, maxRetries, retryDelay), retryDelay);
+        } else {
+            progressBar.setVisibility(View.GONE);
+            NavigationUtil.navigateTo(this, Login.class);
+        }
     }
 }

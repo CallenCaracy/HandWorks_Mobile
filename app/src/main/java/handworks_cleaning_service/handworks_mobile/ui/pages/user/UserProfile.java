@@ -1,8 +1,12 @@
 package handworks_cleaning_service.handworks_mobile.ui.pages.user;
 
-import static java.security.AccessController.getContext;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,28 +19,31 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
+import com.bumptech.glide.Glide;
+import com.clerk.api.Clerk;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.ui.adapters.ProfileSettingsAdapter;
 import handworks_cleaning_service.handworks_mobile.ui.models.ProfileItem;
+import handworks_cleaning_service.handworks_mobile.ui.models.ThemeOption;
 import handworks_cleaning_service.handworks_mobile.ui.pages.auth.Login;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.Constant;
+import handworks_cleaning_service.handworks_mobile.utils.DateUtil;
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
 import handworks_cleaning_service.handworks_mobile.utils.ThemeUtil;
 import handworks_cleaning_service.handworks_mobile.utils.uistate.AuthUiState;
 
+@AndroidEntryPoint
 public class UserProfile extends AppCompatActivity {
     private AuthViewModel authViewModel;
     private Button signOut;
@@ -54,8 +61,10 @@ public class UserProfile extends AppCompatActivity {
         });
 
         ImageView back = findViewById(R.id.btnExitProfile);
+        ImageView userPfp = findViewById(R.id.userPfp);
         TextView cleanerFName = findViewById(R.id.cleanerFirstNameDisplay);
         TextView cleanerLName = findViewById(R.id.cleanerLastNameDisplay);
+        TextView joinedAt = findViewById(R.id.joinedValue);
         signOut = findViewById(R.id.btnLogout);
 
         recyclerView = findViewById(R.id.profileRecycler);
@@ -64,8 +73,21 @@ public class UserProfile extends AppCompatActivity {
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         signOutUser();
 
-        cleanerFName.setText("John");
-        cleanerLName.setText("Doe");
+        var user = Clerk.INSTANCE.getUser();
+        if (user != null && user.getCreatedAt() != null){
+            cleanerFName.setText(user.getFirstName());
+            cleanerLName.setText(user.getLastName());
+
+            Glide.with(this)
+                    .load(user.getImageUrl())
+                    .placeholder(R.drawable.pfp_placeholder)
+                    .error(R.drawable.pfp_placeholder)
+                    .circleCrop()
+                    .into(userPfp);
+
+            long createdAt = user.getCreatedAt();
+            joinedAt.setText(DateUtil.getTimeAgo(createdAt));
+        }
 
         back.setOnClickListener(v -> finish());
     }
@@ -78,7 +100,7 @@ public class UserProfile extends AppCompatActivity {
                 .setNegativeButton("No", null)
                 .show());
 
-        authViewModel.getAuthState().observe((LifecycleOwner) getLifecycle(), state -> {
+        authViewModel.getAuthState().observe(this, state -> {
             if (state instanceof AuthUiState.SignedOut) {
                 NavigationUtil.navigateTo(this, Login.class);
             } else if (state instanceof AuthUiState.Error) {
@@ -97,9 +119,7 @@ public class UserProfile extends AppCompatActivity {
 
         items.add(new ProfileItem(Constant.TYPE_HEADER, "Settings", 0));
         items.add(new ProfileItem(Constant.TYPE_ITEM, "Notifications", R.drawable.bell_svgrepo_com));
-        items.add(new ProfileItem(Constant.TYPE_ITEM, "Dark Mode", R.drawable.moon_fog_svgrepo_com));
-        items.add(new ProfileItem(Constant.TYPE_ITEM, "System Mode", R.drawable.system_settings_backup_svgrepo_com));
-        items.add(new ProfileItem(Constant.TYPE_ITEM, "Light Mode", R.drawable.sun_fog_svgrepo_com));
+        items.add(new ProfileItem(Constant.TYPE_ITEM, "Theme", R.drawable.theme));
 
         ProfileSettingsAdapter adapter = new ProfileSettingsAdapter(items, item -> {
             switch (item.title) {
@@ -109,23 +129,67 @@ public class UserProfile extends AppCompatActivity {
                 case "Notifications":
                     // open notifications
                     break;
-                case "Dark Mode":
-                    ThemeUtil.setTheme(this, Constant.THEME_DARK);
-                    Toast.makeText(this, "Dark Mode activated", Toast.LENGTH_SHORT).show();
-                    break;
-
-                case "Light Mode":
-                    ThemeUtil.setTheme(this, Constant.THEME_LIGHT);
-                    Toast.makeText(this, "Light Mode activated", Toast.LENGTH_SHORT).show();
-                    break;
-
-                case "System Mode":
-                    ThemeUtil.setTheme(this, Constant.THEME_SYSTEM);
-                    Toast.makeText(this, "System Mode activated", Toast.LENGTH_SHORT).show();
+                case "Theme":
+                    showThemeModal();
                     break;
             }
         });
 
         recyclerView.setAdapter(adapter);
+    }
+
+    private void showThemeModal() {
+        ThemeOption[] themes = {
+                new ThemeOption("System", R.drawable.system_settings_backup_svgrepo_com),
+                new ThemeOption("Light", R.drawable.sun_fog_svgrepo_com),
+                new ThemeOption("Dark", R.drawable.moon_fog_svgrepo_com)
+        };
+
+        int currentTheme = ThemeUtil.getTheme(this);
+        int checkedItem = switch (currentTheme) {
+            case Constant.THEME_LIGHT -> 1;
+            case Constant.THEME_DARK -> 2;
+            default -> 0;
+        };
+
+        ArrayAdapter<ThemeOption> adapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_singlechoice, themes) {
+            @NonNull
+            @Override
+            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+                if (convertView == null) {
+                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_theme_dialog, parent, false);
+                }
+
+                ThemeOption theme = Objects.requireNonNull(getItem(position), "ThemeOption cannot be null");
+                TextView text = convertView.findViewById(R.id.text);
+                ImageView icon = convertView.findViewById(R.id.icon);
+
+                text.setText(theme.name);
+                icon.setImageResource(theme.iconRes);
+
+                if (ThemeUtil.themeMatchesCurrent(theme, currentTheme)) {
+                    text.setTypeface(null, Typeface.BOLD);
+                    text.setTextColor(getContext().getColor(R.color.colorTertiary));
+                } else {
+                    text.setTypeface(null, Typeface.NORMAL);
+                    text.setTextColor(getContext().getColor(android.R.color.black));
+                }
+
+                return convertView;
+            }
+        };
+
+        new AlertDialog.Builder(this)
+                .setTitle("Select Theme")
+                .setSingleChoiceItems(adapter, checkedItem, (dialog, which) -> {
+                    switch (which) {
+                        case 0 -> ThemeUtil.setTheme(this, Constant.THEME_SYSTEM);
+                        case 1 -> ThemeUtil.setTheme(this, Constant.THEME_LIGHT);
+                        case 2 -> ThemeUtil.setTheme(this, Constant.THEME_DARK);
+                    }
+                    dialog.dismiss();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 }

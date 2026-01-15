@@ -23,7 +23,6 @@ import handworks_cleaning_service.handworks_mobile.ui.fragments.ChatFragment;
 import handworks_cleaning_service.handworks_mobile.ui.fragments.HistoryFragment;
 import handworks_cleaning_service.handworks_mobile.ui.fragments.HomeFragment;
 import handworks_cleaning_service.handworks_mobile.ui.fragments.NotificationFragment;
-import handworks_cleaning_service.handworks_mobile.ui.fragments.SettingsFragment;
 import handworks_cleaning_service.handworks_mobile.ui.pages.user.UserProfile;
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
 
@@ -75,8 +74,6 @@ public class Dashboard extends AppCompatActivity {
                 replaceFrameFragment(new ChatFragment());
             } else if (id == R.id.notificationIcon) {
                 replaceFrameFragment(new NotificationFragment());
-            } else if (id == R.id.settingsIcon) {
-                replaceFrameFragment(new SettingsFragment());
             }
             return true;
         });

@@ -14,7 +14,6 @@ import java.util.List;
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.ui.models.ProfileItem;
 import handworks_cleaning_service.handworks_mobile.utils.Constant;
-import handworks_cleaning_service.handworks_mobile.utils.ThemeUtil;
 
 public class ProfileSettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -56,18 +55,9 @@ public class ProfileSettingsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         if (holder instanceof ItemVH vh) {
             vh.title.setText(item.title);
             vh.icon.setImageResource(item.iconRes);
-
-            // Highlight active theme
-            int activeTheme = ThemeUtil.getTheme(vh.itemView.getContext());
-            if ((item.title.equals("Dark Mode") && activeTheme == Constant.THEME_DARK) ||
-                    (item.title.equals("Light Mode") && activeTheme == Constant.THEME_LIGHT) ||
-                    (item.title.equals("System Mode") && activeTheme == Constant.THEME_SYSTEM)) {
-                vh.itemView.setAlpha(1f);
-            } else if (item.title.equals("Dark Mode") || item.title.equals("Light Mode") || item.title.equals("System Mode")) {
-                vh.itemView.setAlpha(0.6f); // dim inactive themes
-            }
-
             vh.itemView.setOnClickListener(v -> listener.onItemClick(item));
+        } else if (holder instanceof HeaderVH vh) {
+            vh.title.setText(item.title);
         }
     }
 
@@ -80,7 +70,7 @@ public class ProfileSettingsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         TextView title;
         HeaderVH(View itemView) {
             super(itemView);
-            title = (TextView) itemView;
+            title = itemView.findViewById(R.id.optionHeader);
         }
     }
 
