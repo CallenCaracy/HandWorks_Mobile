@@ -16,6 +16,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.clerk.api.Clerk;
+
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.data.dto.LoginRequest;
@@ -42,6 +44,11 @@ public class Login extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        if (Clerk.INSTANCE.isSignedIn()) {
+            Toast.makeText(this, "Already signed in", Toast.LENGTH_SHORT).show();
+            NavigationUtil.navigateTo(this, Dashboard.class);
+        }
+
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         request = new LoginRequest();
         EditText emailEditText = findViewById(R.id.emailField);
