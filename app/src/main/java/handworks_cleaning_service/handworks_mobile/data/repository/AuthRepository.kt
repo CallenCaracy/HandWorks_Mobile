@@ -51,30 +51,57 @@ class AuthRepository @Inject constructor() : AuthApi {
     }
 
     //region Forgot Password/Reset Password
-    override suspend fun createSignIn(email: String, onResult: (SignIn.Status) -> Unit) {
-        SignIn.create(SignIn.CreateParams.Strategy.ResetPasswordEmailCode(email))
-            .onSuccess { onResult(it.status) }
-            .onFailure {
-                Log.e("AuthRepository", it.longErrorMessageOrNull, it.throwable)
-            }
+    override suspend fun createSignIn(email: String): SignIn.Status {
+        return try {
+            SignIn.create(SignIn.CreateParams.Strategy.ResetPasswordEmailCode(email))
+                .onSuccess { result ->
+                    return result.status
+                }
+                .onFailure { error ->
+                    Log.e("AuthRepository", error.longErrorMessageOrNull, error.throwable)
+                    return SignIn.Status.UNKNOWN
+                }
+            SignIn.Status.UNKNOWN
+        } catch (e: Exception) {
+            Log.e("AuthRepository", "createSignIn exception", e)
+            SignIn.Status.UNKNOWN
+        }
     }
 
-    override suspend fun verifyCode(code: String, onResult: (SignIn.Status) -> Unit) {
-        val signIn = Clerk.signIn ?: return
-        signIn.attemptFirstFactor(SignIn.AttemptFirstFactorParams.ResetPasswordEmailCode(code))
-            .onSuccess { onResult(it.status) }
-            .onFailure {
-                Log.e("AuthRepository", it.longErrorMessageOrNull, it.throwable)
-            }
+    override suspend fun verifyCode(code: String): SignIn.Status {
+        val signIn = Clerk.signIn ?: return SignIn.Status.UNKNOWN
+        return try {
+            signIn.attemptFirstFactor(SignIn.AttemptFirstFactorParams.ResetPasswordEmailCode(code))
+                .onSuccess { result ->
+                    return result.status
+                }
+                .onFailure { error ->
+                    Log.e("AuthRepository", error.longErrorMessageOrNull, error.throwable)
+                    return SignIn.Status.UNKNOWN
+                }
+            SignIn.Status.UNKNOWN
+        } catch (e: Exception) {
+            Log.e("AuthRepository", "verifyCode exception", e)
+            SignIn.Status.UNKNOWN
+        }
     }
 
-    override suspend fun setNewPassword(password: String, onResult: (SignIn.Status) -> Unit) {
-        val signIn = Clerk.signIn ?: return
-        signIn.resetPassword(SignIn.ResetPasswordParams(password))
-            .onSuccess { onResult(it.status) }
-            .onFailure {
-                Log.e("AuthRepository", it.longErrorMessageOrNull, it.throwable)
-            }
+    override suspend fun setNewPassword(password: String): SignIn.Status {
+        val signIn = Clerk.signIn ?: return SignIn.Status.UNKNOWN
+        return try {
+            signIn.resetPassword(SignIn.ResetPasswordParams(password))
+                .onSuccess { result ->
+                    return result.status
+                }
+                .onFailure { error ->
+                    Log.e("AuthRepository", error.longErrorMessageOrNull, error.throwable)
+                    return SignIn.Status.UNKNOWN
+                }
+            SignIn.Status.UNKNOWN
+        } catch (e: Exception) {
+            Log.e("AuthRepository", "setNewPassword exception", e)
+            SignIn.Status.UNKNOWN
+        }
     }
     //endregion
 }

@@ -1,5 +1,6 @@
 package handworks_cleaning_service.handworks_mobile.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -79,39 +80,50 @@ class AuthViewModel @Inject constructor(private val repository: AuthRepository) 
 
     //region Forgot Password/Reset Password
     init {
-        combine(Clerk.isInitialized, Clerk.userFlow) { isInitialized, user ->
-            _resetPasswordUiState.value = when {
-                !isInitialized -> ResetPasswordUiState.Loading
-                user != null -> ResetPasswordUiState.Complete
-                else -> ResetPasswordUiState.SignedOut
+        viewModelScope.launch {
+            combine(
+                Clerk.isInitialized,
+                Clerk.userFlow
+            ) { isInitialized, user ->
+                when {
+                    !isInitialized -> ResetPasswordUiState.Loading
+                    user != null -> ResetPasswordUiState.Complete
+                    else -> ResetPasswordUiState.SignedOut
+                }
+            }.collect { state ->
+                _resetPasswordUiState.value = state
             }
         }
     }
 
     fun createSignIn(email: String) {
         viewModelScope.launch {
-            repository.createSignIn(email) { updateStateFromStatus(it) }
+            val status = repository.createSignIn(email)
+            updateStateFromStatus(status)
         }
     }
 
     fun verify(code: String) {
         viewModelScope.launch {
-            repository.verifyCode(code) { updateStateFromStatus(it) }
+            val status = repository.verifyCode(code)
+            updateStateFromStatus(status)
         }
     }
 
-    fun setNewPassword(newPassword: String) {
+    fun setNewPassword(password: String) {
         viewModelScope.launch {
-            repository.setNewPassword(newPassword) { updateStateFromStatus(it) }
+            val status = repository.setNewPassword(password)
+            updateStateFromStatus(status)
         }
     }
 
     private fun updateStateFromStatus(status: SignIn.Status) {
+        Log.d("ResetPassword", "updateStateFromStatus: $status")
         _resetPasswordUiState.value = when (status) {
-            SignIn.Status.COMPLETE -> ResetPasswordUiState.Complete
             SignIn.Status.NEEDS_FIRST_FACTOR -> ResetPasswordUiState.NeedsFirstFactor
             SignIn.Status.NEEDS_SECOND_FACTOR -> ResetPasswordUiState.NeedsSecondFactor
             SignIn.Status.NEEDS_NEW_PASSWORD -> ResetPasswordUiState.NeedsNewPassword
+            SignIn.Status.COMPLETE -> ResetPasswordUiState.Complete
             else -> ResetPasswordUiState.SignedOut
         }
     }

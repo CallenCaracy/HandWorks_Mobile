@@ -12,8 +12,8 @@ interface AuthApi {
     suspend fun signOut(): ClerkResult<Unit, Throwable>
 
     //region Forgot Password/Reset Password
-    suspend fun createSignIn(email: String, onResult: (SignIn.Status) -> Unit)
-    suspend fun verifyCode(code: String, onResult: (SignIn.Status) -> Unit)
-    suspend fun setNewPassword(password: String, onResult: (SignIn.Status) -> Unit)
+    suspend fun createSignIn(email: String): SignIn.Status
+    suspend fun verifyCode(code: String): SignIn.Status
+    suspend fun setNewPassword(password: String): SignIn.Status
     //endregion
 }

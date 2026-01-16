@@ -1,5 +1,6 @@
 package handworks_cleaning_service.handworks_mobile.ui.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,10 +41,10 @@ public class ProfileSettingsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
         if (viewType == Constant.TYPE_HEADER) {
-            View view = inflater.inflate(R.layout.item_profile_header, parent, false);
+            View view = inflater.inflate(R.layout.item_theme_header, parent, false);
             return new HeaderVH(view);
         } else {
-            View view = inflater.inflate(R.layout.item_profile_option, parent, false);
+            View view = inflater.inflate(R.layout.item_theme_options, parent, false);
             return new ItemVH(view);
         }
     }
@@ -53,11 +54,16 @@ public class ProfileSettingsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         ProfileItem item = items.get(position);
 
         if (holder instanceof ItemVH vh) {
-            vh.title.setText(item.title);
-            vh.icon.setImageResource(item.iconRes);
+            if (vh.title == null) Log.e("Adapter", "title is null!");
+            else vh.title.setText(item.title);
+
+            if (vh.icon == null) Log.e("Adapter", "icon is null!");
+            else vh.icon.setImageResource(item.iconRes);
+
             vh.itemView.setOnClickListener(v -> listener.onItemClick(item));
         } else if (holder instanceof HeaderVH vh) {
-            vh.title.setText(item.title);
+            if (vh.title == null) Log.e("Adapter", "header title is null!");
+            else vh.title.setText(item.title);
         }
     }
 

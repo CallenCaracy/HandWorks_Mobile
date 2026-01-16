@@ -25,7 +25,6 @@ import handworks_cleaning_service.handworks_mobile.ui.pages.index.Dashboard;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
 import handworks_cleaning_service.handworks_mobile.utils.uistate.AuthUiState;
-import handworks_cleaning_service.handworks_mobile.utils.uistate.SessionUiState;
 
 @AndroidEntryPoint
 public class Login extends AppCompatActivity {
@@ -54,7 +53,10 @@ public class Login extends AppCompatActivity {
         EditText emailEditText = findViewById(R.id.emailField);
         EditText passwordEditText = findViewById(R.id.passwordField);
         signInBtn = findViewById(R.id.btnSignIn);
+        Button btnForgotPassword = findViewById(R.id.btnForgotPassword);
         progressBar = findViewById(R.id.progressBar);
+
+        btnForgotPassword.setOnClickListener(v -> NavigationUtil.navigateTo(this, ForgotPassword.class));
 
         signInBtn.setOnClickListener(v -> {
             if (!isInternetAvailable(this)) {

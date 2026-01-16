@@ -4,7 +4,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="handworks_logo">Handworks Logo</string>
     <string name="get_started">Get Started</string>
-    <string name="handworks_cleaning_services_2025">© Handworks Cleaning Services 2025</string>
+    <string name="handworks_cleaning_services_2025">© Handworks Cleaning Services 2026</string>
     <string name="forgot_password">Forgot Password?</string>
     <!--  General Strings EndRegion  -->
 
@@ -52,9 +52,12 @@
 
     <!--  Forgot Password Activity StartRegion  -->
     <string name="don_t_worry_we_ll_reset_your_password_and_send_you_a_n_link_to_create_a_new_one">Don’t worry, We’ll reset your password and send you a\n link to create a new one : )</string>
-    <string name="send_reset_link">Send Reset Link</string>
+    <string name="send_reset_link">Send Email</string>
     <string name="resend_email">Resend email</string>
     <string name="didn_t_receive_the_email">Didn\'t receive the email?</string>
+    <string name="enter_reset_code">Enter reset code</string>
+    <string name="reset_password_code">Reset Password Code</string>
+    <string name="validate_code">Validate Code</string>
     <!--  Forgot Password Activity EndRegion  -->
 
     <!--  Landing Activity StartRegion  -->
@@ -80,6 +83,10 @@
 
     <!--  New Strings Region  -->
     <string name="placeholder">Placeholder</string>
+    <string name="enter_new_password">Enter New Password</string>
+    <string name="new_password">New Password</string>
+    <string name="update_password">Update Password</string>
+    <string name="confirm_new_password">Confirm New Password</string>
     <!--  New Strings EndRegion  -->
 
 
