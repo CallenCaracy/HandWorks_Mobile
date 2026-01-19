@@ -1,5 +1,8 @@
 package handworks_cleaning_service.handworks_mobile.ui.pages.index;
 
+import static handworks_cleaning_service.handworks_mobile.utils.Constant.PREFS_NAME;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 
@@ -27,10 +30,15 @@ public class LearnMore extends AppCompatActivity {
             return insets;
         });
 
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+
         getStarted = findViewById(R.id.btnGoToLogIn);
         backToLanding = findViewById(R.id.btnGoBackToLanding);
 
-        getStarted.setOnClickListener(v -> NavigationUtil.navigateTo(this, AppEntryScreenSplash.class));
+        getStarted.setOnClickListener(v -> {
+            prefs.edit().putBoolean("landing_seen", true).apply();
+            NavigationUtil.navigateTo(this, AppEntryScreenSplash.class);
+        });
         backToLanding.setOnClickListener(v -> NavigationUtil.navigateTo(this, LandingPage.class));
     }
 }

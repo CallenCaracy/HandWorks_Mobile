@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.clerk.api.Clerk;
+import com.clerk.api.session.Session;
+import com.clerk.api.user.User;
 
 import java.util.Date;
 import java.util.Objects;
@@ -79,7 +81,15 @@ public class HomeFragment extends Fragment {
 
         Date date = new Date();
         String dateFormatted = DateUtil.formatDateFromIntToString(date);
-        String firstName = Objects.requireNonNull(Objects.requireNonNull(Clerk.INSTANCE.getSession()).getUser()).getFirstName();
+        String firstName = null;
+
+        Session session = Clerk.INSTANCE.getSession();
+        if (session != null) {
+            User user = session.getUser();
+            if (user != null && user.getFirstName() != null) {
+                firstName = user.getFirstName();
+            }
+        }
 
         dateDisplay.setText(getString(R.string.as_of_display, dateFormatted));
         cleanerNameDisplay.setText(getString(R.string.cleaner_name_display, (firstName != null ? firstName : "Error")));

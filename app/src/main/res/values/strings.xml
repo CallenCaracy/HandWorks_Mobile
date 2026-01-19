@@ -17,6 +17,7 @@
     <string name="continue_this">Continue</string>
     <string name="sign_out">Sign Out</string>
     <string name="header">header</string>
+    <string name="_3_5">3.5</string>
     <!--  User Profile Activity EndRegion  -->
 
     <!--  Login Activity Region  -->
@@ -58,6 +59,10 @@
     <string name="enter_reset_code">Enter reset code</string>
     <string name="reset_password_code">Reset Password Code</string>
     <string name="validate_code">Validate Code</string>
+    <string name="enter_new_password">Enter New Password</string>
+    <string name="new_password">New Password</string>
+    <string name="update_password">Update Password</string>
+    <string name="confirm_new_password">Confirm New Password</string>
     <!--  Forgot Password Activity EndRegion  -->
 
     <!--  Landing Activity StartRegion  -->
@@ -81,13 +86,12 @@
     <string name="user_profile_picture">User Profile Picture</string>
     <!--  header.xml EndRegion  -->
 
+    <!--  FullscreenImageView Activity StartRegion  -->
+    <string name="fullscreenimage">fullscreenImage</string>
+    <!--  FullscreenImageView Activity EndRegion  -->
+
     <!--  New Strings Region  -->
     <string name="placeholder">Placeholder</string>
-    <string name="enter_new_password">Enter New Password</string>
-    <string name="new_password">New Password</string>
-    <string name="update_password">Update Password</string>
-    <string name="confirm_new_password">Confirm New Password</string>
     <!--  New Strings EndRegion  -->
-
 
 </resources>

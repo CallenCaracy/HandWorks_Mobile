@@ -64,10 +64,7 @@ public class LandingPage extends AppCompatActivity {
             prefs.edit().putBoolean("landing_seen", true).apply();
             NavigationUtil.navigateTo(this, AppEntryScreenSplash.class);
         });
-        learnMore.setOnClickListener(v -> {
-            prefs.edit().putBoolean("landing_seen", true).apply();
-            NavigationUtil.navigateTo(this, LearnMore.class);
-        });
+        learnMore.setOnClickListener(v -> NavigationUtil.navigateTo(this, LearnMore.class));
     }
     final Runnable slideRunnable = new Runnable() {
         @Override

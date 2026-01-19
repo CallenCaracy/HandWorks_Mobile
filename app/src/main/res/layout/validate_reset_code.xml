@@ -54,6 +54,7 @@
         android:drawableStart="@drawable/outline_chevron_left"
         android:elevation="4dp"
         android:text="@string/back"
+        app:cornerRadius="8dp"
         android:textColor="@color/textPrimary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/codeLayout" />
@@ -67,6 +68,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="24dp"
         android:text="@string/validate_code"
+        app:cornerRadius="8dp"
         android:textColor="@color/textPrimary"
         app:layout_constraintBottom_toBottomOf="@+id/btnBackResetCode"
         app:layout_constraintEnd_toEndOf="parent"

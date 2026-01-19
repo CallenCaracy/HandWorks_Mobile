@@ -65,6 +65,8 @@
             android:id="@+id/userPfp"
             android:layout_width="130dp"
             android:layout_height="132dp"
+            android:clickable="true"
+            android:focusable="true"
             android:src="@drawable/pfp_placeholder"
             android:contentDescription="@string/user_pfp" />
     </androidx.cardview.widget.CardView>
@@ -119,6 +121,16 @@
         android:layout_marginTop="4dp"
         app:layout_constraintStart_toStartOf="@id/joinedLabel"
         app:layout_constraintTop_toBottomOf="@id/joinedValue" />
+
+    <TextView
+        android:id="@+id/ratingValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/_3_5"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/ratingBar"
+        app:layout_constraintStart_toStartOf="@+id/ratingBar"
+        app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/profileRecycler"

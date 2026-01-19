@@ -1,6 +1,6 @@
 package handworks_cleaning_service.handworks_mobile.ui.pages.user;
 
-
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ import handworks_cleaning_service.handworks_mobile.ui.adapters.ProfileSettingsAd
 import handworks_cleaning_service.handworks_mobile.ui.models.ProfileItem;
 import handworks_cleaning_service.handworks_mobile.ui.models.ThemeOption;
 import handworks_cleaning_service.handworks_mobile.ui.pages.auth.Login;
+import handworks_cleaning_service.handworks_mobile.ui.pages.index.FullscreenImageView;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.Constant;
 import handworks_cleaning_service.handworks_mobile.utils.DateUtil;
@@ -65,6 +67,8 @@ public class UserProfile extends AppCompatActivity {
         TextView cleanerFName = findViewById(R.id.cleanerFirstNameDisplay);
         TextView cleanerLName = findViewById(R.id.cleanerLastNameDisplay);
         TextView joinedAt = findViewById(R.id.joinedValue);
+        RatingBar ratingBar = findViewById(R.id.ratingBar);
+        TextView ratingValue = findViewById(R.id.ratingValue);
         signOut = findViewById(R.id.btnLogout);
 
         recyclerView = findViewById(R.id.profileRecycler);
@@ -87,7 +91,17 @@ public class UserProfile extends AppCompatActivity {
 
             long createdAt = user.getCreatedAt();
             joinedAt.setText(DateUtil.getTimeAgo(createdAt));
+
+
+            userPfp.setOnClickListener(v -> {
+                Intent intent = new Intent(this, FullscreenImageView.class);
+                intent.putExtra("image_url", user.getImageUrl());
+                startActivity(intent);
+            });
         }
+
+        ratingBar.setRating(4.5f);
+        ratingValue.setText("4.5");
 
         back.setOnClickListener(v -> finish());
     }
