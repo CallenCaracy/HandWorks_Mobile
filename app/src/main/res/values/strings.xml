@@ -77,6 +77,19 @@
     <string name="as_of_display">As of %1$s</string>
     <!--  Home Fragment EndRegion  -->
 
+    <!--  Notification Fragment StartRegion  -->
+    <string name="no_notifications_yet">No notifications yet</string>
+    <string name="your_notifications_will_appear_here_once_you_ve_received_them">Your notifications will appear here once you\'ve received them.</string>
+    <string name="get_notified">Get notified</string>
+    <string name="later">Later</string>
+    <string name="you_can_adjust_these_settings_later">You can adjust these settings later</string>
+    <string name="your_tasks">Your tasks</string>
+    <string name="get_notified_about_important_stuff">Get notified about important stuff</string>
+    <string name="we_ll_notify_you_when">We\'ll notify you when</string>
+    <string name="earnings">Earnings</string>
+    <string name="updates">Updates</string>
+    <!--  Notification Fragment EndRegion  -->
+
     <!--  slider_item.xml Region  -->
     <string name="user_pfp">User PFP</string>
     <!--  slider_item.xml EndRegion  -->
