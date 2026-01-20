@@ -1,5 +1,7 @@
 package handworks_cleaning_service.handworks_mobile.ui.adapters;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -43,8 +46,11 @@ public class ProfileSettingsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         if (viewType == Constant.TYPE_HEADER) {
             View view = inflater.inflate(R.layout.item_theme_header, parent, false);
             return new HeaderVH(view);
+        } else if (viewType == Constant.TYPE_SWITCH) {
+            View view = inflater.inflate(R.layout.item_tab_switch, parent, false);
+            return new SwitchVH(view);
         } else {
-            View view = inflater.inflate(R.layout.item_theme_options, parent, false);
+            View view = inflater.inflate(R.layout.item_tab_options, parent, false);
             return new ItemVH(view);
         }
     }
@@ -54,17 +60,31 @@ public class ProfileSettingsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         ProfileItem item = items.get(position);
 
         if (holder instanceof ItemVH vh) {
-            if (vh.title == null) Log.e("Adapter", "title is null!");
-            else vh.title.setText(item.title);
-
-            if (vh.icon == null) Log.e("Adapter", "icon is null!");
-            else vh.icon.setImageResource(item.iconRes);
-
+            vh.title.setText(item.title);
+            vh.icon.setImageResource(item.iconRes);
             vh.itemView.setOnClickListener(v -> listener.onItemClick(item));
         } else if (holder instanceof HeaderVH vh) {
-            if (vh.title == null) Log.e("Adapter", "header title is null!");
-            else vh.title.setText(item.title);
+            vh.title.setText(item.title);
+        } else if (holder instanceof SwitchVH vh) {
+            vh.icon.setImageResource(item.iconRes);
+            vh.title.setText(item.title);
+
+            Context context = vh.itemView.getContext();
+            SharedPreferences prefs =
+                    context.getSharedPreferences(Constant.PREFS_NAME, Context.MODE_PRIVATE);
+
+            vh.switchCompat.setOnCheckedChangeListener(null);
+
+            boolean enabled = prefs.getBoolean("Notification_Toggle", false);
+            vh.switchCompat.setChecked(enabled);
+
+            vh.switchCompat.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                prefs.edit()
+                        .putBoolean("Notification_Toggle", isChecked)
+                        .apply();
+            });
         }
+
     }
 
     @Override
@@ -88,6 +108,19 @@ public class ProfileSettingsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             super(itemView);
             icon = itemView.findViewById(R.id.icon);
             title = itemView.findViewById(R.id.title);
+        }
+    }
+
+    static class SwitchVH extends RecyclerView.ViewHolder {
+        ImageView icon;
+        TextView title;
+        SwitchCompat switchCompat;
+
+        SwitchVH(View itemView) {
+            super(itemView);
+            icon = itemView.findViewById(R.id.icon);
+            title = itemView.findViewById(R.id.title);
+            switchCompat = itemView.findViewById(R.id.switchView);
         }
     }
 }

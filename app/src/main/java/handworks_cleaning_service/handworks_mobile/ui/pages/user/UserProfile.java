@@ -1,6 +1,10 @@
 package handworks_cleaning_service.handworks_mobile.ui.pages.user;
 
+import static handworks_cleaning_service.handworks_mobile.utils.Constant.PREFS_NAME;
+
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,6 +21,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -132,7 +137,7 @@ public class UserProfile extends AppCompatActivity {
         items.add(new ProfileItem(Constant.TYPE_ITEM, "Manage user", R.drawable.target_svgrepo_com));
 
         items.add(new ProfileItem(Constant.TYPE_HEADER, "Settings", 0));
-        items.add(new ProfileItem(Constant.TYPE_ITEM, "Notifications", R.drawable.bell_svgrepo_com));
+        items.add(new ProfileItem(Constant.TYPE_SWITCH, "Notifications", R.drawable.bell_svgrepo_com));
         items.add(new ProfileItem(Constant.TYPE_ITEM, "Theme", R.drawable.theme));
 
         ProfileSettingsAdapter adapter = new ProfileSettingsAdapter(items, item -> {
@@ -141,7 +146,12 @@ public class UserProfile extends AppCompatActivity {
                     // open manage user
                     break;
                 case "Notifications":
-                    // open notifications
+                    SharedPreferences prefs = this.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+                    SwitchCompat switchView = findViewById(R.id.switchView);
+
+                    switchView.setChecked(prefs.getBoolean("Notification_Toggle", false));
+
+                    switchView.setOnCheckedChangeListener((btn, checked) -> prefs.edit().putBoolean("Notification_Toggle", checked).apply());
                     break;
                 case "Theme":
                     showThemeModal();
@@ -171,7 +181,7 @@ public class UserProfile extends AppCompatActivity {
             @Override
             public View getView(int position, View convertView, @NonNull ViewGroup parent) {
                 if (convertView == null) {
-                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_theme_dialog, parent, false);
+                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_tab_dialog, parent, false);
                 }
 
                 ThemeOption theme = Objects.requireNonNull(getItem(position), "ThemeOption cannot be null");
@@ -186,7 +196,7 @@ public class UserProfile extends AppCompatActivity {
                     text.setTextColor(getContext().getColor(R.color.colorTertiary));
                 } else {
                     text.setTypeface(null, Typeface.NORMAL);
-                    text.setTextColor(getContext().getColor(android.R.color.black));
+                    text.setTextColor(getContext().getColor(R.color.textPrimary));
                 }
 
                 return convertView;
