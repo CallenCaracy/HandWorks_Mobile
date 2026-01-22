@@ -75,7 +75,24 @@
     <!--  Home Fragment StartRegion  -->
     <string name="cleaner_name_display">Cleaner %1$s</string>
     <string name="as_of_display">As of %1$s</string>
+    <string name="no_work_for_now">No work for now</string>
+    <string name="set_down_and_relax_enjoy_a_drink_or_two">Set down and relax, enjoy a drink or two!</string>
+    <string name="total_ongoing_work">Total ongoing work</string>
+    <string name="as_of_march_8_2026">As of March 8, 2026</string>
+    <string name="_4">4</string>
+    <string name="cleaner_name">Cleaner Name</string>
+    <string name="welcome">Welcome</string>
     <!--  Home Fragment EndRegion  -->
+
+    <!--  History Fragment StartRegion  -->
+    <string name="no_work_history_yet">No work history yet</string>
+    <string name="your_previous_work_will_be_added_and_kept_here">Your previous work will be added and kept here</string>
+    <!--  History Fragment EndRegion  -->
+
+    <!--  Chat Fragment StartRegion  -->
+    <string name="start_sending_messages_or_receive_one_sooner">Start sending messages or receive one sooner</string>
+    <string name="no_conversations_yet">No conversations yet</string>
+    <!--  Chat Fragment EndRegion  -->
 
     <!--  Notification Fragment StartRegion  -->
     <string name="no_notifications_yet">No notifications yet</string>
@@ -102,6 +119,13 @@
     <!--  FullscreenImageView Activity StartRegion  -->
     <string name="fullscreenimage">fullscreenImage</string>
     <!--  FullscreenImageView Activity EndRegion  -->
+
+    <!--  Bottom NavBar.xml StartRegion  -->
+    <string name="chat">Chat</string>
+    <string name="home">Home</string>
+    <string name="history">History</string>
+    <string name="notification">Notification</string>
+    <!--  Bottom NavBar.xml EndRegion  -->
 
     <!--  New Strings Region  -->
     <string name="placeholder">Placeholder</string>

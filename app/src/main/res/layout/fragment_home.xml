@@ -6,6 +6,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragments.HomeFragment">
 
+    <include
+        android:id="@+id/noJobAssignedYet"
+        layout="@layout/no_job_assigned_yet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -17,9 +24,9 @@
             android:layout_margin="16dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -29,64 +36,64 @@
 
                 <TextView
                     android:id="@+id/welcome"
-                    android:text="Welcome"
-                    android:textSize="12sp"
-                    android:textColor="@color/textPrimary"
-                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    tools:ignore="HardcodedText"/>
+                    android:layout_height="wrap_content"
+                    android:text="@string/welcome"
+                    android:textColor="@color/textPrimary"
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/cleanerNameDisplay"
-                    android:text="Cleaner Name"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/textPrimary"
-                    android:layout_marginBottom="12dp"
-                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    tools:ignore="HardcodedText"/>
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:text="@string/cleaner_name"
+                    android:textColor="@color/textPrimary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <!-- Tasks -->
                 <LinearLayout
-                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:text="Total Assigned Work"
-                        android:textSize="12sp"
-                        android:textColor="@color/textPrimary"
-                        android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        tools:ignore="HardcodedText"/>
+                        android:layout_weight="1"
+                        android:text="@string/total_ongoing_work"
+                        android:textColor="@color/textPrimary"
+                        android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/summaryTaskNumberDisplay"
-                        android:text="4"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/textPrimary"
-                        android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
-                        tools:ignore="HardcodedText"/>
+                        android:layout_height="wrap_content"
+                        android:text="@string/_4"
+                        android:textColor="@color/textPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <!-- Date -->
                 <TextView
                     android:id="@+id/dateDisplay"
-                    android:text="As of March 8, 2026"
-                    android:textSize="11sp"
-                    android:textColor="@color/textPrimary"
-                    android:layout_marginTop="8dp"
-                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    tools:ignore="HardcodedText"/>
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/as_of_march_8_2026"
+                    android:textColor="@color/textPrimary"
+                    android:textSize="11sp" />
 
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
+
+        <!--
+            MAKE THE CALENDAR... REFER TO THIS
+            https://github.com/codeWithCal/CalendarTutorialAndroidStudio/blob/WeeklyCalendar/app/src/main/java/codewithcal/au/calendarappexample/Event.java
+        -->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -59,5 +59,4 @@ public class ThemeUtil {
                 || (theme.name.equals("Light") && currentTheme == Constant.THEME_LIGHT)
                 || (theme.name.equals("Dark") && currentTheme == Constant.THEME_DARK);
     }
-
 }

@@ -4,25 +4,21 @@
 
     <item
         android:id="@+id/homeIcon"
-        android:title="Home"
-        android:icon="@drawable/home_icon"
-        tools:ignore="HardcodedText"/>
+        android:title="@string/home"
+        android:icon="@drawable/home_icon"/>
 
     <item
         android:id="@+id/historyIcon"
-        android:title="History"
-        android:icon="@drawable/history_icon"
-        tools:ignore="HardcodedText"/>
+        android:title="@string/history"
+        android:icon="@drawable/history_icon"/>
 
     <item
         android:id="@+id/chatIcon"
-        android:title="Chat"
-        android:icon="@drawable/chat_icon"
-        tools:ignore="HardcodedText"/>
+        android:title="@string/chat"
+        android:icon="@drawable/chat_icon"/>
 
     <item
         android:id="@+id/notificationIcon"
-        android:title="Notification"
-        android:icon="@drawable/notification_icon"
-        tools:ignore="HardcodedText"/>
+        android:title="@string/notification"
+        android:icon="@drawable/notification_icon"/>
 </menu>
