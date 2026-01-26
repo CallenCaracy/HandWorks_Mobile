@@ -2,7 +2,6 @@ package handworks_cleaning_service.handworks_mobile.ui.adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,11 +77,9 @@ public class ProfileSettingsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             boolean enabled = prefs.getBoolean("Notification_Toggle", false);
             vh.switchCompat.setChecked(enabled);
 
-            vh.switchCompat.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                prefs.edit()
-                        .putBoolean("Notification_Toggle", isChecked)
-                        .apply();
-            });
+            vh.switchCompat.setOnCheckedChangeListener((buttonView, isChecked) -> prefs.edit()
+                    .putBoolean("Notification_Toggle", isChecked)
+                    .apply());
         }
 
     }

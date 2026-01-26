@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.clerk.api.Clerk;
+import com.clerk.api.user.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,25 +83,25 @@ public class UserProfile extends AppCompatActivity {
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         signOutUser();
 
-        var user = Clerk.INSTANCE.getUser();
-        if (user != null && user.getCreatedAt() != null){
-            cleanerFName.setText(user.getFirstName());
-            cleanerLName.setText(user.getLastName());
+        User cachedUser = authViewModel.getCachedUser();
+        if (cachedUser != null && cachedUser.getCreatedAt() != null) {
+            cleanerFName.setText(cachedUser.getFirstName());
+            cleanerLName.setText(cachedUser.getLastName());
 
             Glide.with(this)
-                    .load(user.getImageUrl())
+                    .load(cachedUser.getImageUrl())
                     .placeholder(R.drawable.pfp_placeholder)
                     .error(R.drawable.pfp_placeholder)
                     .circleCrop()
                     .into(userPfp);
 
-            long createdAt = user.getCreatedAt();
+            long createdAt = cachedUser.getCreatedAt();
             joinedAt.setText(DateUtil.getTimeAgo(createdAt));
 
 
             userPfp.setOnClickListener(v -> {
                 Intent intent = new Intent(this, FullscreenImageView.class);
-                intent.putExtra("image_url", user.getImageUrl());
+                intent.putExtra("image_url", cachedUser.getImageUrl());
                 startActivity(intent);
             });
         }
