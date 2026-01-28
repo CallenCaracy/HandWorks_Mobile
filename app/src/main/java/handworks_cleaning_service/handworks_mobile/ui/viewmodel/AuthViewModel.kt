@@ -6,16 +6,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.clerk.api.Clerk
-import com.clerk.api.session.Session
 import com.clerk.api.signin.SignIn
-import com.clerk.api.user.get
+import com.clerk.api.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import handworks_cleaning_service.handworks_mobile.data.dto.LoginRequest
 import handworks_cleaning_service.handworks_mobile.data.repository.AuthRepository
 import handworks_cleaning_service.handworks_mobile.utils.Result
 import handworks_cleaning_service.handworks_mobile.utils.uistate.AuthUiState
-import handworks_cleaning_service.handworks_mobile.utils.Constant.DELAY_MILLIS
-import handworks_cleaning_service.handworks_mobile.utils.Constant.MAX_RETRIES
 import handworks_cleaning_service.handworks_mobile.utils.uistate.ResetPasswordUiState
 import handworks_cleaning_service.handworks_mobile.utils.uistate.SessionUiState
 import kotlinx.coroutines.*
@@ -27,11 +24,20 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor(private val repository: AuthRepository) : ViewModel() {
 
-    private val _authState = MutableLiveData<AuthUiState>()
+    private val _authState = MutableLiveData<AuthUiState>(AuthUiState.Idle)
     val authState: LiveData<AuthUiState> get() = _authState
 
-    private val _sessionState = MutableLiveData<SessionUiState>()
+    private val _sessionState = MutableLiveData<SessionUiState>(SessionUiState.Idle)
     val sessionState: LiveData<SessionUiState> get() = _sessionState
+
+    init {
+        val cachedUser = repository.getCachedUser()
+        if (cachedUser != null) {
+            _sessionState.value = SessionUiState.Authenticated(cachedUser)
+        } else {
+            _sessionState.value = SessionUiState.Idle
+        }
+    }
 
     private val _resetPasswordUiState = MutableStateFlow<ResetPasswordUiState>(ResetPasswordUiState.Loading)
     val resetPasswordUiState = _resetPasswordUiState.asStateFlow()
@@ -46,26 +52,29 @@ class AuthViewModel @Inject constructor(private val repository: AuthRepository) 
         }
     }
 
-    fun waitForSessionReady() {
+    fun checkSession() {
         viewModelScope.launch {
             _sessionState.value = SessionUiState.Loading
-            val session = pollSessionWithRetry()
-            if (session != null) {
-                _sessionState.value = SessionUiState.Ready(session)
+
+            while (!repository.isClerkInitialized()) {
+                delay(200)
+            }
+
+            if (!repository.isSignedIn()) {
+                _sessionState.value = SessionUiState.Unauthenticated
+                return@launch
+            }
+
+            val user = repository.getUser()
+            _sessionState.value = if (user != null) {
+                SessionUiState.Authenticated(user)
             } else {
-                _sessionState.value = SessionUiState.Error("Account Session Error")
+                SessionUiState.Unauthenticated
             }
         }
     }
 
-    private suspend fun pollSessionWithRetry(): Session? {
-        repeat(MAX_RETRIES) { _ ->
-            val session = repository.getSession()
-            if (session != null) return session
-            delay(DELAY_MILLIS)
-        }
-        return null
-    }
+    fun getCachedUser(): User? = repository.getCachedUser()
 
     fun signOut() {
         viewModelScope.launch {
@@ -81,39 +90,50 @@ class AuthViewModel @Inject constructor(private val repository: AuthRepository) 
 
     //region Forgot Password/Reset Password
     init {
-        combine(Clerk.isInitialized, Clerk.userFlow) { isInitialized, user ->
-            _resetPasswordUiState.value = when {
-                !isInitialized -> ResetPasswordUiState.Loading
-                user != null -> ResetPasswordUiState.Complete
-                else -> ResetPasswordUiState.SignedOut
+        viewModelScope.launch {
+            combine(
+                Clerk.isInitialized,
+                Clerk.userFlow
+            ) { isInitialized, user ->
+                when {
+                    !isInitialized -> ResetPasswordUiState.Loading
+                    user != null -> ResetPasswordUiState.Complete
+                    else -> ResetPasswordUiState.SignedOut
+                }
+            }.collect { state ->
+                _resetPasswordUiState.value = state
             }
         }
     }
 
     fun createSignIn(email: String) {
         viewModelScope.launch {
-            repository.createSignIn(email) { updateStateFromStatus(it) }
+            val status = repository.createSignIn(email)
+            updateStateFromStatus(status)
         }
     }
 
     fun verify(code: String) {
         viewModelScope.launch {
-            repository.verifyCode(code) { updateStateFromStatus(it) }
+            val status = repository.verifyCode(code)
+            updateStateFromStatus(status)
         }
     }
 
-    fun setNewPassword(newPassword: String) {
+    fun setNewPassword(password: String) {
         viewModelScope.launch {
-            repository.setNewPassword(newPassword) { updateStateFromStatus(it) }
+            val status = repository.setNewPassword(password)
+            updateStateFromStatus(status)
         }
     }
 
     private fun updateStateFromStatus(status: SignIn.Status) {
+        Log.d("ResetPassword", "updateStateFromStatus: $status")
         _resetPasswordUiState.value = when (status) {
-            SignIn.Status.COMPLETE -> ResetPasswordUiState.Complete
             SignIn.Status.NEEDS_FIRST_FACTOR -> ResetPasswordUiState.NeedsFirstFactor
             SignIn.Status.NEEDS_SECOND_FACTOR -> ResetPasswordUiState.NeedsSecondFactor
             SignIn.Status.NEEDS_NEW_PASSWORD -> ResetPasswordUiState.NeedsNewPassword
+            SignIn.Status.COMPLETE -> ResetPasswordUiState.Complete
             else -> ResetPasswordUiState.SignedOut
         }
     }

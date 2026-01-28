@@ -5,14 +5,9 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragments.HistoryFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textSize="30sp"
-        android:text="History Page"
-        android:gravity="center"
-        tools:ignore="HardcodedText" />
+    <include
+        android:id="@+id/noHistoryYet"
+        layout="@layout/no_history_yet"
+        android:visibility="gone" />
 
 </FrameLayout>

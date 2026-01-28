@@ -2,6 +2,7 @@ package handworks_cleaning_service.handworks_mobile.ui.pages.index;
 
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,9 +12,11 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.clerk.api.Clerk;
+import com.clerk.api.user.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -23,9 +26,11 @@ import handworks_cleaning_service.handworks_mobile.ui.fragments.ChatFragment;
 import handworks_cleaning_service.handworks_mobile.ui.fragments.HistoryFragment;
 import handworks_cleaning_service.handworks_mobile.ui.fragments.HomeFragment;
 import handworks_cleaning_service.handworks_mobile.ui.fragments.NotificationFragment;
-import handworks_cleaning_service.handworks_mobile.ui.fragments.SettingsFragment;
+import handworks_cleaning_service.handworks_mobile.ui.pages.auth.Login;
 import handworks_cleaning_service.handworks_mobile.ui.pages.user.UserProfile;
+import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
+import handworks_cleaning_service.handworks_mobile.utils.uistate.SessionUiState;
 
 @AndroidEntryPoint
 public class Dashboard extends AppCompatActivity {
@@ -49,18 +54,19 @@ public class Dashboard extends AppCompatActivity {
             return insets;
         });
 
-        ImageView userPfp = findViewById(R.id.userPfp);
-        String userPfpUrl = null;
-        if (Clerk.INSTANCE.getSession() != null && Clerk.INSTANCE.getSession().getUser() != null) {
-            userPfpUrl = Clerk.INSTANCE.getSession().getUser().getImageUrl();
-        }
+        AuthViewModel authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
-        Glide.with(this)
-                .load(userPfpUrl)
-                .placeholder(R.drawable.pfp_placeholder)
-                .error(R.drawable.pfp_placeholder)
-                .circleCrop()
-                .into(userPfp);
+        ImageView userPfp = findViewById(R.id.userPfp);
+
+        User cachedUser = authViewModel.getCachedUser();
+        if (cachedUser != null) {
+            String userPfpUrl = cachedUser.getImageUrl();
+            Glide.with(this)
+                    .load(userPfpUrl)
+                    .placeholder(R.drawable.pfp_placeholder)
+                    .circleCrop()
+                    .into(userPfp);
+        }
 
         userPfp.setOnClickListener(v -> NavigationUtil.navigateNoFinishTo(this, UserProfile.class));
 
@@ -75,8 +81,6 @@ public class Dashboard extends AppCompatActivity {
                 replaceFrameFragment(new ChatFragment());
             } else if (id == R.id.notificationIcon) {
                 replaceFrameFragment(new NotificationFragment());
-            } else if (id == R.id.settingsIcon) {
-                replaceFrameFragment(new SettingsFragment());
             }
             return true;
         });

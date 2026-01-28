@@ -16,6 +16,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.clerk.api.Clerk;
+
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.data.dto.LoginRequest;
@@ -23,7 +25,6 @@ import handworks_cleaning_service.handworks_mobile.ui.pages.index.Dashboard;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
 import handworks_cleaning_service.handworks_mobile.utils.uistate.AuthUiState;
-import handworks_cleaning_service.handworks_mobile.utils.uistate.SessionUiState;
 
 @AndroidEntryPoint
 public class Login extends AppCompatActivity {
@@ -42,12 +43,20 @@ public class Login extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        if (Clerk.INSTANCE.isSignedIn()) {
+            Toast.makeText(this, "Already signed in", Toast.LENGTH_SHORT).show();
+            NavigationUtil.navigateTo(this, Dashboard.class);
+        }
+
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         request = new LoginRequest();
         EditText emailEditText = findViewById(R.id.emailField);
         EditText passwordEditText = findViewById(R.id.passwordField);
         signInBtn = findViewById(R.id.btnSignIn);
+        Button btnForgotPassword = findViewById(R.id.btnForgotPassword);
         progressBar = findViewById(R.id.progressBar);
+
+        btnForgotPassword.setOnClickListener(v -> NavigationUtil.navigateTo(this, ForgotPassword.class));
 
         signInBtn.setOnClickListener(v -> {
             if (!isInternetAvailable(this)) {

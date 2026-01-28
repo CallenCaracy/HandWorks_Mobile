@@ -1,5 +1,10 @@
 package handworks_cleaning_service.handworks_mobile.ui.fragments;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,8 +12,10 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import handworks_cleaning_service.handworks_mobile.R;
+import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +32,10 @@ public class NotificationFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private View noNotifYet;
+    private View notifIsOff;
+    private Button btnLater;
+    private Button btnGetNotified;
 
     public NotificationFragment() {
         // Required empty public constructor
@@ -60,7 +71,29 @@ public class NotificationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notification, container, false);
+        View view = inflater.inflate(R.layout.fragment_notification, container, false);
+
+        SharedPreferences prefs = view.getContext()
+                .getSharedPreferences("PREFS_NAME", Context.MODE_PRIVATE);
+        boolean isOn = prefs.getBoolean("Notification_Toggle", false);
+
+        notifIsOff = view.findViewById(R.id.notifIsOff);
+        btnLater = view.findViewById(R.id.btnLater);
+        btnGetNotified = view.findViewById(R.id.btnGetNotified);
+
+        notifIsOff.setVisibility(isOn ? View.GONE : View.VISIBLE);
+
+        noNotifYet = view.findViewById(R.id.noNotifYet);
+        int notifCount = 0;
+
+        noNotifYet.setVisibility((notifCount == 0 || !isOn) ? View.VISIBLE : View.GONE);
+
+        btnLater.setOnClickListener(v -> notifIsOff.setVisibility(View.GONE));
+        btnGetNotified.setOnClickListener(v -> {
+            prefs.edit().putBoolean("Notification_Toggle", true).apply();
+            notifIsOff.setVisibility(View.GONE);
+        });
+
+        return view;
     }
 }

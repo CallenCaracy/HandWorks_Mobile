@@ -6,6 +6,10 @@
         <item name="colorTertiary">@color/colorTertiary</item>
         <item name="android:colorBackground">@color/background</item>
         <item name="android:textColorPrimary">@color/textPrimary</item>
+
+<!--        Font Issues We'll Revisit This-->
+<!--        <item name="android:fontFamily">@font/inter_font</item>-->
+<!--        <item name="fontFamily">@font/inter_font</item>-->
     </style>
 
     <style name="Theme.HandWorks_Mobile" parent="Base.Theme.HandWorks_Mobile" />

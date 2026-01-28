@@ -38,11 +38,12 @@ It is directly connected to the backend microservices through a secured API gate
 
 ### 0.2.x - Clerk Auth Api implementation and Kotlin integration to the code base for authenticating throughout the mobile application.
 - 0.2.1: New dependency added Clerk, KSP, Kapt, and Kotlin
-- 0.2.2: Clerk initialized
+- 0.2.2: Clerk initialized and dagger hilt injections on activities/fragments
 - 0.2.3: Added Continuous Integration yml file and bugs
 - 0.2.4: Landing and learn more page feature added
 - 0.2.5: Sign out, forgot password added
 - 0.2.6: Refactors and improvements of clerk api integrations
+- 0.2.7: Migrate settings activity into user profile page, landing page only seen once and get session clerk in splash loading added retry logic and checks valid authentication
 
 ---
 

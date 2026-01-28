@@ -5,14 +5,14 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragments.NotificationFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <include
+        android:id="@+id/noNotifYet"
+        layout="@layout/no_notifcations_yet"
+        android:visibility="gone"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textSize="30sp"
-        android:text="Notification Page"
-        android:gravity="center"
-        tools:ignore="HardcodedText"/>
+    <include
+        android:id="@+id/notifIsOff"
+        layout="@layout/notifications_is_off"
+        android:visibility="gone"/>
 
 </FrameLayout>

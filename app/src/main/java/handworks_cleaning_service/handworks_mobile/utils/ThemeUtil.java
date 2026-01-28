@@ -1,5 +1,7 @@
 package handworks_cleaning_service.handworks_mobile.utils;
 
+import static handworks_cleaning_service.handworks_mobile.utils.Constant.KEY_THEME;
+import static handworks_cleaning_service.handworks_mobile.utils.Constant.PREFS_NAME;
 import static handworks_cleaning_service.handworks_mobile.utils.Constant.THEME_DARK;
 import static handworks_cleaning_service.handworks_mobile.utils.Constant.THEME_LIGHT;
 import static handworks_cleaning_service.handworks_mobile.utils.Constant.THEME_SYSTEM;
@@ -9,10 +11,9 @@ import android.content.SharedPreferences;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
-public class ThemeUtil {
-    private static final String PREFS_NAME = "theme_prefs";
-    private static final String KEY_THEME = "theme_mode";
+import handworks_cleaning_service.handworks_mobile.ui.models.ThemeOption;
 
+public class ThemeUtil {
     public static void applyTheme(Context context) {
         SharedPreferences prefs =
                 context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
@@ -51,5 +52,11 @@ public class ThemeUtil {
         SharedPreferences prefs =
                 context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         return prefs.getInt(KEY_THEME, THEME_SYSTEM);
+    }
+
+    public static boolean themeMatchesCurrent(ThemeOption theme, int currentTheme) {
+        return (theme.name.equals("System") && currentTheme == Constant.THEME_SYSTEM)
+                || (theme.name.equals("Light") && currentTheme == Constant.THEME_LIGHT)
+                || (theme.name.equals("Dark") && currentTheme == Constant.THEME_DARK);
     }
 }
