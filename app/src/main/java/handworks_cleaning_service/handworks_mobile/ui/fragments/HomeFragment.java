@@ -17,7 +17,6 @@ import com.clerk.api.user.User;
 
 import java.util.Date;
 
-
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
@@ -58,6 +57,7 @@ public class HomeFragment extends Fragment {
 
         dateDisplay.setText(getString(R.string.as_of_display, dateFormatted));
         cleanerNameDisplay.setText(getString(R.string.cleaner_name_display, (firstName != null ? firstName : "Error")));
+        totalTaskDisplay.setText("3");
 
         noJobAssignedYet.setVisibility((workCount == 0) ? VISIBLE : GONE);
 

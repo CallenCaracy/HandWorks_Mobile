@@ -2,7 +2,6 @@ package handworks_cleaning_service.handworks_mobile.ui.pages.index;
 
 import android.os.Bundle;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +14,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
-import com.clerk.api.Clerk;
 import com.clerk.api.user.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -26,11 +24,9 @@ import handworks_cleaning_service.handworks_mobile.ui.fragments.ChatFragment;
 import handworks_cleaning_service.handworks_mobile.ui.fragments.HistoryFragment;
 import handworks_cleaning_service.handworks_mobile.ui.fragments.HomeFragment;
 import handworks_cleaning_service.handworks_mobile.ui.fragments.NotificationFragment;
-import handworks_cleaning_service.handworks_mobile.ui.pages.auth.Login;
 import handworks_cleaning_service.handworks_mobile.ui.pages.user.UserProfile;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
-import handworks_cleaning_service.handworks_mobile.utils.uistate.SessionUiState;
 
 @AndroidEntryPoint
 public class Dashboard extends AppCompatActivity {

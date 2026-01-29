@@ -30,7 +30,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.clerk.api.Clerk;
 import com.clerk.api.user.User;
 
 import java.util.ArrayList;
@@ -55,6 +54,9 @@ import handworks_cleaning_service.handworks_mobile.utils.uistate.AuthUiState;
 public class UserProfile extends AppCompatActivity {
     private AuthViewModel authViewModel;
     private Button signOut;
+    private ImageView back, userPfp;
+    private TextView cleanerFName, ratingValue, joinedAt, cleanerLName;
+    private RatingBar ratingBar;
     private RecyclerView recyclerView;
 
     @Override
@@ -68,16 +70,8 @@ public class UserProfile extends AppCompatActivity {
             return insets;
         });
 
-        ImageView back = findViewById(R.id.btnExitProfile);
-        ImageView userPfp = findViewById(R.id.userPfp);
-        TextView cleanerFName = findViewById(R.id.cleanerFirstNameDisplay);
-        TextView cleanerLName = findViewById(R.id.cleanerLastNameDisplay);
-        TextView joinedAt = findViewById(R.id.joinedValue);
-        RatingBar ratingBar = findViewById(R.id.ratingBar);
-        TextView ratingValue = findViewById(R.id.ratingValue);
-        signOut = findViewById(R.id.btnLogout);
+        initWidgets();
 
-        recyclerView = findViewById(R.id.profileRecycler);
         setUpRecyclerView();
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
@@ -110,6 +104,18 @@ public class UserProfile extends AppCompatActivity {
         ratingValue.setText("4.5");
 
         back.setOnClickListener(v -> finish());
+    }
+
+    private void initWidgets() {
+        back = findViewById(R.id.btnExitProfile);
+        userPfp = findViewById(R.id.userPfp);
+        cleanerFName = findViewById(R.id.cleanerFirstNameDisplay);
+        cleanerLName = findViewById(R.id.cleanerLastNameDisplay);
+        joinedAt = findViewById(R.id.joinedValue);
+        ratingBar = findViewById(R.id.ratingBar);
+        ratingValue = findViewById(R.id.ratingValue);
+        signOut = findViewById(R.id.btnLogout);
+        recyclerView = findViewById(R.id.profileRecycler);
     }
 
     private void signOutUser() {

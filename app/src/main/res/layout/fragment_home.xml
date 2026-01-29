@@ -95,6 +95,13 @@
             https://github.com/codeWithCal/CalendarTutorialAndroidStudio/blob/WeeklyCalendar/app/src/main/java/codewithcal/au/calendarappexample/Event.java
         -->
 
+        <include
+            android:id="@+id/calendarComponent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/activity_calendar_component"
+            app:layout_constraintTop_toBottomOf="@+id/summaryCard"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

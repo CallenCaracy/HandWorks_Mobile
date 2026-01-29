@@ -13,7 +13,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import handworks_cleaning_service.handworks_mobile.R;
-import handworks_cleaning_service.handworks_mobile.ui.pages.auth.Login;
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
 
 public class LearnMore extends AppCompatActivity {
@@ -32,13 +31,17 @@ public class LearnMore extends AppCompatActivity {
 
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 
-        getStarted = findViewById(R.id.btnGoToLogIn);
-        backToLanding = findViewById(R.id.btnGoBackToLanding);
+        initWidgets();
 
         getStarted.setOnClickListener(v -> {
             prefs.edit().putBoolean("landing_seen", true).apply();
             NavigationUtil.navigateTo(this, AppEntryScreenSplash.class);
         });
         backToLanding.setOnClickListener(v -> NavigationUtil.navigateTo(this, LandingPage.class));
+    }
+
+    private void initWidgets() {
+        getStarted = findViewById(R.id.btnGoToLogIn);
+        backToLanding = findViewById(R.id.btnGoBackToLanding);
     }
 }

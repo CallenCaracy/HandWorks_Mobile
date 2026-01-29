@@ -48,22 +48,7 @@ class ForgotPassword : ComponentActivity() {
 
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
 
-        emailStep = findViewById(R.id.emailStep)
-        codeStep = findViewById(R.id.codeStep)
-        newPasswordStep = findViewById(R.id.newPasswordStep)
-
-        resetEmailInput = findViewById(R.id.resetEmailField)
-        btnSendResetEmail = findViewById(R.id.btnSendResetEmail)
-        btnBackResetEmail = findViewById(R.id.btnBackResetEmail)
-
-        codeFieldInput = findViewById(R.id.codeField)
-        btnValidateCode = findViewById(R.id.btnValidateCode)
-        btnBackResetCode = findViewById(R.id.btnBackResetCode)
-
-        newPasswordFieldInput = findViewById(R.id.newPasswordField)
-        confirmNewPasswordFieldInput = findViewById(R.id.confirmNewPasswordField)
-        btnUpdatePassword = findViewById(R.id.btnUpdatePassword)
-        btnBackResetPassword = findViewById(R.id.btnBackResetPassword)
+        initWidgets()
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -117,6 +102,25 @@ class ForgotPassword : ComponentActivity() {
                 else -> authViewModel.setNewPassword(newPassword)
             }
         }
+    }
+
+    private fun initWidgets() {
+        emailStep = findViewById(R.id.emailStep)
+        codeStep = findViewById(R.id.codeStep)
+        newPasswordStep = findViewById(R.id.newPasswordStep)
+
+        resetEmailInput = findViewById(R.id.resetEmailField)
+        btnSendResetEmail = findViewById(R.id.btnSendResetEmail)
+        btnBackResetEmail = findViewById(R.id.btnBackResetEmail)
+
+        codeFieldInput = findViewById(R.id.codeField)
+        btnValidateCode = findViewById(R.id.btnValidateCode)
+        btnBackResetCode = findViewById(R.id.btnBackResetCode)
+
+        newPasswordFieldInput = findViewById(R.id.newPasswordField)
+        confirmNewPasswordFieldInput = findViewById(R.id.confirmNewPasswordField)
+        btnUpdatePassword = findViewById(R.id.btnUpdatePassword)
+        btnBackResetPassword = findViewById(R.id.btnBackResetPassword)
     }
 
     private fun showEmailStep() {

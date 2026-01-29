@@ -29,8 +29,9 @@ import handworks_cleaning_service.handworks_mobile.utils.uistate.AuthUiState;
 @AndroidEntryPoint
 public class Login extends AppCompatActivity {
     private ProgressBar progressBar;
-    private Button signInBtn;
+    private Button signInBtn, btnForgotPassword;
     private AuthViewModel authViewModel;
+    private EditText emailEditText, passwordEditText;
     protected LoginRequest request;
 
     @Override
@@ -43,18 +44,15 @@ public class Login extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
         if (Clerk.INSTANCE.isSignedIn()) {
             Toast.makeText(this, "Already signed in", Toast.LENGTH_SHORT).show();
             NavigationUtil.navigateTo(this, Dashboard.class);
         }
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-        request = new LoginRequest();
-        EditText emailEditText = findViewById(R.id.emailField);
-        EditText passwordEditText = findViewById(R.id.passwordField);
-        signInBtn = findViewById(R.id.btnSignIn);
-        Button btnForgotPassword = findViewById(R.id.btnForgotPassword);
-        progressBar = findViewById(R.id.progressBar);
+
+        initWidgets();
 
         btnForgotPassword.setOnClickListener(v -> NavigationUtil.navigateTo(this, ForgotPassword.class));
 
@@ -76,6 +74,16 @@ public class Login extends AppCompatActivity {
         });
         observeAuthState();
     }
+
+    private void initWidgets() {
+        request = new LoginRequest();
+        emailEditText = findViewById(R.id.emailField);
+        passwordEditText = findViewById(R.id.passwordField);
+        signInBtn = findViewById(R.id.btnSignIn);
+        btnForgotPassword = findViewById(R.id.btnForgotPassword);
+        progressBar = findViewById(R.id.progressBar);
+    }
+
     private void observeAuthState() {
         authViewModel.getAuthState().observe(this, uiState -> {
             if (uiState instanceof AuthUiState.Loading) {
