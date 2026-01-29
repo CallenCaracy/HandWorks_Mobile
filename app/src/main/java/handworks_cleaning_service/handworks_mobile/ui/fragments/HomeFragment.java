@@ -1,5 +1,8 @@
 package handworks_cleaning_service.handworks_mobile.ui.fragments;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,8 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.clerk.api.Clerk;
-import com.clerk.api.session.Session;
 import com.clerk.api.user.User;
 
 import java.util.Date;
@@ -41,6 +42,8 @@ public class HomeFragment extends Fragment {
         TextView cleanerNameDisplay = view.findViewById(R.id.cleanerNameDisplay);
         TextView totalTaskDisplay = view.findViewById(R.id.summaryTaskNumberDisplay);
         TextView dateDisplay = view.findViewById(R.id.dateDisplay);
+        View noJobAssignedYet = view.findViewById(R.id.noJobAssignedYet);
+        int workCount = 0;
 
         AuthViewModel authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
@@ -55,6 +58,8 @@ public class HomeFragment extends Fragment {
 
         dateDisplay.setText(getString(R.string.as_of_display, dateFormatted));
         cleanerNameDisplay.setText(getString(R.string.cleaner_name_display, (firstName != null ? firstName : "Error")));
+
+        noJobAssignedYet.setVisibility((workCount == 0) ? VISIBLE : GONE);
 
         return view;
     }
