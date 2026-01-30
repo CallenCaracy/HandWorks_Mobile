@@ -1,8 +1,5 @@
 package handworks_cleaning_service.handworks_mobile.ui.pages.user;
 
-import static handworks_cleaning_service.handworks_mobile.utils.Constant.PREFS_NAME;
-
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -11,9 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +22,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.clerk.api.user.User;
@@ -36,8 +30,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.inject.Inject;
+
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
+import handworks_cleaning_service.handworks_mobile.databinding.ActivityUserProfileBinding;
 import handworks_cleaning_service.handworks_mobile.ui.adapters.ProfileSettingsAdapter;
 import handworks_cleaning_service.handworks_mobile.ui.models.ProfileItem;
 import handworks_cleaning_service.handworks_mobile.ui.models.ThemeOption;
@@ -52,25 +49,25 @@ import handworks_cleaning_service.handworks_mobile.utils.uistate.AuthUiState;
 
 @AndroidEntryPoint
 public class UserProfile extends AppCompatActivity {
+    @Inject
+    SharedPreferences prefs;
     private AuthViewModel authViewModel;
-    private Button signOut;
-    private ImageView back, userPfp;
-    private TextView cleanerFName, ratingValue, joinedAt, cleanerLName;
-    private RatingBar ratingBar;
-    private RecyclerView recyclerView;
+    private ActivityUserProfileBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        binding = ActivityUserProfileBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_user_profile);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        initWidgets();
 
         setUpRecyclerView();
 
@@ -79,47 +76,35 @@ public class UserProfile extends AppCompatActivity {
 
         User cachedUser = authViewModel.getCachedUser();
         if (cachedUser != null && cachedUser.getCreatedAt() != null) {
-            cleanerFName.setText(cachedUser.getFirstName());
-            cleanerLName.setText(cachedUser.getLastName());
+            binding.cleanerFirstNameDisplay.setText(cachedUser.getFirstName());
+            binding.cleanerLastNameDisplay.setText(cachedUser.getLastName());
 
             Glide.with(this)
                     .load(cachedUser.getImageUrl())
                     .placeholder(R.drawable.pfp_placeholder)
                     .error(R.drawable.pfp_placeholder)
                     .circleCrop()
-                    .into(userPfp);
+                    .into(binding.userPfp);
 
             long createdAt = cachedUser.getCreatedAt();
-            joinedAt.setText(DateUtil.getTimeAgo(createdAt));
+            binding.joinedValue.setText(DateUtil.getTimeAgo(createdAt));
 
 
-            userPfp.setOnClickListener(v -> {
+            binding.userPfp.setOnClickListener(v -> {
                 Intent intent = new Intent(this, FullscreenImageView.class);
                 intent.putExtra("image_url", cachedUser.getImageUrl());
                 startActivity(intent);
             });
         }
 
-        ratingBar.setRating(4.5f);
-        ratingValue.setText("4.5");
+        binding.ratingBar.setRating(4.5f);
+        binding.ratingValue.setText("4.5");
 
-        back.setOnClickListener(v -> finish());
-    }
-
-    private void initWidgets() {
-        back = findViewById(R.id.btnExitProfile);
-        userPfp = findViewById(R.id.userPfp);
-        cleanerFName = findViewById(R.id.cleanerFirstNameDisplay);
-        cleanerLName = findViewById(R.id.cleanerLastNameDisplay);
-        joinedAt = findViewById(R.id.joinedValue);
-        ratingBar = findViewById(R.id.ratingBar);
-        ratingValue = findViewById(R.id.ratingValue);
-        signOut = findViewById(R.id.btnLogout);
-        recyclerView = findViewById(R.id.profileRecycler);
+        binding.btnExitProfile.setOnClickListener(v -> finish());
     }
 
     private void signOutUser() {
-        signOut.setOnClickListener(v -> new AlertDialog.Builder(this)
+        binding.btnLogout.setOnClickListener(v -> new AlertDialog.Builder(this)
                 .setTitle("Logout")
                 .setMessage("Are you sure you want to logout?")
                 .setPositiveButton("Yes", (dialog, which) -> authViewModel.signOut())
@@ -136,7 +121,7 @@ public class UserProfile extends AppCompatActivity {
     }
 
     private void setUpRecyclerView() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.profileRecycler.setLayoutManager(new LinearLayoutManager(this));
 
         List<ProfileItem> items = new ArrayList<>();
 
@@ -153,11 +138,9 @@ public class UserProfile extends AppCompatActivity {
                     // open manage user
                     break;
                 case "Notifications":
-                    SharedPreferences prefs = this.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
                     SwitchCompat switchView = findViewById(R.id.switchView);
 
                     switchView.setChecked(prefs.getBoolean("Notification_Toggle", false));
-
                     switchView.setOnCheckedChangeListener((btn, checked) -> prefs.edit().putBoolean("Notification_Toggle", checked).apply());
                     break;
                 case "Theme":
@@ -166,7 +149,7 @@ public class UserProfile extends AppCompatActivity {
             }
         });
 
-        recyclerView.setAdapter(adapter);
+        binding.profileRecycler.setAdapter(adapter);
     }
 
     private void showThemeModal() {

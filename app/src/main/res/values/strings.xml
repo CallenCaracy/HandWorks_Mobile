@@ -143,7 +143,12 @@
     <string name="notification">Notification</string>
     <!--  Bottom NavBar.xml EndRegion  -->
 
-    <!--  New Strings Region  -->
+    <!--  Splash Entry Activity StartRegion  -->
+    <string name="retry">Retry</string>
+    <string name="still_checking_your_session_nplease_check_your_internet_connection">Still checking your session.\nPlease check your internet connection.</string>
+    <!--  Splash Entry Activity EndRegion  -->
+
+    <!--  New Strings StartRegion  -->
     <string name="placeholder">Placeholder</string>
     <!--  New Strings EndRegion  -->
 

@@ -1,5 +1,7 @@
 package handworks_cleaning_service.handworks_mobile.di;
 
+import static handworks_cleaning_service.handworks_mobile.utils.Constant.PREFS_NAME;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -19,7 +21,7 @@ public class AppModule {
     @Provides
     @Singleton
     public SharedPreferences provideSharedPrefs(@ApplicationContext Context context) {
-        return context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
     }
 
     @Provides

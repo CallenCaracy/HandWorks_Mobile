@@ -37,22 +37,21 @@ public class Dashboard extends AppCompatActivity {
 
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         EdgeToEdge.enable(this);
+
         ActivityDashboardBinding binding = ActivityDashboardBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
+
         if (savedInstanceState == null) {
             replaceFrameFragment(new HomeFragment());
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(bottomNav, (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNavigationView, (v, insets) -> {
             int bottomInset = insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom;
             v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), bottomInset);
             return insets;
         });
 
         AuthViewModel authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-
-        ImageView userPfp = findViewById(R.id.userPfp);
 
         User cachedUser = authViewModel.getCachedUser();
         if (cachedUser != null) {
@@ -61,10 +60,10 @@ public class Dashboard extends AppCompatActivity {
                     .load(userPfpUrl)
                     .placeholder(R.drawable.pfp_placeholder)
                     .circleCrop()
-                    .into(userPfp);
+                    .into(binding.header.userPfp);
         }
 
-        userPfp.setOnClickListener(v -> NavigationUtil.navigateNoFinishTo(this, UserProfile.class));
+        binding.header.userPfp.setOnClickListener(v -> NavigationUtil.navigateNoFinishTo(this, UserProfile.class));
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();

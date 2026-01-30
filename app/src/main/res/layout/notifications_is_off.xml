@@ -126,7 +126,7 @@
         android:gravity="center"
         android:layout_marginBottom="10dp"
         android:text="@string/you_can_adjust_these_settings_later"
-        android:textColor="@color/backgroundLightTransition"
+        android:textColor="@color/gray"
         app:layout_constraintBottom_toTopOf="@+id/btnLater"
         app:layout_constraintStart_toStartOf="@+id/btnLater" />
 

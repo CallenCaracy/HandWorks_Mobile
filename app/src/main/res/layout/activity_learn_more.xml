@@ -223,8 +223,8 @@
         android:layout_height="wrap_content"
         android:text="@string/get_started"
         app:cornerRadius="8dp"
-        android:textColor="@color/textSecondary"
-        android:backgroundTint="@color/colorTertiary"
+        android:textColor="@color/whiten"
+        android:backgroundTint="@color/colorPrimary"
         app:layout_constraintTop_toTopOf="@id/btnGoBackToLanding"
         app:layout_constraintStart_toEndOf="@id/btnGoBackToLanding"
         android:layout_marginStart="10dp"
@@ -242,7 +242,8 @@
         app:iconGravity="textStart"
         app:iconPadding="8dp"
         app:cornerRadius="8dp"
-        app:iconTint="@color/textSecondary"
+        android:textColor="@color/darken"
+        app:iconTint="@color/darken"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layoutInfo" />
 

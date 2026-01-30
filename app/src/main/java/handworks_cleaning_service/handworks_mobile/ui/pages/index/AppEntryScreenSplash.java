@@ -2,9 +2,6 @@ package handworks_cleaning_service.handworks_mobile.ui.pages.index;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
+import handworks_cleaning_service.handworks_mobile.databinding.ActivityAppEntryScreenSplashBinding;
 import handworks_cleaning_service.handworks_mobile.ui.pages.auth.Login;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
@@ -22,15 +20,18 @@ import handworks_cleaning_service.handworks_mobile.utils.uistate.SessionUiState;
 
 @AndroidEntryPoint
 public class AppEntryScreenSplash extends AppCompatActivity {
-
-    private ProgressBar progressBar;
+    private ActivityAppEntryScreenSplashBinding binding;
     private AuthViewModel authViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        binding = ActivityAppEntryScreenSplashBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_app_entry_screen_splash);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -39,31 +40,29 @@ public class AppEntryScreenSplash extends AppCompatActivity {
 
         authViewModel = new ViewModelProvider(this)
                 .get(AuthViewModel.class);
-
-        progressBar = findViewById(R.id.progressBarLoading);
         
         authViewModel.getSessionState()
                 .observe(this, state -> {
 
                     if (state instanceof SessionUiState.Loading
                             || state instanceof SessionUiState.Idle) {
-                        progressBar.setVisibility(View.VISIBLE);
+                        binding.progressBarLoading.setVisibility(View.VISIBLE);
                     }
 
                     else if (state instanceof SessionUiState.Authenticated) {
-                        progressBar.setVisibility(View.GONE);
+                        binding.progressBarLoading.setVisibility(View.GONE);
                         NavigationUtil.navigateTo(this, Dashboard.class);
                         finish();
                     }
 
                     else if (state instanceof SessionUiState.Unauthenticated) {
-                        progressBar.setVisibility(View.GONE);
+                        binding.progressBarLoading.setVisibility(View.GONE);
                         NavigationUtil.navigateTo(this, Login.class);
                         finish();
                     }
 
                     else if (state instanceof SessionUiState.Error) {
-                        progressBar.setVisibility(View.GONE);
+                        binding.progressBarLoading.setVisibility(View.GONE);
                         showRetryUI();
                     }
                 });
@@ -72,16 +71,13 @@ public class AppEntryScreenSplash extends AppCompatActivity {
     }
 
     private void showRetryUI() {
-        TextView message = findViewById(R.id.tvRetryMessage);
-        Button retryButton = findViewById(R.id.btnRetry);
+        binding.tvRetryMessage.setVisibility(View.VISIBLE);
+        binding.btnRetry.setVisibility(View.VISIBLE);
 
-        message.setVisibility(View.VISIBLE);
-        retryButton.setVisibility(View.VISIBLE);
-
-        retryButton.setOnClickListener(v -> {
-            message.setVisibility(View.GONE);
-            retryButton.setVisibility(View.GONE);
-            progressBar.setVisibility(View.VISIBLE);
+        binding.btnRetry.setOnClickListener(v -> {
+            binding.tvRetryMessage.setVisibility(View.GONE);
+            binding.btnRetry.setVisibility(View.GONE);
+            binding.progressBarLoading.setVisibility(View.VISIBLE);
 
             authViewModel.checkSession();
         });

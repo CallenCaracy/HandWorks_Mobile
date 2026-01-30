@@ -1,11 +1,14 @@
 package handworks_cleaning_service.handworks_mobile.di;
 
+import com.google.gson.Gson;
+
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
 import javax.inject.Singleton;
 
+import handworks_cleaning_service.handworks_mobile.BuildConfig;
 import handworks_cleaning_service.handworks_mobile.data.remote.UserApi;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -16,10 +19,10 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    public Retrofit provideRetrofit() {
+    public Retrofit provideRetrofit(Gson gson) {
         return new Retrofit.Builder()
-                .baseUrl("https://your-api-url.com/")
-                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(BuildConfig.BASE_URL_DEBUG)
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
     }
 
