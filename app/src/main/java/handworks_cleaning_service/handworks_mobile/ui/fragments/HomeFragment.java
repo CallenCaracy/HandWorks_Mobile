@@ -5,13 +5,13 @@ import static android.view.View.VISIBLE;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.clerk.api.user.User;
 
@@ -19,11 +19,14 @@ import java.util.Date;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
+import handworks_cleaning_service.handworks_mobile.databinding.FragmentHomeBinding;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.DateUtil;
 
 @AndroidEntryPoint
 public class HomeFragment extends Fragment {
+    private FragmentHomeBinding binding;
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -34,14 +37,10 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        binding = FragmentHomeBinding.inflate(inflater, container, false);
 
-        TextView cleanerNameDisplay = view.findViewById(R.id.cleanerNameDisplay);
-        TextView totalTaskDisplay = view.findViewById(R.id.summaryTaskNumberDisplay);
-        TextView dateDisplay = view.findViewById(R.id.dateDisplay);
-        View noJobAssignedYet = view.findViewById(R.id.noJobAssignedYet);
         int workCount = 0;
 
         AuthViewModel authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
@@ -55,12 +54,17 @@ public class HomeFragment extends Fragment {
             firstName = cachedUser.getFirstName();
         }
 
-        dateDisplay.setText(getString(R.string.as_of_display, dateFormatted));
-        cleanerNameDisplay.setText(getString(R.string.cleaner_name_display, (firstName != null ? firstName : "Error")));
-        totalTaskDisplay.setText("3");
+        binding.cleanerNameDisplay.setText(getString(R.string.cleaner_name_display, (firstName != null ? firstName : "Error")));
+        binding.dateDisplay.setText(getString(R.string.as_of_display, dateFormatted));
+        binding.summaryTaskNumberDisplay.setText("3");
+        binding.noJobAssignedYet.getRoot().setVisibility((workCount == 0) ? VISIBLE : GONE);
 
-        noJobAssignedYet.setVisibility((workCount == 0) ? VISIBLE : GONE);
+        return binding.getRoot();
+    }
 
-        return view;
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }
