@@ -2,8 +2,6 @@ package handworks_cleaning_service.handworks_mobile.ui.pages.auth
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.core.view.ViewCompat
@@ -24,16 +22,6 @@ import kotlinx.coroutines.launch
 class ForgotPassword : ComponentActivity() {
     private lateinit var authViewModel: AuthViewModel
     private lateinit var binding: ActivityForgotPasswordBinding
-    private var resetEmailInput: EditText? = null
-    private var codeFieldInput: EditText? = null
-    private var newPasswordFieldInput: EditText? = null
-    private var confirmNewPasswordFieldInput: EditText? = null
-    private var btnSendResetEmail: Button? = null
-    private var btnBackResetEmail: Button? = null
-    private var btnValidateCode: Button? = null
-    private var btnBackResetCode: Button? = null
-    private var btnUpdatePassword: Button? = null
-    private var btnBackResetPassword: Button? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,8 +34,6 @@ class ForgotPassword : ComponentActivity() {
         }
 
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
-
-        initWidgets()
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -67,9 +53,9 @@ class ForgotPassword : ComponentActivity() {
             }
         }
 
-        btnBackResetEmail?.setOnClickListener { NavigationUtil.navigateTo(this, Login::class.java) }
-        btnSendResetEmail?.setOnClickListener {
-            val resetEmail = resetEmailInput?.text.toString().trim()
+        binding.emailStep.btnBackResetEmail.setOnClickListener { NavigationUtil.navigateTo(this, Login::class.java) }
+        binding.emailStep.btnSendResetEmail.setOnClickListener {
+            val resetEmail = binding.emailStep.resetEmailField.text.toString().trim()
             if (resetEmail.isEmpty()) {
                 Toast.makeText(this, "Email is required.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -77,9 +63,9 @@ class ForgotPassword : ComponentActivity() {
             authViewModel.createSignIn(resetEmail)
         }
 
-        btnBackResetCode?.setOnClickListener { showEmailStep() }
-        btnValidateCode?.setOnClickListener {
-            val code = codeFieldInput?.text.toString().trim()
+        binding.codeStep.btnBackResetCode.setOnClickListener { showEmailStep() }
+        binding.codeStep.btnValidateCode.setOnClickListener {
+            val code = binding.codeStep.codeField.text.toString().trim()
             if (code.isEmpty()) {
                 Toast.makeText(this, "Code is required.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -87,10 +73,10 @@ class ForgotPassword : ComponentActivity() {
             authViewModel.verify(code)
         }
 
-        btnBackResetPassword?.setOnClickListener { showCodeStep() }
-        btnUpdatePassword?.setOnClickListener {
-            val newPassword = newPasswordFieldInput?.text.toString()
-            val confirmNewPassword = confirmNewPasswordFieldInput?.text.toString()
+        binding.newPasswordStep.btnBackResetPassword.setOnClickListener { showCodeStep() }
+        binding.newPasswordStep.btnUpdatePassword.setOnClickListener {
+            val newPassword = binding.newPasswordStep.newPasswordField.text.toString()
+            val confirmNewPassword = binding.newPasswordStep.confirmNewPasswordField.text.toString()
             when {
                 newPassword.isEmpty() || confirmNewPassword.isEmpty() ->
                     Toast.makeText(this, "New password is required.", Toast.LENGTH_SHORT).show()
@@ -103,25 +89,10 @@ class ForgotPassword : ComponentActivity() {
         }
     }
 
-    private fun initWidgets() {
-        resetEmailInput = findViewById(R.id.resetEmailField)
-        btnSendResetEmail = findViewById(R.id.btnSendResetEmail)
-        btnBackResetEmail = findViewById(R.id.btnBackResetEmail)
-
-        codeFieldInput = findViewById(R.id.codeField)
-        btnValidateCode = findViewById(R.id.btnValidateCode)
-        btnBackResetCode = findViewById(R.id.btnBackResetCode)
-
-        newPasswordFieldInput = findViewById(R.id.newPasswordField)
-        confirmNewPasswordFieldInput = findViewById(R.id.confirmNewPasswordField)
-        btnUpdatePassword = findViewById(R.id.btnUpdatePassword)
-        btnBackResetPassword = findViewById(R.id.btnBackResetPassword)
-    }
-
     private fun showEmailStep() {
         binding.emailStep.root.visibility = View.VISIBLE
-        resetEmailInput?.visibility = View.VISIBLE
-        btnSendResetEmail?.visibility = View.VISIBLE
+        binding.emailStep.resetEmailField.visibility = View.VISIBLE
+        binding.emailStep.btnSendResetEmail.visibility = View.VISIBLE
 
         binding.codeStep.root.visibility = View.GONE
         binding.newPasswordStep.root.visibility = View.GONE
