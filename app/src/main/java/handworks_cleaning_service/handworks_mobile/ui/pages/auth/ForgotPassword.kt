@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import handworks_cleaning_service.handworks_mobile.R
+import handworks_cleaning_service.handworks_mobile.databinding.ActivityForgotPasswordBinding
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil
 import handworks_cleaning_service.handworks_mobile.utils.uistate.ResetPasswordUiState
@@ -22,9 +23,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class ForgotPassword : ComponentActivity() {
     private lateinit var authViewModel: AuthViewModel
-    private var emailStep: View? = null
-    private var codeStep: View? = null
-    private var newPasswordStep: View? = null
+    private lateinit var binding: ActivityForgotPasswordBinding
     private var resetEmailInput: EditText? = null
     private var codeFieldInput: EditText? = null
     private var newPasswordFieldInput: EditText? = null
@@ -105,10 +104,6 @@ class ForgotPassword : ComponentActivity() {
     }
 
     private fun initWidgets() {
-        emailStep = findViewById(R.id.emailStep)
-        codeStep = findViewById(R.id.codeStep)
-        newPasswordStep = findViewById(R.id.newPasswordStep)
-
         resetEmailInput = findViewById(R.id.resetEmailField)
         btnSendResetEmail = findViewById(R.id.btnSendResetEmail)
         btnBackResetEmail = findViewById(R.id.btnBackResetEmail)
@@ -124,23 +119,23 @@ class ForgotPassword : ComponentActivity() {
     }
 
     private fun showEmailStep() {
-        emailStep?.visibility = View.VISIBLE
+        binding.emailStep.root.visibility = View.VISIBLE
         resetEmailInput?.visibility = View.VISIBLE
         btnSendResetEmail?.visibility = View.VISIBLE
 
-        codeStep?.visibility = View.GONE
-        newPasswordStep?.visibility = View.GONE
+        binding.codeStep.root.visibility = View.GONE
+        binding.newPasswordStep.root.visibility = View.GONE
     }
 
     private fun showCodeStep() {
-        emailStep?.visibility = View.GONE
-        codeStep?.visibility = View.VISIBLE
-        newPasswordStep?.visibility = View.GONE
+        binding.emailStep.root.visibility = View.GONE
+        binding.codeStep.root.visibility = View.VISIBLE
+        binding.newPasswordStep.root.visibility = View.GONE
     }
 
     private fun showNewPasswordStep() {
-        emailStep?.visibility = View.GONE
-        codeStep?.visibility = View.GONE
-        newPasswordStep?.visibility = View.VISIBLE
+        binding.emailStep.root.visibility = View.GONE
+        binding.codeStep.root.visibility = View.GONE
+        binding.newPasswordStep.root.visibility = View.VISIBLE
     }
 }
