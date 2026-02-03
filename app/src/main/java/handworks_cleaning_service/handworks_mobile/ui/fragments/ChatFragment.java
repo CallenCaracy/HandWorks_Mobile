@@ -29,7 +29,6 @@ public class ChatFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         binding = FragmentChatBinding.inflate(inflater, container, false);
 
         int chatCount = 0;

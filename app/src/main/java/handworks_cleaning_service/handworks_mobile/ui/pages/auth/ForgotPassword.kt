@@ -13,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import handworks_cleaning_service.handworks_mobile.R
 import handworks_cleaning_service.handworks_mobile.databinding.ActivityForgotPasswordBinding
+import handworks_cleaning_service.handworks_mobile.ui.pages.index.AppEntryScreenSplash
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil
 import handworks_cleaning_service.handworks_mobile.utils.uistate.ResetPasswordUiState
@@ -25,7 +26,9 @@ class ForgotPassword : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_forgot_password)
+
+        binding = ActivityForgotPasswordBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -44,7 +47,7 @@ class ForgotPassword : ComponentActivity() {
                         ResetPasswordUiState.NeedsNewPassword -> showNewPasswordStep()
                         ResetPasswordUiState.Complete -> {
                             Toast.makeText(this@ForgotPassword, "Password updated!", Toast.LENGTH_SHORT).show()
-                            NavigationUtil.navigateTo(this@ForgotPassword, Login::class.java)
+                            NavigationUtil.navigateTo(this@ForgotPassword, AppEntryScreenSplash::class.java)
                             finish()
                         }
                         else -> { }

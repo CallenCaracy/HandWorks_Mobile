@@ -1,7 +1,6 @@
 package handworks_cleaning_service.handworks_mobile.ui.pages.index;
 
 import android.os.Bundle;
-import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,11 +14,11 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.clerk.api.user.User;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.databinding.ActivityDashboardBinding;
+import handworks_cleaning_service.handworks_mobile.ui.fragments.CalendarFragment;
 import handworks_cleaning_service.handworks_mobile.ui.fragments.ChatFragment;
 import handworks_cleaning_service.handworks_mobile.ui.fragments.HistoryFragment;
 import handworks_cleaning_service.handworks_mobile.ui.fragments.HomeFragment;
@@ -70,6 +69,8 @@ public class Dashboard extends AppCompatActivity {
 
             if (id == R.id.homeIcon) {
                 replaceFrameFragment(new HomeFragment());
+            } else if (id == R.id.calendarIcon) {
+                replaceFrameFragment(new CalendarFragment());
             } else if (id == R.id.historyIcon) {
                 replaceFrameFragment(new HistoryFragment());
             } else if (id == R.id.chatIcon) {

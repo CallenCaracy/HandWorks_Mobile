@@ -29,7 +29,6 @@ public class HistoryFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         binding = FragmentHistoryBinding.inflate(inflater, container, false);
 
         int historyCount = 0;

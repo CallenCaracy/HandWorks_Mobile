@@ -23,9 +23,6 @@
             android:name=".ui.components.WeekViewComponentActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.components.CalendarComponentActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.pages.index.FullscreenImageView"
             android:exported="false" />
         <activity
