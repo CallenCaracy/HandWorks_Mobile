@@ -26,7 +26,7 @@ android {
         debug {
             buildConfigField(
                 type = "String",
-                name = "BASE_URL_DEBUG",
+                name = "BASE_URL",
                 value = "\"https://qa-handworks-api.onrender.com/\"",
             )
         }

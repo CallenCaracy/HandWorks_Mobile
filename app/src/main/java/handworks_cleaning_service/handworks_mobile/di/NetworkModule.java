@@ -21,7 +21,7 @@ public class NetworkModule {
     @Singleton
     public Retrofit provideRetrofit(Gson gson) {
         return new Retrofit.Builder()
-                .baseUrl(BuildConfig.BASE_URL_DEBUG)
+                .baseUrl(BuildConfig.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
     }
