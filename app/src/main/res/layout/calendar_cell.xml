@@ -18,5 +18,15 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintVertical_bias="0.25"/>
 
+    <View
+        android:id="@+id/eventDot"
+        android:layout_width="6dp"
+        android:layout_height="6dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/dot"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/calendarCellText"
+        app:layout_constraintStart_toStartOf="@+id/calendarCellText"
+        app:layout_constraintTop_toBottomOf="@+id/calendarCellText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

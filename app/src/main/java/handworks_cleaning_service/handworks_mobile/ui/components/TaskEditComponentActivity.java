@@ -20,7 +20,7 @@ import handworks_cleaning_service.handworks_mobile.utils.CalendarUtils;
 public class TaskEditComponentActivity extends AppCompatActivity {
     private EditText taskNameET;
     private TextView taskDateTV, taskTimeTV;
-    private LocalTime time;
+    private LocalTime timeStart, timeEnd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +35,10 @@ public class TaskEditComponentActivity extends AppCompatActivity {
 
         initWidgets();
 
-        time = LocalTime.now();
+        timeStart = LocalTime.now();
+        timeEnd = timeStart.plusHours(2);
         taskDateTV.setText("Date: " + CalendarUtils.formattedDate(CalendarUtils.selectedDate));
-        taskTimeTV.setText("Time: " + CalendarUtils.formattedTime(time));
+        taskTimeTV.setText("Time: " + CalendarUtils.formattedTime(timeStart));
     }
 
     private void initWidgets() {
@@ -48,7 +49,7 @@ public class TaskEditComponentActivity extends AppCompatActivity {
 
     public void saveTaskAction(View view) {
         String taskName = taskNameET.getText().toString();
-        Task newTask = new Task(taskName, CalendarUtils.selectedDate, time);
+        Task newTask = new Task(taskName, CalendarUtils.selectedDate, timeStart, timeEnd);
         Task.tasksList.add(newTask);
         finish();
     }

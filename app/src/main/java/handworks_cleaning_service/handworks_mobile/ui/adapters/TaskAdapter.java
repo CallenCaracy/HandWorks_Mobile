@@ -25,8 +25,7 @@ public class TaskAdapter extends ArrayAdapter<Task> {
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent)
-    {
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         Task task = getItem(position);
 
         if (convertView == null)
@@ -35,14 +34,15 @@ public class TaskAdapter extends ArrayAdapter<Task> {
         TextView eventCellTV = convertView.findViewById(R.id.taskCellTV);
 
         String name = (task == null) ? null : task.getName();
-        LocalTime time = (task == null) ? null : task.getTime();
+        LocalTime timeStart = (task == null) ? null : task.getTimeStart();
+        LocalTime timeEnd = (task == null) ? null : task.getTimeEnd();
 
         String eventTitle =
-                ((name == null || name.isEmpty()) ? "Name is null." : name)
+                (name == null || name.isEmpty() ? "Name is null." : name)
                         + " "
-                        + CalendarUtils.formattedTime(
-                        (time == null) ? LocalTime.now() : time
-                );
+                        + CalendarUtils.formattedTime(timeStart == null ? LocalTime.now() : timeStart)
+                        + " - "
+                        + CalendarUtils.formattedTime(timeEnd == null ? LocalTime.now() : timeEnd);
 
         eventCellTV.setText(eventTitle);
         return convertView;

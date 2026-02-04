@@ -1,26 +1,31 @@
 package handworks_cleaning_service.handworks_mobile.ui.adapters;
 
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import handworks_cleaning_service.handworks_mobile.R;
+import handworks_cleaning_service.handworks_mobile.ui.models.Task;
 import handworks_cleaning_service.handworks_mobile.utils.CalendarUtils;
 
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
-    private final ArrayList<LocalDate> days;
+    private ArrayList<LocalDate> days;
     private final OnItemListener onItemListener;
+    private final Map<LocalDate, List<Task>> eventsByDate;
 
-    public CalendarAdapter(ArrayList<LocalDate> days, OnItemListener onItemListener)
-    {
+    public CalendarAdapter(ArrayList<LocalDate> days, Map<LocalDate, List<Task>> eventsByDate, OnItemListener onItemListener) {
         this.days = days;
+        this.eventsByDate = (eventsByDate != null) ? eventsByDate : new HashMap<>();
         this.onItemListener = onItemListener;
     }
 
@@ -39,16 +44,20 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CalendarViewHolder holder, int position)
-    {
+    public void onBindViewHolder(@NonNull CalendarViewHolder holder, int position) {
         final LocalDate date = days.get(position);
-        if(date == null)
+        if(date == null) {
             holder.dayOfMonth.setText("");
-        else
-        {
+            holder.dot.setVisibility(View.GONE);
+        } else {
             holder.dayOfMonth.setText(String.valueOf(date.getDayOfMonth()));
             if(date.equals(CalendarUtils.selectedDate))
-                holder.parentView.setBackgroundColor(Color.LTGRAY);
+                holder.parentView.setBackgroundColor(ContextCompat.getColor(holder.parentView.getContext(),R.color.backgroundLightTransition));
+            if (eventsByDate.containsKey(date) && eventsByDate.get(date) != null) {
+                holder.dot.setVisibility(View.VISIBLE);
+            } else {
+                holder.dot.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -57,8 +66,12 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
         return days.size();
     }
 
-    public interface OnItemListener
-    {
+    public interface OnItemListener {
         void onItemClick(int position, LocalDate date);
+    }
+
+    public void updateDays(ArrayList<LocalDate> newDays) {
+        this.days = newDays;
+        notifyDataSetChanged();
     }
 }
