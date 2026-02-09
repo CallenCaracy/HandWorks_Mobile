@@ -98,6 +98,7 @@
     <string name="feb_2021">Feb 2021</string>
     <string name="weekly">Weekly</string>
     <string name="temp_btn">Temp BTN</string>
+    <string name="show_whole_calendar">Show Whole Calendar</string>
     <!--  Calendar Components Activity EndRegion  -->
 
     <!--  History Fragment StartRegion  -->

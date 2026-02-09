@@ -18,11 +18,11 @@ import com.clerk.api.user.User;
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.databinding.ActivityDashboardBinding;
-import handworks_cleaning_service.handworks_mobile.ui.fragments.CalendarFragment;
 import handworks_cleaning_service.handworks_mobile.ui.fragments.ChatFragment;
 import handworks_cleaning_service.handworks_mobile.ui.fragments.HistoryFragment;
 import handworks_cleaning_service.handworks_mobile.ui.fragments.HomeFragment;
 import handworks_cleaning_service.handworks_mobile.ui.fragments.NotificationFragment;
+import handworks_cleaning_service.handworks_mobile.ui.fragments.WeekViewFragment;
 import handworks_cleaning_service.handworks_mobile.ui.pages.user.UserProfile;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
@@ -70,7 +70,7 @@ public class Dashboard extends AppCompatActivity {
             if (id == R.id.homeIcon) {
                 replaceFrameFragment(new HomeFragment());
             } else if (id == R.id.calendarIcon) {
-                replaceFrameFragment(new CalendarFragment());
+                replaceFrameFragment(new WeekViewFragment());
             } else if (id == R.id.historyIcon) {
                 replaceFrameFragment(new HistoryFragment());
             } else if (id == R.id.chatIcon) {

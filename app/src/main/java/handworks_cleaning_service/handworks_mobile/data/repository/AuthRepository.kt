@@ -29,7 +29,6 @@ import kotlin.coroutines.suspendCoroutine
 
 class AuthRepository @Inject constructor() : AuthApi {
     private var cachedUser: User? = null
-
     override suspend fun signIn(request: LoginRequest): Result<SignIn> {
         return try {
             val signInResult = suspendCoroutine<Result<SignIn>> { cont ->

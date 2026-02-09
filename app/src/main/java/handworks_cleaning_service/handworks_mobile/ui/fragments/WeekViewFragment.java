@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.view.LayoutInflater;
@@ -16,17 +17,24 @@ import android.view.ViewGroup;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
+import dagger.hilt.android.AndroidEntryPoint;
+import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.databinding.FragmentWeekViewBinding;
 import handworks_cleaning_service.handworks_mobile.ui.adapters.CalendarAdapter;
 import handworks_cleaning_service.handworks_mobile.ui.adapters.TaskAdapter;
 import handworks_cleaning_service.handworks_mobile.ui.components.TaskEditComponentActivity;
 import handworks_cleaning_service.handworks_mobile.ui.models.Task;
+import handworks_cleaning_service.handworks_mobile.ui.viewmodel.TaskViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.CalendarUtils;
 
+@AndroidEntryPoint
 public class WeekViewFragment extends Fragment implements CalendarAdapter.OnItemListener {
     private FragmentWeekViewBinding binding;
     private CalendarAdapter calendarAdapter;
+    private TaskViewModel taskViewModel;
 
     public WeekViewFragment() {
         // Required empty public constructor
@@ -44,8 +52,11 @@ public class WeekViewFragment extends Fragment implements CalendarAdapter.OnItem
             CalendarUtils.selectedDate = LocalDate.now();
         }
 
+        taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
+
         binding.prevWeekBtn.setOnClickListener(v -> previousWeekAction());
         binding.nextWeekBtn.setOnClickListener(v -> nextWeekAction());
+        binding.showMonthBtn.setOnClickListener(v -> showWholeCalendar());
 
         return binding.getRoot();
     }
@@ -54,14 +65,23 @@ public class WeekViewFragment extends Fragment implements CalendarAdapter.OnItem
         binding.monthYearTV.setText(monthYearFromDate(CalendarUtils.selectedDate));
         ArrayList<LocalDate> days = daysInWeekArray(CalendarUtils.selectedDate);
 
+        taskViewModel.loadTasksForEmployee("wfsr322fs", true);
+        Map<LocalDate, List<Task>> weekEvents = taskViewModel.getMonthEvents(CalendarUtils.selectedDate);
+        for (LocalDate day : days) {
+            if (weekEvents.containsKey(day)) {
+                weekEvents.put(day, weekEvents.get(day));
+            }
+        }
+
         if (calendarAdapter == null) {
-            calendarAdapter = new CalendarAdapter(days, null, this);
+            calendarAdapter = new CalendarAdapter(days, weekEvents, this);
             binding.calendarRecyclerView.setLayoutManager(
                     new GridLayoutManager(requireContext(), 7)
             );
             binding.calendarRecyclerView.setAdapter(calendarAdapter);
         } else {
             calendarAdapter.updateDays(days);
+            calendarAdapter.updateEvents(weekEvents);
         }
         setTaskAdapter();
     }
@@ -93,6 +113,15 @@ public class WeekViewFragment extends Fragment implements CalendarAdapter.OnItem
         ArrayList<Task> dailyTasks = Task.tasksForDate(CalendarUtils.selectedDate);
         TaskAdapter taskAdapter = new TaskAdapter(requireContext(), dailyTasks);
         binding.taskListView.setAdapter(taskAdapter);
+    }
+
+    public void showWholeCalendar() {
+        requireActivity()
+                .getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.frameLayout, new CalendarFragment())
+                .addToBackStack(null)
+                .commit();
     }
 
     public void newTaskAction() {

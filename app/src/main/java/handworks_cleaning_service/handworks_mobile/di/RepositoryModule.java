@@ -6,8 +6,10 @@ import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
+import handworks_cleaning_service.handworks_mobile.data.remote.TaskApi;
 import handworks_cleaning_service.handworks_mobile.data.remote.UserApi;
 import handworks_cleaning_service.handworks_mobile.data.repository.AuthRepository;
+import handworks_cleaning_service.handworks_mobile.data.repository.TaskRepository;
 import handworks_cleaning_service.handworks_mobile.data.repository.UserRepository;
 
 @Module
@@ -24,5 +26,8 @@ public class RepositoryModule {
     @Singleton
     public UserRepository provideUserRepository(UserApi userApi) { return new UserRepository(userApi); }
 
+    @Provides
+    @Singleton
+    public TaskRepository provideTaskRepository(TaskApi taskApi) { return new TaskRepository(taskApi); }
 }
 
