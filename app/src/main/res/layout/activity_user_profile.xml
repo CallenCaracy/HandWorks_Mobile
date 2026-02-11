@@ -22,11 +22,8 @@
             android:layout_height="35dp"
             android:layout_marginStart="4dp"
             android:layout_marginTop="4dp"
-            android:background="@drawable/circle"
-            android:backgroundTint="@color/colorTertiary"
             android:contentDescription="@string/back"
             android:clickable="true"
-            android:drawableTint="@color/background"
             android:focusable="true"
             android:padding="4dp"
             android:src="@drawable/outline_chevron_left"
@@ -34,7 +31,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.5"
-            app:tint="@color/colorSecondary" />
+            app:tint="@color/textPrimary" />
 
         <TextView
             android:id="@+id/textView3"

@@ -20,6 +20,7 @@ import handworks_cleaning_service.handworks_mobile.utils.CalendarUtils;
 public class TaskAdapter extends ArrayAdapter<Task> {
     public TaskAdapter(@NonNull Context context, List<Task> tasks)
     {
+
         super(context, 0, tasks);
     }
 

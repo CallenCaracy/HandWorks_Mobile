@@ -18,17 +18,18 @@ import java.util.Objects;
 
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.ui.models.Task;
-import handworks_cleaning_service.handworks_mobile.utils.CalendarUtils;
 
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
     private ArrayList<LocalDate> days;
     private final OnItemListener onItemListener;
     private final Map<LocalDate, List<Task>> eventsByDate;
+    private LocalDate selectedDate;
 
-    public CalendarAdapter(ArrayList<LocalDate> days, Map<LocalDate, List<Task>> eventsByDate, OnItemListener onItemListener) {
+    public CalendarAdapter(ArrayList<LocalDate> days, Map<LocalDate, List<Task>> eventsByDate, OnItemListener onItemListener, LocalDate selectedDate) {
         this.days = days;
         this.eventsByDate = (eventsByDate != null) ? eventsByDate : new HashMap<>();
         this.onItemListener = onItemListener;
+        this.selectedDate = selectedDate;
     }
 
     @NonNull
@@ -60,32 +61,12 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
 
         holder.dayOfMonth.setText(String.valueOf(date.getDayOfMonth()));
 
-        holder.parentView.setBackgroundColor(
-                ContextCompat.getColor(holder.parentView.getContext(), R.color.background)
-        );
+        holder.parentView.setBackgroundColor(ContextCompat.getColor(holder.parentView.getContext(), (date.equals(selectedDate) ? R.color.colorSecondary : R.color.background)));
 
-        if (date.equals(CalendarUtils.selectedDate)) {
-            holder.parentView.setBackgroundColor(
-                    ContextCompat.getColor(holder.parentView.getContext(), R.color.colorSecondary)
-            );
-        }
-
-        if (eventsByDate.containsKey(date) && eventsByDate.get(date) != null) {
-            holder.dot.setVisibility(View.VISIBLE);
-        } else {
-            holder.dot.setVisibility(View.GONE);
-        }
+        holder.dot.setVisibility((eventsByDate.containsKey(date) && eventsByDate.get(date) != null) ? View.VISIBLE :  View.GONE);
 
         holder.parentView.setOnClickListener(v -> {
-            int oldPosition = days.indexOf(CalendarUtils.selectedDate);
-
-            CalendarUtils.selectedDate = date;
-
-            int newPosition = days.indexOf(date);
-
-            if (oldPosition != -1) notifyItemChanged(oldPosition);
-            notifyItemChanged(newPosition);
-
+            setSelectedDate(date);
             onItemListener.onItemClick(position, date);
         });
     }
@@ -97,6 +78,16 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
 
     public interface OnItemListener {
         void onItemClick(int position, LocalDate date);
+    }
+
+    public void setSelectedDate(LocalDate newDate) {
+        int oldPosition = days.indexOf(selectedDate);
+        int newPosition = days.indexOf(newDate);
+
+        selectedDate = newDate;
+
+        if (oldPosition != -1) notifyItemChanged(oldPosition);
+        if (newPosition != -1) notifyItemChanged(newPosition);
     }
 
     public void updateDays(List<LocalDate> newDays) {

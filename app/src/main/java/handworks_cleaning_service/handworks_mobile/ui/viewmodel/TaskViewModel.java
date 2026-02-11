@@ -28,16 +28,43 @@ public class TaskViewModel extends ViewModel {
     public TaskViewModel(TaskRepository taskRepository) { this.taskRepository = taskRepository; }
 
     public void loadTasksForEmployee(String employeeId, boolean useFakeData) {
+        String[] taskNames = {"Floor Cleaning", "Window Washing", "Carpet Shampoo", "Bathroom Disinfection", "Testing 123"};
+        LocalDate[] taskDates = {
+                LocalDate.of(2026, 2, 12),
+                LocalDate.of(2025, 12, 30),
+                LocalDate.of(2026, 2, 22),
+                LocalDate.of(2026, 2, 28),
+                LocalDate.of(2026, 2, 1)
+        };
+
+        LocalTime[] taskTimeStarts = {
+                LocalTime.of(12, 0),
+                LocalTime.of(10, 0),
+                LocalTime.of(20, 0),
+                LocalTime.of(15, 0),
+                LocalTime.of(3, 30),
+        };
+
+        LocalTime[] taskTimeEnds = {
+                LocalTime.of(15, 0),
+                LocalTime.of(12, 0),
+                LocalTime.of(23, 0),
+                LocalTime.of(16, 0),
+                LocalTime.of(5, 30),
+        };
+
         if (useFakeData) {
             List<Task> fakeTasks = new ArrayList<>();
-            fakeTasks.add(new Task("Floor Cleaning", LocalDate.of(2026, 2, 4),
-                    LocalTime.of(9, 0), LocalTime.of(11, 0)));
-            fakeTasks.add(new Task("Window Washing", LocalDate.of(2026, 2, 4),
-                    LocalTime.of(12, 0), LocalTime.of(14, 0)));
-            fakeTasks.add(new Task("Carpet Shampoo", LocalDate.of(2026, 2, 5),
-                    LocalTime.of(10, 0), LocalTime.of(12, 0)));
-            fakeTasks.add(new Task("Bathroom Disinfection", LocalDate.of(2026, 2, 6),
-                    LocalTime.of(8, 0), LocalTime.of(9, 30)));
+            for(int i = 0; i < 5; i++){
+                fakeTasks.add(
+                        new Task(
+                                taskNames[i],
+                                taskDates[i],
+                                taskTimeStarts[i],
+                                taskTimeEnds[i]
+                        )
+                );
+            }
 
             Map<LocalDate, List<Task>> map = convertToMap(fakeTasks);
             taskRepository.setEvents(map);
@@ -76,5 +103,9 @@ public class TaskViewModel extends ViewModel {
         return allEvents.entrySet().stream()
                 .filter(entry -> entry.getKey().getMonth() == selectedDate.getMonth())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    public LiveData<Map<LocalDate, List<Task>>> getEvents() {
+        return events;
     }
 }

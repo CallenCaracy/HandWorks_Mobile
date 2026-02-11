@@ -27,7 +27,7 @@ android {
             buildConfigField(
                 type = "String",
                 name = "BASE_URL",
-                value = "\"https://qa-handworks-api.onrender.com/\"",
+                value = "\"http://192.168.1.50:8080\"",
             )
         }
         release {

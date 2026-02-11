@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,7 @@ import handworks_cleaning_service.handworks_mobile.utils.CalendarUtils;
 public class CalendarFragment extends Fragment implements CalendarAdapter.OnItemListener {
     private FragmentCalendarBinding binding;
     private TaskViewModel taskViewModel;
+    private CalendarAdapter calendarAdapter;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -55,6 +57,8 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
         binding.nextMonthBtn.setOnClickListener(v -> nextMonthAction());
         binding.hideMonthBtn.setOnClickListener(v -> hideMonth());
 
+        ((SimpleItemAnimator) binding.calendarRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+
         setMonthView();
 
         return binding.getRoot();
@@ -66,7 +70,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
 
         Map<LocalDate, List<Task>> monthEvents = taskViewModel.getMonthEvents(CalendarUtils.selectedDate);
 
-        CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, monthEvents, this);
+        calendarAdapter = new CalendarAdapter(daysInMonth, monthEvents, this, CalendarUtils.selectedDate);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(requireContext(), 7);
         binding.calendarRecyclerView.setLayoutManager(layoutManager);
         binding.calendarRecyclerView.setAdapter(calendarAdapter);
@@ -90,12 +94,13 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
                 .addToBackStack(null)
                 .commit();
     }
-
+    
     @Override
     public void onItemClick(int position, LocalDate date) {
         if (date == null) return;
 
         CalendarUtils.selectedDate = date;
+        calendarAdapter.setSelectedDate(date);
 
         requireActivity()
                 .getSupportFragmentManager()
