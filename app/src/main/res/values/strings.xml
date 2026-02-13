@@ -99,6 +99,10 @@
     <string name="weekly">Weekly</string>
     <string name="temp_btn">Temp BTN</string>
     <string name="show_whole_calendar">Show Whole Calendar</string>
+    <string name="_08_00_10_00">08:00 – 10:00</string>
+    <string name="cleaning_service">Cleaning Service</string>
+    <string name="task_with_duration">%1$s (%2$d:%3$02d)</string>
+
     <!--  Calendar Components Activity EndRegion  -->
 
     <!--  History Fragment StartRegion  -->
@@ -152,6 +156,7 @@
 
     <!--  New Strings StartRegion  -->
     <string name="placeholder">Placeholder</string>
+    <string name="resend_in_s">Resend in %1$ds</string>
     <!--  New Strings EndRegion  -->
 
 </resources>

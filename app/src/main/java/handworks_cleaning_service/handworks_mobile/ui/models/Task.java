@@ -3,6 +3,7 @@ package handworks_cleaning_service.handworks_mobile.ui.models;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class Task {
     public static ArrayList<Task> tasksList = new ArrayList<>();
@@ -18,11 +19,13 @@ public class Task {
         return tasks;
     }
 
+    private final UUID id;
     private String name;
     private LocalDate date;
     private LocalTime timeStart, timeEnd;
 
-    public Task(String name, LocalDate date, LocalTime timeStart, LocalTime timeEnd) {
+    public Task(UUID id, String name, LocalDate date, LocalTime timeStart, LocalTime timeEnd) {
+        this.id = id;
         this.name = name;
         this.date = date;
         this.timeStart = timeStart;
@@ -37,6 +40,8 @@ public class Task {
     {
         this.name = name;
     }
+
+    public UUID getId() { return id; }
     public LocalDate getDate()
     {
         return date;

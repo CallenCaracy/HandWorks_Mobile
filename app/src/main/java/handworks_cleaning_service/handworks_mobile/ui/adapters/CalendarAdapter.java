@@ -121,34 +121,24 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
         days = new ArrayList<>(newDays);
         diffResult.dispatchUpdatesTo(this);
     }
+
     public void updateEvents(Map<LocalDate, List<Task>> newEvents) {
         Map<LocalDate, List<Task>> oldEvents = new HashMap<>(this.eventsByDate);
-        List<LocalDate> oldKeys = new ArrayList<>(oldEvents.keySet());
-        List<LocalDate> newKeys = new ArrayList<>(newEvents != null ? newEvents.keySet() : List.of());
-
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
-            @Override
-            public int getOldListSize() { return oldKeys.size(); }
-
-            @Override
-            public int getNewListSize() { return newKeys.size(); }
-
-            @Override
-            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                return oldKeys.get(oldItemPosition).equals(newKeys.get(newItemPosition));
-            }
-
-            @Override
-            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                List<Task> oldList = oldEvents.get(oldKeys.get(oldItemPosition));
-                List<Task> newList = newEvents.get(newKeys.get(newItemPosition));
-                return Objects.equals(oldList, newList);
-            }
-        });
 
         this.eventsByDate.clear();
-        if (newEvents != null) this.eventsByDate.putAll(newEvents);
+        if (newEvents != null) {
+            this.eventsByDate.putAll(newEvents);
+        }
 
-        diffResult.dispatchUpdatesTo(this);
+        for (int i = 0; i < days.size(); i++) {
+            LocalDate date = days.get(i);
+
+            boolean oldHasEvent = oldEvents.containsKey(date) && oldEvents.get(date) != null;
+            boolean newHasEvent = this.eventsByDate.containsKey(date) && this.eventsByDate.get(date) != null;
+
+            if (oldHasEvent != newHasEvent) {
+                notifyItemChanged(i);
+            }
+        }
     }
 }

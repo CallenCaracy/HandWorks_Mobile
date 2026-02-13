@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,8 +55,6 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
         binding.previousMonthBtn.setOnClickListener(v -> previousMonthAction());
         binding.nextMonthBtn.setOnClickListener(v -> nextMonthAction());
         binding.hideMonthBtn.setOnClickListener(v -> hideMonth());
-
-        ((SimpleItemAnimator) binding.calendarRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
         setMonthView();
 

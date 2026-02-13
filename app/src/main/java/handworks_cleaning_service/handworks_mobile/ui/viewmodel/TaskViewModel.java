@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -28,6 +29,13 @@ public class TaskViewModel extends ViewModel {
     public TaskViewModel(TaskRepository taskRepository) { this.taskRepository = taskRepository; }
 
     public void loadTasksForEmployee(String employeeId, boolean useFakeData) {
+        UUID[] taskIDs = {
+                UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
+                UUID.fromString("123e4567-e89b-12d3-a456-426614174001"),
+                UUID.fromString("123e4567-e89b-12d3-a456-426614174002"),
+                UUID.fromString("123e4567-e89b-12d3-a456-426614174003"),
+                UUID.fromString("123e4567-e89b-12d3-a456-426614174004"),
+        };
         String[] taskNames = {"Floor Cleaning", "Window Washing", "Carpet Shampoo", "Bathroom Disinfection", "Testing 123"};
         LocalDate[] taskDates = {
                 LocalDate.of(2026, 2, 12),
@@ -58,6 +66,7 @@ public class TaskViewModel extends ViewModel {
             for(int i = 0; i < 5; i++){
                 fakeTasks.add(
                         new Task(
+                                taskIDs[i],
                                 taskNames[i],
                                 taskDates[i],
                                 taskTimeStarts[i],

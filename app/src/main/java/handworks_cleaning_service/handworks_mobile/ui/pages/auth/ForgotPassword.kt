@@ -1,9 +1,12 @@
 package handworks_cleaning_service.handworks_mobile.ui.pages.auth
 
+import android.content.DialogInterface
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.View
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
@@ -64,9 +67,19 @@ class ForgotPassword : ComponentActivity() {
                 return@setOnClickListener
             }
             authViewModel.createSignIn(resetEmail)
+            disable()
         }
 
-        binding.codeStep.btnBackResetCode.setOnClickListener { showEmailStep() }
+        binding.codeStep.btnBackResetCode.setOnClickListener { _ ->
+            AlertDialog.Builder(this)
+                .setTitle("Go Back?")
+                .setMessage("Are you sure you want to go back?")
+                .setPositiveButton(
+                    "Yes"
+                ) { _: DialogInterface?, _: Int -> showEmailStep() }
+                .setNegativeButton("No", null)
+                .show()
+        }
         binding.codeStep.btnValidateCode.setOnClickListener {
             val code = binding.codeStep.codeField.text.toString().trim()
             if (code.isEmpty()) {
@@ -76,7 +89,16 @@ class ForgotPassword : ComponentActivity() {
             authViewModel.verify(code)
         }
 
-        binding.newPasswordStep.btnBackResetPassword.setOnClickListener { showCodeStep() }
+        binding.newPasswordStep.btnBackResetPassword.setOnClickListener { _ ->
+            AlertDialog.Builder(this)
+                .setTitle("Go Back?")
+                .setMessage("Are you sure you want to go back?")
+                .setPositiveButton(
+                    "Yes"
+                ) { _: DialogInterface?, _: Int -> showCodeStep() }
+                .setNegativeButton("No", null)
+                .show()
+        }
         binding.newPasswordStep.btnUpdatePassword.setOnClickListener {
             val newPassword = binding.newPasswordStep.newPasswordField.text.toString()
             val confirmNewPassword = binding.newPasswordStep.confirmNewPasswordField.text.toString()
@@ -111,5 +133,24 @@ class ForgotPassword : ComponentActivity() {
         binding.emailStep.root.visibility = View.GONE
         binding.codeStep.root.visibility = View.GONE
         binding.newPasswordStep.root.visibility = View.VISIBLE
+    }
+
+    private fun disable() {
+        binding.emailStep.btnSendResetEmail.isEnabled = false
+        val cooldownSeconds = 60
+
+        val timer = object : CountDownTimer(cooldownSeconds * 1000L, 1000L) {
+            override fun onTick(millisUntilFinished: Long) {
+                binding.emailStep.btnSendResetEmail.text =
+                    getString(R.string.resend_in_s, millisUntilFinished / 1000)
+            }
+
+            override fun onFinish() {
+
+                binding.emailStep.btnSendResetEmail.isEnabled = true
+                binding.emailStep.btnSendResetEmail.text = getString(R.string.resend_email)
+            }
+        }
+        timer.start()
     }
 }

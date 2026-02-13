@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -108,8 +109,10 @@ public class WeekViewFragment extends Fragment implements CalendarAdapter.OnItem
         List<Task> dailyTasks = events.get(CalendarUtils.selectedDate);
         if (dailyTasks == null) dailyTasks = new ArrayList<>();
 
-        TaskAdapter taskAdapter = new TaskAdapter(requireContext(), dailyTasks);
-        binding.taskListView.setAdapter(taskAdapter);
+        TaskAdapter taskAdapter = new TaskAdapter();
+        binding.taskTimeScheduleRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.taskTimeScheduleRecyclerView.setAdapter(taskAdapter);
+        taskAdapter.submitList(dailyTasks);
     }
 
     public void showWholeCalendar() {

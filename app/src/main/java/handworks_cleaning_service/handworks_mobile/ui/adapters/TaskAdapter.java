@@ -1,51 +1,70 @@
 package handworks_cleaning_service.handworks_mobile.ui.adapters;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 
-import java.time.LocalTime;
-import java.util.List;
+import java.time.Duration;
+import java.util.Locale;
+import java.util.Objects;
 
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.ui.models.Task;
 import handworks_cleaning_service.handworks_mobile.utils.CalendarUtils;
 
-public class TaskAdapter extends ArrayAdapter<Task> {
-    public TaskAdapter(@NonNull Context context, List<Task> tasks)
-    {
+public class TaskAdapter extends ListAdapter<Task, TaskViewHolder> {
 
-        super(context, 0, tasks);
+    public TaskAdapter() {
+        super(DIFF_CALLBACK);
     }
+
+    private static final DiffUtil.ItemCallback<Task> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<>() {
+
+                @Override
+                public boolean areItemsTheSame(@NonNull Task oldItem, @NonNull Task newItem) {
+                    return oldItem.getId().equals(newItem.getId());
+                }
+
+                @Override
+                public boolean areContentsTheSame(@NonNull Task oldItem, @NonNull Task newItem) {
+                    return Objects.equals(oldItem.getName(), newItem.getName())
+                            && Objects.equals(oldItem.getTimeStart(), newItem.getTimeStart())
+                            && Objects.equals(oldItem.getTimeEnd(), newItem.getTimeEnd());
+                }
+            };
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.task_cell, parent, false);
+        return new TaskViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         Task task = getItem(position);
+        Duration duration = Duration.between(task.getTimeStart(), task.getTimeEnd());
+        long hours = duration.toHours();
+        long minutes = duration.toMinutes() % 60;
 
-        if (convertView == null)
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.task_cell, parent, false);
+        String taskText = String.format(Locale.getDefault(),
+                holder.itemView.getContext().getString(R.string.task_with_duration),
+                task.getName(),
+                hours,
+                minutes);
 
-        TextView eventCellTV = convertView.findViewById(R.id.taskCellTV);
+        holder.taskNameTV.setText(taskText);
 
-        String name = (task == null) ? null : task.getName();
-        LocalTime timeStart = (task == null) ? null : task.getTimeStart();
-        LocalTime timeEnd = (task == null) ? null : task.getTimeEnd();
+        String timeText = CalendarUtils.formattedTime(task.getTimeStart())
+                + "\n"
+                + CalendarUtils.formattedTime(task.getTimeEnd());
 
-        String eventTitle =
-                (name == null || name.isEmpty() ? "Name is null." : name)
-                        + " "
-                        + CalendarUtils.formattedTime(timeStart == null ? LocalTime.now() : timeStart)
-                        + " - "
-                        + CalendarUtils.formattedTime(timeEnd == null ? LocalTime.now() : timeEnd);
-
-        eventCellTV.setText(eventTitle);
-        return convertView;
+        holder.timeTV.setText(timeText);
     }
 }
