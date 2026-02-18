@@ -5,7 +5,6 @@ plugins {
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
     alias(libs.plugins.kotlin.android)
-    kotlin("kapt")
 }
 
 android {
@@ -27,7 +26,7 @@ android {
             buildConfigField(
                 type = "String",
                 name = "BASE_URL",
-                value = "\"http://192.168.1.50:8080\"",
+                value = "\"http://192.168.0.128:8080/\"",
             )
         }
         release {
@@ -75,7 +74,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    kapt(libs.hilt.android.compiler)
     implementation(libs.glide.v4151)
-    annotationProcessor(libs.compiler)
+    ksp(libs.hilt.android.compiler)
 }

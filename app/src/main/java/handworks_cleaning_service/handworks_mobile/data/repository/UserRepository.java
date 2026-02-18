@@ -2,7 +2,9 @@ package handworks_cleaning_service.handworks_mobile.data.repository;
 
 import javax.inject.Inject;
 
+import handworks_cleaning_service.handworks_mobile.data.models.employee.Employee;
 import handworks_cleaning_service.handworks_mobile.data.remote.UserApi;
+import retrofit2.Call;
 
 public class UserRepository {
     private final UserApi userApi;
@@ -12,7 +14,7 @@ public class UserRepository {
         this.userApi = userApi;
     }
 
-    public UserApi getUserApi() {
-        return userApi;
+    public Call<Employee> getEmployeeById(String userId) {
+        return userApi.getEmployeeById(userId);
     }
 }

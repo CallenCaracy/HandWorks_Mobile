@@ -41,6 +41,7 @@ import handworks_cleaning_service.handworks_mobile.ui.models.ThemeOption;
 import handworks_cleaning_service.handworks_mobile.ui.pages.auth.Login;
 import handworks_cleaning_service.handworks_mobile.ui.pages.index.FullscreenImageView;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
+import handworks_cleaning_service.handworks_mobile.ui.viewmodel.UserViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.Constant;
 import handworks_cleaning_service.handworks_mobile.utils.DateUtil;
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
@@ -72,6 +73,7 @@ public class UserProfile extends AppCompatActivity {
         setUpRecyclerView();
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        UserViewModel userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         signOutUser();
 
         User cachedUser = authViewModel.getCachedUser();
@@ -95,10 +97,17 @@ public class UserProfile extends AppCompatActivity {
                 intent.putExtra("image_url", cachedUser.getImageUrl());
                 startActivity(intent);
             });
-        }
 
-        binding.ratingBar.setRating(4.5f);
-        binding.ratingValue.setText("4.5");
+            userViewModel.getEmployee().observe(this, employee -> {
+                binding.ratingBar.setRating(((float) employee.getPerformance_score()));
+                binding.ratingValue.setText((int) employee.getPerformance_score());
+            });
+
+            userViewModel.getError().observe(this, error -> {
+                binding.ratingBar.setRating(4.5f);
+                binding.ratingValue.setText("4.5");
+            });
+        }
 
         binding.btnExitProfile.setOnClickListener(v -> finish());
     }

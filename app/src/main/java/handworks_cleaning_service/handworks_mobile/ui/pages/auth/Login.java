@@ -92,7 +92,6 @@ public class Login extends AppCompatActivity {
             if (uiState instanceof AuthUiState.Success) {
                 Toast.makeText(this, "Welcome!", Toast.LENGTH_SHORT).show();
                 NavigationUtil.navigateTo(this, Dashboard.class);
-                finish();
             } else if (uiState instanceof AuthUiState.Error) {
                 String error = ((AuthUiState.Error) uiState).getMessage();
                 Toast.makeText(this, "Login failed: " + error, Toast.LENGTH_LONG).show();

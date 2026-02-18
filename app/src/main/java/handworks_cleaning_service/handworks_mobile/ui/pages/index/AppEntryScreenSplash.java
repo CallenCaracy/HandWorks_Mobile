@@ -51,14 +51,13 @@ public class AppEntryScreenSplash extends AppCompatActivity {
 
                     else if (state instanceof SessionUiState.Authenticated) {
                         binding.progressBarLoading.setVisibility(View.GONE);
+
                         NavigationUtil.navigateTo(this, Dashboard.class);
-                        finish();
                     }
 
                     else if (state instanceof SessionUiState.Unauthenticated) {
                         binding.progressBarLoading.setVisibility(View.GONE);
                         NavigationUtil.navigateTo(this, Login.class);
-                        finish();
                     }
 
                     else if (state instanceof SessionUiState.Error) {

@@ -1,6 +1,7 @@
 package handworks_cleaning_service.handworks_mobile.ui.pages.index;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +26,7 @@ import handworks_cleaning_service.handworks_mobile.ui.fragments.NotificationFrag
 import handworks_cleaning_service.handworks_mobile.ui.fragments.WeekViewFragment;
 import handworks_cleaning_service.handworks_mobile.ui.pages.user.UserProfile;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
+import handworks_cleaning_service.handworks_mobile.ui.viewmodel.UserViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
 
 @AndroidEntryPoint
@@ -51,9 +53,14 @@ public class Dashboard extends AppCompatActivity {
         });
 
         AuthViewModel authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        UserViewModel userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         User cachedUser = authViewModel.getCachedUser();
         if (cachedUser != null) {
+            String clerkUserId = cachedUser.getId();
+            Log.d("clerkUserId", "ID: " + clerkUserId);
+            userViewModel.fetchUser(clerkUserId);
+
             String userPfpUrl = cachedUser.getImageUrl();
             Glide.with(this)
                     .load(userPfpUrl)
