@@ -7,10 +7,12 @@
     tools:context=".ui.fragments.WeekViewFragment">
 
     <LinearLayout
+        android:id="@+id/weekViewLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:padding="10dp"
+        tools:ignore="UselessParent">
 
         <LinearLayout
             android:layout_width="match_parent"

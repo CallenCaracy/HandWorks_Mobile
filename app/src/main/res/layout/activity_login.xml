@@ -92,11 +92,12 @@
             android:id="@+id/emailField"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:textColor="@color/textPrimary"
             android:hint="@string/enter_your_email_address"
             android:inputType="textEmailAddress"
             android:padding="12dp"
-            android:textColorHint="#777777"/>
+            android:textColor="@color/textPrimary"
+            android:textColorHint="#777777"
+            tools:ignore="TextContrastCheck" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Password Label -->
@@ -137,7 +138,8 @@
             android:hint="@string/enter_your_password"
             android:inputType="textPassword"
             android:padding="12dp"
-            android:textColorHint="#777777"/>
+            android:textColorHint="#777777"
+            tools:ignore="TextContrastCheck"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Forgot Password Section -->
@@ -176,7 +178,7 @@
             android:padding="0dp"
             android:text="@string/forgot_password"
             android:textAllCaps="false"
-            android:textColor="#279AF0"
+            android:textColor="@color/colorPrimary"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

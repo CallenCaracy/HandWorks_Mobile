@@ -1,14 +1,15 @@
 package handworks_cleaning_service.handworks_mobile.ui.pages.user;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -184,18 +186,27 @@ public class UserProfile extends AppCompatActivity {
                 }
 
                 ThemeOption theme = Objects.requireNonNull(getItem(position), "ThemeOption cannot be null");
-                TextView text = convertView.findViewById(R.id.text);
-                ImageView icon = convertView.findViewById(R.id.icon);
+                TextView textAndIcon = convertView.findViewById(R.id.textAndIcon);
 
-                text.setText(theme.name);
-                icon.setImageResource(theme.iconRes);
+                textAndIcon.setText(theme.name);
+
+                Context context = getContext();
+                Drawable icon = AppCompatResources.getDrawable(context, theme.iconRes);
+                if (icon != null) {
+                    float scale = context.getResources().getDisplayMetrics().density;
+                    int sizeInPx = (int) (24 * scale + 0.5f);
+                    icon.setBounds(0, 0, sizeInPx, sizeInPx);
+
+                    textAndIcon.setCompoundDrawables(icon, null, null, null);
+                    textAndIcon.setCompoundDrawablePadding(12);
+                }
 
                 if (ThemeUtil.themeMatchesCurrent(theme, currentTheme)) {
-                    text.setTypeface(null, Typeface.BOLD);
-                    text.setTextColor(getContext().getColor(R.color.colorTertiary));
+                    textAndIcon.setTypeface(null, Typeface.BOLD);
+                    textAndIcon.setTextColor(getContext().getColor(R.color.colorTertiary));
                 } else {
-                    text.setTypeface(null, Typeface.NORMAL);
-                    text.setTextColor(getContext().getColor(R.color.textPrimary));
+                    textAndIcon.setTypeface(null, Typeface.NORMAL);
+                    textAndIcon.setTextColor(getContext().getColor(R.color.textPrimary));
                 }
 
                 return convertView;

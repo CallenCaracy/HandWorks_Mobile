@@ -38,8 +38,7 @@ public class AppEntryScreenSplash extends AppCompatActivity {
             return insets;
         });
 
-        authViewModel = new ViewModelProvider(this)
-                .get(AuthViewModel.class);
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         
         authViewModel.getSessionState()
                 .observe(this, state -> {
