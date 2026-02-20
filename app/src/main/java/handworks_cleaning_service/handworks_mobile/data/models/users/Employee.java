@@ -1,24 +1,15 @@
-package handworks_cleaning_service.handworks_mobile.data.models.employee;
-
-import com.google.gson.annotations.SerializedName;
+package handworks_cleaning_service.handworks_mobile.data.models.users;
 
 import handworks_cleaning_service.handworks_mobile.data.models.Account;
 
 public class Employee {
-    @SerializedName("id")
     private String id;
-    @SerializedName("account")
     private Account account;
-    @SerializedName("position")
     private String position;
-    @SerializedName("status")
     private String status;
-    @SerializedName("hire_date")
-    private String hire_date;
-    @SerializedName("num_ratings")
-    private int num_ratings;
-    @SerializedName("performance_score")
     private double performance_score;
+    private String hire_date;
+    private int num_ratings;
 
     public Employee(String id, Account account, String position, String status, String hire_date, int num_ratings, double performance_score) {
         this.id = id;

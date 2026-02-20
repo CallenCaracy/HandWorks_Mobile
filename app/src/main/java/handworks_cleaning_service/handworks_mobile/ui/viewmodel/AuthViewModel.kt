@@ -9,7 +9,7 @@ import com.clerk.api.Clerk
 import com.clerk.api.signin.SignIn
 import com.clerk.api.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
-import handworks_cleaning_service.handworks_mobile.data.dto.LoginRequest
+import handworks_cleaning_service.handworks_mobile.data.dto.auth.LoginRequest
 import handworks_cleaning_service.handworks_mobile.data.repository.AuthRepository
 import handworks_cleaning_service.handworks_mobile.utils.Result
 import handworks_cleaning_service.handworks_mobile.utils.uistate.AuthUiState

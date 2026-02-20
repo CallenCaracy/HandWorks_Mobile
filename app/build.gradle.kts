@@ -26,7 +26,8 @@ android {
             buildConfigField(
                 type = "String",
                 name = "BASE_URL",
-                value = "\"http://192.168.1.8:8080/\"",
+//                value = "\"http://192.168.0.128:8080/api/\"",
+                value = "\"https://qa-handworks-api.onrender.com/api/\"",
             )
         }
         release {
@@ -38,7 +39,7 @@ android {
             buildConfigField(
                 type = "String",
                 name = "BASE_URL",
-                value = "\"https://qa-handworks-api.onrender.com/\"",
+                value = "\"https://qa-handworks-api.onrender.com/api/\"",
             )
         }
     }
@@ -76,4 +77,5 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation(libs.glide.v4151)
     ksp(libs.hilt.android.compiler)
+    implementation(libs.logging.interceptor)
 }

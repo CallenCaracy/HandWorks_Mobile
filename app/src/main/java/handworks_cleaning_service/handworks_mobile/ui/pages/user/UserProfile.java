@@ -102,14 +102,18 @@ public class UserProfile extends AppCompatActivity {
             });
 
             userViewModel.getEmployee().observe(this, employee -> {
-                binding.ratingBar.setRating(((float) employee.getPerformance_score()));
-                binding.ratingValue.setText((int) employee.getPerformance_score());
+                if (employee != null) {
+                    binding.ratingBar.setRating((float) employee.getPerformance_score());
+                    binding.ratingValue.setText(String.valueOf((int) employee.getPerformance_score()));
+                }
             });
 
             userViewModel.getError().observe(this, error -> {
-                binding.ratingBar.setRating(4.5f);
-                binding.ratingValue.setText("4.5");
+                Toast.makeText(this, "Error fetching user info.", Toast.LENGTH_LONG).show();
+                binding.ratingBar.setRating(0.0f);
+                binding.ratingValue.setText(error);
             });
+            userViewModel.loadEmployee(cachedUser.getId());
         }
 
         binding.btnExitProfile.setOnClickListener(v -> finish());

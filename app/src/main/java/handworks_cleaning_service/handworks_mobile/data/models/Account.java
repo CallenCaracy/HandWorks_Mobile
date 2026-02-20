@@ -2,12 +2,12 @@ package handworks_cleaning_service.handworks_mobile.data.models;
 
 public class Account {
     private String id;
-    private String clerk_id;
-    private String email;
     private String first_name;
     private String last_name;
+    private String email;
     private String provider;
     private String role;
+    private String clerk_id;
     private String created_at;
     private String updated_at;
 

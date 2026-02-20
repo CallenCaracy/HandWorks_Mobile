@@ -17,6 +17,7 @@ import handworks_cleaning_service.handworks_mobile.data.remote.UserApi;
 import handworks_cleaning_service.handworks_mobile.data.repository.AuthRepository;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -27,6 +28,9 @@ public class NetworkModule {
     @Provides
     @Singleton
     public OkHttpClient provideOkHttpClient(AuthRepository authRepository) {
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(message -> Log.d("HTTP", message));
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
         return new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
                     Request original = chain.request();
@@ -42,6 +46,7 @@ public class NetworkModule {
 
                     return chain.proceed(builder.build());
                 })
+                .addInterceptor(loggingInterceptor)
                 .build();
     }
 

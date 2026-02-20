@@ -14,7 +14,7 @@ import com.clerk.api.signin.SignIn
 import com.clerk.api.signin.attemptFirstFactor
 import com.clerk.api.signin.resetPassword
 import com.clerk.api.user.User
-import handworks_cleaning_service.handworks_mobile.data.dto.LoginRequest
+import handworks_cleaning_service.handworks_mobile.data.dto.auth.LoginRequest
 import handworks_cleaning_service.handworks_mobile.data.remote.AuthApi
 import handworks_cleaning_service.handworks_mobile.utils.Result
 import handworks_cleaning_service.handworks_mobile.utils.SignInHelper

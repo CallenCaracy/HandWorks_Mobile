@@ -59,7 +59,6 @@ public class Dashboard extends AppCompatActivity {
         if (cachedUser != null) {
             userViewModel.loadEmployee(cachedUser.getId());
             Log.d("clerkUserId", "ID: " + cachedUser.getId());
-            userViewModel.loadEmployee(cachedUser.getId());
 
             String userPfpUrl = cachedUser.getImageUrl();
             Glide.with(this)

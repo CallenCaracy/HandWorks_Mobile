@@ -8,7 +8,8 @@ import androidx.lifecycle.ViewModel;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import handworks_cleaning_service.handworks_mobile.data.models.employee.Employee;
+import handworks_cleaning_service.handworks_mobile.data.models.users.Employee;
+import handworks_cleaning_service.handworks_mobile.data.models.wrappers.UserWrapper;
 import handworks_cleaning_service.handworks_mobile.data.repository.UserRepository;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,23 +37,23 @@ public class UserViewModel extends ViewModel {
     }
 
     public void loadEmployee(String id) {
-
         Employee cached = userRepository.getCachedEmployee();
         if (cached != null) {
             employeeLiveData.setValue(cached);
             return;
         }
 
-        userRepository.fetchEmployee(id, new Callback<Employee>() {
+        userRepository.fetchEmployee("6a0ed6b3-2bc2-4b16-a713-48175fef9a41", new Callback<UserWrapper<Employee>>() {
             @Override
-            public void onResponse(@NonNull Call<Employee> call, @NonNull Response<Employee> response) {
-                if (response.isSuccessful()) {
-                    employeeLiveData.postValue(response.body());
+            public void onResponse(@NonNull Call<UserWrapper<Employee>> call, @NonNull Response<UserWrapper<Employee>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Employee employee = response.body().unwrap();
+                    employeeLiveData.postValue(employee);
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<Employee> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<UserWrapper<Employee>> call, @NonNull Throwable t) {
                 errorLiveData.postValue(t.getMessage());
             }
         });

@@ -17,7 +17,7 @@ import com.clerk.api.Clerk;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
-import handworks_cleaning_service.handworks_mobile.data.dto.LoginRequest;
+import handworks_cleaning_service.handworks_mobile.data.dto.auth.LoginRequest;
 import handworks_cleaning_service.handworks_mobile.databinding.ActivityLoginBinding;
 import handworks_cleaning_service.handworks_mobile.ui.pages.index.Dashboard;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
