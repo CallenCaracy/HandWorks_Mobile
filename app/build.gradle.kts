@@ -26,7 +26,7 @@ android {
             buildConfigField(
                 type = "String",
                 name = "BASE_URL",
-                value = "\"http://192.168.0.128:8080/\"",
+                value = "\"http://192.168.1.8:8080/\"",
             )
         }
         release {

@@ -55,6 +55,7 @@ public class UserProfile extends AppCompatActivity {
     @Inject
     SharedPreferences prefs;
     private AuthViewModel authViewModel;
+    private UserViewModel userViewModel;
     private ActivityUserProfileBinding binding;
 
     @Override
@@ -75,7 +76,7 @@ public class UserProfile extends AppCompatActivity {
         setUpRecyclerView();
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-        UserViewModel userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         signOutUser();
 
         User cachedUser = authViewModel.getCachedUser();
@@ -124,6 +125,8 @@ public class UserProfile extends AppCompatActivity {
 
         authViewModel.getAuthState().observe(this, state -> {
             if (state instanceof AuthUiState.SignedOut) {
+                authViewModel.clearCache();
+                userViewModel.clearCache();
                 NavigationUtil.navigateTo(this, Login.class);
             } else if (state instanceof AuthUiState.Error) {
                 Toast.makeText(this, ((AuthUiState.Error) state).getMessage(), Toast.LENGTH_SHORT).show();

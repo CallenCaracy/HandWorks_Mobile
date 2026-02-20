@@ -1,5 +1,7 @@
 package handworks_cleaning_service.handworks_mobile.di;
 
+import android.util.Log;
+
 import com.clerk.api.session.Session;
 import com.google.gson.Gson;
 
@@ -31,7 +33,7 @@ public class NetworkModule {
 
                     Session session = authRepository.getSession();
                     String token = session != null && session.getLastActiveToken() != null ? session.getLastActiveToken().getJwt() : null;
-
+                    Log.d("Session", "Session: " + token);
                     Request.Builder builder = original.newBuilder();
 
                     if (token != null) {

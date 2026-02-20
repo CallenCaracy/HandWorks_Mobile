@@ -1,7 +1,5 @@
 package handworks_cleaning_service.handworks_mobile.ui.viewmodel;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -25,6 +23,10 @@ public class UserViewModel extends ViewModel {
     @Inject
     public UserViewModel(UserRepository userRepository) { this.userRepository = userRepository; }
 
+    public void clearCache() {
+        userRepository.clearCache();
+    }
+
     public LiveData<Employee> getEmployee() {
         return employeeLiveData;
     }
@@ -33,23 +35,26 @@ public class UserViewModel extends ViewModel {
         return errorLiveData;
     }
 
-    public void fetchUser(String clerkUserId) {
-        userRepository.getEmployeeById(clerkUserId)
-                .enqueue(new Callback<Employee>() {
-                    @Override
-                    public void onResponse(@NonNull Call<Employee> call, @NonNull Response<Employee> response) {
-                        Log.d("clerkUserId", "Fetch Triggered");
-                        if (response.isSuccessful() && response.body() != null) {
-                            employeeLiveData.postValue(response.body());
-                        } else {
-                            errorLiveData.postValue("Error: " + response.code());
-                        }
-                    }
+    public void loadEmployee(String id) {
 
-                    @Override
-                    public void onFailure(@NonNull Call<Employee> call, @NonNull Throwable t) {
-                        errorLiveData.postValue(t.getMessage());
-                    }
-                });
+        Employee cached = userRepository.getCachedEmployee();
+        if (cached != null) {
+            employeeLiveData.setValue(cached);
+            return;
+        }
+
+        userRepository.fetchEmployee(id, new Callback<Employee>() {
+            @Override
+            public void onResponse(@NonNull Call<Employee> call, @NonNull Response<Employee> response) {
+                if (response.isSuccessful()) {
+                    employeeLiveData.postValue(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Employee> call, @NonNull Throwable t) {
+                errorLiveData.postValue(t.getMessage());
+            }
+        });
     }
 }

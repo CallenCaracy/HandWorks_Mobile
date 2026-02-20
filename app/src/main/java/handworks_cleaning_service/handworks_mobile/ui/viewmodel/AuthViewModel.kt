@@ -40,6 +40,10 @@ class AuthViewModel @Inject constructor(private val repository: AuthRepository) 
         }
     }
 
+    fun clearCache() {
+        repository.clearCache()
+    }
+
     private val _resetPasswordUiState = MutableStateFlow<ResetPasswordUiState>(ResetPasswordUiState.Loading)
     val resetPasswordUiState = _resetPasswordUiState.asStateFlow()
 

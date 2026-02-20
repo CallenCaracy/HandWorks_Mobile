@@ -18,6 +18,7 @@ import handworks_cleaning_service.handworks_mobile.data.dto.LoginRequest
 import handworks_cleaning_service.handworks_mobile.data.remote.AuthApi
 import handworks_cleaning_service.handworks_mobile.utils.Result
 import handworks_cleaning_service.handworks_mobile.utils.SignInHelper
+import kotlinx.coroutines.suspendCancellableCoroutine
 import java.lang.Boolean
 import javax.inject.Inject
 import kotlin.Exception
@@ -25,21 +26,24 @@ import kotlin.String
 import kotlin.Throwable
 import kotlin.Unit
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 class AuthRepository @Inject constructor() : AuthApi {
     private var cachedUser: User? = null
     override suspend fun signIn(request: LoginRequest): Result<SignIn> {
         return try {
-            val signInResult = suspendCoroutine<Result<SignIn>> { cont ->
-                SignInHelper().signIn(request.email, request.password, object : SignInHelper.Callback {
-                    override fun onSuccess(user: SignIn) {
-                        cont.resume(Result.Success(user))
-                    }
-                    override fun onError(errorMessage: String) {
-                        cont.resume(Result.Failure(Exception(errorMessage)))
-                    }
-                })
+            val signInResult = suspendCancellableCoroutine<Result<SignIn>> { cont ->
+                SignInHelper().signIn(
+                    request.email,
+                    request.password,
+                    object : SignInHelper.Callback {
+                        override fun onSuccess(user: SignIn) {
+                            cont.resume(Result.Success(user))
+                        }
+
+                        override fun onError(errorMessage: String) {
+                            cont.resume(Result.Failure(Exception(errorMessage)))
+                        }
+                    })
             }
             signInResult
         } catch (e: Exception) {
@@ -77,6 +81,8 @@ class AuthRepository @Inject constructor() : AuthApi {
     }
 
     fun getCachedUser(): User? = cachedUser
+
+    fun clearCache() { cachedUser = null }
 
     //region Forgot Password/Reset Password
     override suspend fun createSignIn(email: String): SignIn.Status {
