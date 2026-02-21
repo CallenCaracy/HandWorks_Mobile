@@ -43,7 +43,7 @@ public class UserViewModel extends ViewModel {
             return;
         }
 
-        userRepository.fetchEmployee("6a0ed6b3-2bc2-4b16-a713-48175fef9a41", new Callback<UserWrapper<Employee>>() {
+        userRepository.fetchEmployee("6a0ed6b3-2bc2-4b16-a713-48175fef9a41", new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<UserWrapper<Employee>> call, @NonNull Response<UserWrapper<Employee>> response) {
                 if (response.isSuccessful() && response.body() != null) {

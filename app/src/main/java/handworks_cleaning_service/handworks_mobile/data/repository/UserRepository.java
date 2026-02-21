@@ -30,7 +30,7 @@ public class UserRepository {
             return;
         }
 
-        userApi.getEmployeeById(userId).enqueue(new Callback<UserWrapper<Employee>>() {
+        userApi.getEmployeeById(userId).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<UserWrapper<Employee>> call, @NonNull Response<UserWrapper<Employee>> response) {
                 if (response.isSuccessful() && response.body() != null) {

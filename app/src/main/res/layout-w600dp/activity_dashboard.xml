@@ -24,7 +24,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
-    <!-- Content fills rest of space -->
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="0dp"

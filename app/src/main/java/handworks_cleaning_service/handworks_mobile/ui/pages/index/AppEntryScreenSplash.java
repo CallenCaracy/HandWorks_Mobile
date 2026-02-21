@@ -2,19 +2,23 @@ package handworks_cleaning_service.handworks_mobile.ui.pages.index;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
+import handworks_cleaning_service.handworks_mobile.data.models.users.Employee;
 import handworks_cleaning_service.handworks_mobile.databinding.ActivityAppEntryScreenSplashBinding;
 import handworks_cleaning_service.handworks_mobile.ui.pages.auth.Login;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
+import handworks_cleaning_service.handworks_mobile.ui.viewmodel.UserViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
 import handworks_cleaning_service.handworks_mobile.utils.uistate.SessionUiState;
 
@@ -22,6 +26,7 @@ import handworks_cleaning_service.handworks_mobile.utils.uistate.SessionUiState;
 public class AppEntryScreenSplash extends AppCompatActivity {
     private ActivityAppEntryScreenSplashBinding binding;
     private AuthViewModel authViewModel;
+    private UserViewModel userViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +44,8 @@ public class AppEntryScreenSplash extends AppCompatActivity {
         });
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-        
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
         authViewModel.getSessionState()
                 .observe(this, state -> {
 
@@ -50,8 +56,7 @@ public class AppEntryScreenSplash extends AppCompatActivity {
 
                     else if (state instanceof SessionUiState.Authenticated) {
                         binding.progressBarLoading.setVisibility(View.GONE);
-
-                        NavigationUtil.navigateTo(this, Dashboard.class);
+                        checkPoint();
                     }
 
                     else if (state instanceof SessionUiState.Unauthenticated) {
@@ -79,5 +84,32 @@ public class AppEntryScreenSplash extends AppCompatActivity {
 
             authViewModel.checkSession();
         });
+    }
+
+    private void checkPoint() {
+        String id = authViewModel.getCachedUser().getId();
+
+        if (!id.isEmpty()) {
+            userViewModel.loadEmployee(id);
+
+            userViewModel.getEmployee().observe(this, new Observer<>() {
+                @Override
+                public void onChanged(Employee employee) {
+                    userViewModel.getEmployee().removeObserver(this);
+
+                    if (employee != null && "employee".equals(employee.getAccount().getRole())) {
+                        Toast.makeText(AppEntryScreenSplash.this, "Welcome back!", Toast.LENGTH_LONG).show();
+                        NavigationUtil.navigateTo(AppEntryScreenSplash.this, Dashboard.class);
+                    } else {
+                        Toast.makeText(AppEntryScreenSplash.this, "Unauthorized account", Toast.LENGTH_LONG).show();
+                        authViewModel.signOut();
+                        NavigationUtil.navigateTo(AppEntryScreenSplash.this, Login.class);
+                    }
+                }
+            });
+        } else {
+            authViewModel.signOut();
+            NavigationUtil.navigateTo(this, Login.class);
+        }
     }
 }

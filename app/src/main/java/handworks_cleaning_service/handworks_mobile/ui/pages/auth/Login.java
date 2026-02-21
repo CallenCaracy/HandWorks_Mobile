@@ -13,13 +13,11 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.clerk.api.Clerk;
-
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.data.dto.auth.LoginRequest;
 import handworks_cleaning_service.handworks_mobile.databinding.ActivityLoginBinding;
-import handworks_cleaning_service.handworks_mobile.ui.pages.index.Dashboard;
+import handworks_cleaning_service.handworks_mobile.ui.pages.index.AppEntryScreenSplash;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
 import handworks_cleaning_service.handworks_mobile.utils.uistate.AuthUiState;
@@ -44,11 +42,6 @@ public class Login extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        if (Clerk.INSTANCE.isSignedIn()) {
-            Toast.makeText(this, "Already signed in", Toast.LENGTH_SHORT).show();
-            NavigationUtil.navigateTo(this, Dashboard.class);
-        }
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
@@ -90,8 +83,7 @@ public class Login extends AppCompatActivity {
             binding.btnSignIn.setEnabled(true);
 
             if (uiState instanceof AuthUiState.Success) {
-                Toast.makeText(this, "Welcome!", Toast.LENGTH_SHORT).show();
-                NavigationUtil.navigateTo(this, Dashboard.class);
+                NavigationUtil.navigateTo(this, AppEntryScreenSplash.class);
             } else if (uiState instanceof AuthUiState.Error) {
                 String error = ((AuthUiState.Error) uiState).getMessage();
                 Toast.makeText(this, "Login failed: " + error, Toast.LENGTH_LONG).show();

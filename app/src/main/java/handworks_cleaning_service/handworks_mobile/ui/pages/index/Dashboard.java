@@ -1,7 +1,6 @@
 package handworks_cleaning_service.handworks_mobile.ui.pages.index;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -57,9 +56,6 @@ public class Dashboard extends AppCompatActivity {
 
         User cachedUser = authViewModel.getCachedUser();
         if (cachedUser != null) {
-            userViewModel.loadEmployee(cachedUser.getId());
-            Log.d("clerkUserId", "ID: " + cachedUser.getId());
-
             String userPfpUrl = cachedUser.getImageUrl();
             Glide.with(this)
                     .load(userPfpUrl)
