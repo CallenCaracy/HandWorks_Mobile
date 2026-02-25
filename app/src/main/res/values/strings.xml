@@ -6,6 +6,7 @@
     <string name="get_started">Get Started</string>
     <string name="handworks_cleaning_services_2025">© Handworks Cleaning Services 2026</string>
     <string name="forgot_password">Forgot Password?</string>
+    <string name="error">Error</string>
     <!--  General Strings EndRegion  -->
 
     <!--  User Profile Activity Region  -->
@@ -17,6 +18,17 @@
     <string name="continue_this">Continue</string>
     <string name="sign_out">Sign Out</string>
     <string name="header">header</string>
+    <string name="resend_in_s">Resend in %1$ds</string>
+    <string name="profile_info">Profile Info</string>
+    <plurals name="reviews_count">
+        <item quantity="one">Based on %d review</item>
+        <item quantity="other">Based on %d reviews</item>
+    </plurals>
+    <string name="email_colon">Email: </string>
+    <string name="hired_date_colon">Hired Date: </string>
+    <string name="position_colon">Position: </string>
+    <string name="status_colon">Status: %s</string>
+    <string name="_0_months_ago">0 months ago</string>
     <!--  User Profile Activity EndRegion  -->
 
     <!--  Login Activity Region  -->
@@ -155,7 +167,6 @@
 
     <!--  New Strings StartRegion  -->
     <string name="placeholder">Placeholder</string>
-    <string name="resend_in_s">Resend in %1$ds</string>
     <!--  New Strings EndRegion  -->
 
 </resources>

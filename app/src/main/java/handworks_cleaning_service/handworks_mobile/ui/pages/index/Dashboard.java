@@ -25,7 +25,6 @@ import handworks_cleaning_service.handworks_mobile.ui.fragments.NotificationFrag
 import handworks_cleaning_service.handworks_mobile.ui.fragments.WeekViewFragment;
 import handworks_cleaning_service.handworks_mobile.ui.pages.user.UserProfile;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
-import handworks_cleaning_service.handworks_mobile.ui.viewmodel.UserViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
 
 @AndroidEntryPoint
@@ -52,7 +51,6 @@ public class Dashboard extends AppCompatActivity {
         });
 
         AuthViewModel authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-        UserViewModel userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         User cachedUser = authViewModel.getCachedUser();
         if (cachedUser != null) {

@@ -1,5 +1,7 @@
 package handworks_cleaning_service.handworks_mobile.ui.pages.user;
 
+import static android.view.View.GONE;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -91,10 +93,6 @@ public class UserProfile extends AppCompatActivity {
                     .circleCrop()
                     .into(binding.userPfp);
 
-            long createdAt = cachedUser.getCreatedAt();
-            binding.joinedValue.setText(DateUtil.getTimeAgo(createdAt));
-
-
             binding.userPfp.setOnClickListener(v -> {
                 Intent intent = new Intent(this, FullscreenImageView.class);
                 intent.putExtra("image_url", cachedUser.getImageUrl());
@@ -103,15 +101,38 @@ public class UserProfile extends AppCompatActivity {
 
             userViewModel.getEmployee().observe(this, employee -> {
                 if (employee != null) {
+                    String formattedDate = DateUtil.formatStringDate(employee.getHire_date());
+                    long longDate = DateUtil.convertStringToLong(employee.getHire_date());
+
+                    binding.joinedValue.setText(DateUtil.getTimeAgo(longDate));
                     binding.ratingBar.setRating((float) employee.getPerformance_score());
                     binding.ratingValue.setText(String.valueOf((int) employee.getPerformance_score()));
+                    binding.ratingNumber.setText(
+                            getResources().getQuantityString(
+                                    R.plurals.reviews_count,
+                                    employee.getNum_ratings(),
+                                    employee.getNum_ratings()
+                            )
+                    );
+                    binding.employeeEmailValue.setText(employee.getAccount().getEmail());
+                    binding.employeeHireDateValue.setText(formattedDate);
+                    binding.employeePositionValue.setText(employee.getPosition());
+                    binding.employeeStatus.setText(
+                            getString(R.string.status_colon, employee.getStatus())
+                    );
                 }
             });
 
             userViewModel.getError().observe(this, error -> {
                 Toast.makeText(this, "Error fetching user info.", Toast.LENGTH_LONG).show();
                 binding.ratingBar.setRating(0.0f);
-                binding.ratingValue.setText(error);
+                binding.joinedValue.setText(R.string._0_months_ago);
+                binding.ratingValue.setText("0.0");
+                binding.ratingNumber.setVisibility(GONE);
+                binding.employeeEmailValue.setText(R.string.error);
+                binding.employeeHireDateValue.setText(R.string.error);
+                binding.employeePositionValue.setText(R.string.error);
+                binding.employeeStatus.setText(R.string.error);
             });
             userViewModel.loadEmployee(cachedUser.getId());
         }
@@ -143,18 +164,12 @@ public class UserProfile extends AppCompatActivity {
 
         List<ProfileItem> items = new ArrayList<>();
 
-        items.add(new ProfileItem(Constant.TYPE_HEADER, "Profile", 0));
-        items.add(new ProfileItem(Constant.TYPE_ITEM, "Manage user", R.drawable.target_svgrepo_com));
-
         items.add(new ProfileItem(Constant.TYPE_HEADER, "Settings", 0));
         items.add(new ProfileItem(Constant.TYPE_SWITCH, "Notifications", R.drawable.bell_svgrepo_com));
         items.add(new ProfileItem(Constant.TYPE_ITEM, "Theme", R.drawable.theme));
 
         ProfileSettingsAdapter adapter = new ProfileSettingsAdapter(items, item -> {
             switch (item.title) {
-                case "Manage user":
-                    // open manage user
-                    break;
                 case "Notifications":
                     SwitchCompat switchView = findViewById(R.id.switchView);
 

@@ -1,6 +1,8 @@
 package handworks_cleaning_service.handworks_mobile.utils;
 
 import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
 
@@ -8,6 +10,17 @@ public class DateUtil {
     public static String formatDateFromIntToString(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault());
         return sdf.format(date);
+    }
+
+    public static String formatStringDate(String strDate) {
+        OffsetDateTime date = OffsetDateTime.parse(strDate);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
+        return date.format(formatter);
+    }
+
+    public static long convertStringToLong(String strDate) {
+        OffsetDateTime dateTime = OffsetDateTime.parse(strDate);
+        return dateTime.toInstant().toEpochMilli();
     }
 
     public static String getTimeAgo(long timeMillis) {

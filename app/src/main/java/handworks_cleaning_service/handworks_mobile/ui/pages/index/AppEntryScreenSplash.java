@@ -1,6 +1,7 @@
 package handworks_cleaning_service.handworks_mobile.ui.pages.index;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -21,6 +22,8 @@ import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.UserViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
 import handworks_cleaning_service.handworks_mobile.utils.uistate.SessionUiState;
+import kotlinx.serialization.json.JsonElement;
+import kotlinx.serialization.json.JsonObject;
 
 @AndroidEntryPoint
 public class AppEntryScreenSplash extends AppCompatActivity {
@@ -87,10 +90,14 @@ public class AppEntryScreenSplash extends AppCompatActivity {
     }
 
     private void checkPoint() {
-        String id = authViewModel.getCachedUser().getId();
+        JsonObject metadata = authViewModel.getCachedUser().getPublicMetadata();
+        if (metadata == null || !metadata.containsKey("empId")) return;
+        JsonElement element = metadata.get("empId");
+        String empId = element.toString().replace("\"", "");
+        Log.d("Session", empId);
 
-        if (!id.isEmpty()) {
-            userViewModel.loadEmployee(id);
+        if (!empId.isEmpty()) {
+            userViewModel.loadEmployee(empId);
 
             userViewModel.getEmployee().observe(this, new Observer<>() {
                 @Override

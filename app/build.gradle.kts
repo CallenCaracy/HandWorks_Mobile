@@ -78,4 +78,5 @@ dependencies {
     implementation(libs.glide.v4151)
     ksp(libs.hilt.android.compiler)
     implementation(libs.logging.interceptor)
+    implementation(libs.kotlinx.serialization.json)
 }
