@@ -91,32 +91,42 @@ public class AppEntryScreenSplash extends AppCompatActivity {
 
     private void checkPoint() {
         JsonObject metadata = authViewModel.getCachedUser().getPublicMetadata();
-        if (metadata == null || !metadata.containsKey("empId")) return;
-        JsonElement element = metadata.get("empId");
-        String empId = element.toString().replace("\"", "");
-        Log.d("Session", empId);
-
-        if (!empId.isEmpty()) {
-            userViewModel.loadEmployee(empId);
-
-            userViewModel.getEmployee().observe(this, new Observer<>() {
-                @Override
-                public void onChanged(Employee employee) {
-                    userViewModel.getEmployee().removeObserver(this);
-
-                    if (employee != null && "employee".equals(employee.getAccount().getRole())) {
-                        Toast.makeText(AppEntryScreenSplash.this, "Welcome back!", Toast.LENGTH_LONG).show();
-                        NavigationUtil.navigateTo(AppEntryScreenSplash.this, Dashboard.class);
-                    } else {
-                        Toast.makeText(AppEntryScreenSplash.this, "Unauthorized account", Toast.LENGTH_LONG).show();
-                        authViewModel.signOut();
-                        NavigationUtil.navigateTo(AppEntryScreenSplash.this, Login.class);
-                    }
-                }
-            });
-        } else {
+        if (metadata == null || !metadata.containsKey("empId")) {
             authViewModel.signOut();
             NavigationUtil.navigateTo(this, Login.class);
+            return;
         }
+
+        JsonElement element = metadata.get("empId");
+        String empId = element.toString().replace("\"", "");
+        if (empId.isEmpty()) {
+            authViewModel.signOut();
+            NavigationUtil.navigateTo(this, Login.class);
+            return;
+        }
+
+        userViewModel.loadEmployee(empId);
+
+        userViewModel.getEmployee().observe(this, new Observer<>() {
+            @Override
+            public void onChanged(Employee employee) {
+                userViewModel.getEmployee().removeObserver(this);
+
+                if (employee != null && "employee".equals(employee.getAccount().getRole())) {
+                    Toast.makeText(AppEntryScreenSplash.this, "Welcome back!", Toast.LENGTH_LONG).show();
+                    NavigationUtil.navigateTo(AppEntryScreenSplash.this, Dashboard.class);
+                } else {
+                    Toast.makeText(AppEntryScreenSplash.this, "Unauthorized account", Toast.LENGTH_LONG).show();
+                    authViewModel.signOut();
+                    NavigationUtil.navigateTo(AppEntryScreenSplash.this, Login.class);
+                }
+            }
+        });
+
+        userViewModel.getError().observe(this, error -> {
+            if (error != null) {
+                NavigationUtil.navigateTo(this, NoInternetActivity.class);
+            }
+        });
     }
 }
