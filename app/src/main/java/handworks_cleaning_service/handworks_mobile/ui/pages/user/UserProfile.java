@@ -144,14 +144,12 @@ public class UserProfile extends AppCompatActivity {
         binding.btnLogout.setOnClickListener(v -> new AlertDialog.Builder(this)
                 .setTitle("Logout")
                 .setMessage("Are you sure you want to logout?")
-                .setPositiveButton("Yes", (dialog, which) -> authViewModel.signOut())
+                .setPositiveButton("Yes", (dialog, which) -> logoutCompletely())
                 .setNegativeButton("No", null)
                 .show());
 
         authViewModel.getAuthState().observe(this, state -> {
             if (state instanceof AuthUiState.SignedOut) {
-                authViewModel.clearCache();
-                userViewModel.clearCache();
                 NavigationUtil.navigateTo(this, Login.class);
             } else if (state instanceof AuthUiState.Error) {
                 Toast.makeText(this, ((AuthUiState.Error) state).getMessage(), Toast.LENGTH_SHORT).show();
@@ -247,5 +245,10 @@ public class UserProfile extends AppCompatActivity {
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
+    }
+
+    private void logoutCompletely() {
+        authViewModel.logoutCompletely();
+        userViewModel.clearCache();
     }
 }

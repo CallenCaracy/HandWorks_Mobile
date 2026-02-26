@@ -29,6 +29,11 @@ import kotlin.coroutines.resume
 
 class AuthRepository @Inject constructor() : AuthApi {
     private var cachedUser: User? = null
+
+    fun getCachedUser(): User? = cachedUser
+
+    fun clearCache() { cachedUser = null }
+
     override suspend fun signIn(request: LoginRequest): Result<SignIn> {
         return try {
             val signInResult = suspendCancellableCoroutine<Result<SignIn>> { cont ->
@@ -79,10 +84,6 @@ class AuthRepository @Inject constructor() : AuthApi {
         cachedUser = session?.user
         return cachedUser
     }
-
-    fun getCachedUser(): User? = cachedUser
-
-    fun clearCache() { cachedUser = null }
 
     //region Forgot Password/Reset Password
     override suspend fun createSignIn(email: String): SignIn.Status {

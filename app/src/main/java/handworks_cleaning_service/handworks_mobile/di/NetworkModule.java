@@ -12,6 +12,7 @@ import dagger.hilt.components.SingletonComponent;
 import javax.inject.Singleton;
 
 import handworks_cleaning_service.handworks_mobile.BuildConfig;
+import handworks_cleaning_service.handworks_mobile.data.remote.BookApi;
 import handworks_cleaning_service.handworks_mobile.data.remote.TaskApi;
 import handworks_cleaning_service.handworks_mobile.data.remote.UserApi;
 import handworks_cleaning_service.handworks_mobile.data.repository.AuthRepository;
@@ -65,6 +66,10 @@ public class NetworkModule {
     public UserApi provideUserApi(Retrofit retrofit) {
         return retrofit.create(UserApi.class);
     }
+
+    @Provides
+    @Singleton
+    public BookApi provideBookApi(Retrofit retrofit) { return retrofit.create(BookApi.class); }
 
     @Provides
     @Singleton

@@ -93,6 +93,11 @@ class AuthViewModel @Inject constructor(private val repository: AuthRepository) 
         }
     }
 
+    fun logoutCompletely() {
+        signOut()
+        clearCache()
+    }
+
     //region Forgot Password/Reset Password
     init {
         viewModelScope.launch {

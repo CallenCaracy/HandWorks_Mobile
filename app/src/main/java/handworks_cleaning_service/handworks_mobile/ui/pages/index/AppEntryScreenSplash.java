@@ -1,7 +1,6 @@
 package handworks_cleaning_service.handworks_mobile.ui.pages.index;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -92,7 +91,7 @@ public class AppEntryScreenSplash extends AppCompatActivity {
     private void checkPoint() {
         JsonObject metadata = authViewModel.getCachedUser().getPublicMetadata();
         if (metadata == null || !metadata.containsKey("empId")) {
-            authViewModel.signOut();
+            forceLogout();
             NavigationUtil.navigateTo(this, Login.class);
             return;
         }
@@ -100,7 +99,7 @@ public class AppEntryScreenSplash extends AppCompatActivity {
         JsonElement element = metadata.get("empId");
         String empId = element.toString().replace("\"", "");
         if (empId.isEmpty()) {
-            authViewModel.signOut();
+            forceLogout();
             NavigationUtil.navigateTo(this, Login.class);
             return;
         }
@@ -117,7 +116,7 @@ public class AppEntryScreenSplash extends AppCompatActivity {
                     NavigationUtil.navigateTo(AppEntryScreenSplash.this, Dashboard.class);
                 } else {
                     Toast.makeText(AppEntryScreenSplash.this, "Unauthorized account", Toast.LENGTH_LONG).show();
-                    authViewModel.signOut();
+                    forceLogout();
                     NavigationUtil.navigateTo(AppEntryScreenSplash.this, Login.class);
                 }
             }
@@ -125,8 +124,15 @@ public class AppEntryScreenSplash extends AppCompatActivity {
 
         userViewModel.getError().observe(this, error -> {
             if (error != null) {
-                NavigationUtil.navigateTo(this, NoInternetActivity.class);
+                Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+                NavigationUtil.navigateNoFinishTo(this, NoInternet.class);
             }
         });
+    }
+
+    private void forceLogout() {
+        authViewModel.logoutCompletely();
+        userViewModel.clearCache();
+        NavigationUtil.navigateTo(this, Login.class);
     }
 }

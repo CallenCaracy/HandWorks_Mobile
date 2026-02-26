@@ -27,7 +27,7 @@
     <string name="email_colon">Email: </string>
     <string name="hired_date_colon">Hired Date: </string>
     <string name="position_colon">Position: </string>
-    <string name="status_colon">Status: %s</string>
+    <string name="status_colon">%s</string>
     <string name="_0_months_ago">0 months ago</string>
     <!--  User Profile Activity EndRegion  -->
 
@@ -164,6 +164,12 @@
     <string name="retry">Retry</string>
     <string name="still_checking_your_session_nplease_check_your_internet_connection">Still checking your session.\nPlease check your internet connection.</string>
     <!--  Splash Entry Activity EndRegion  -->
+
+    <!--  No Internet Activity StartRegion  -->
+    <string name="there_seems_to_be_an_error_please_check_your_internet_connection_and_try_again">There seems to be an error. Please check your internet connection and try again.</string>
+    <string name="oops">Oops!</string>
+    <string name="error_illustration">Error Illustration</string>
+    <!--  No Internet Activity EndRegion  -->
 
     <!--  New Strings StartRegion  -->
     <string name="placeholder">Placeholder</string>

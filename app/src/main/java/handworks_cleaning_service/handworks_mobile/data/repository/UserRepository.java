@@ -22,6 +22,10 @@ public class UserRepository {
         return cachedEmployee;
     }
 
+    public void clearCache() {
+        cachedEmployee = null;
+    }
+
     public void fetchEmployee(String userId, Callback<UserWrapper<Employee>> callback) {
         if (cachedEmployee != null) {
             UserWrapper<Employee> wrapper = new UserWrapper<>();
@@ -46,9 +50,5 @@ public class UserRepository {
                 callback.onFailure(call, t);
             }
         });
-    }
-
-    public void clearCache() {
-        cachedEmployee = null;
     }
 }
