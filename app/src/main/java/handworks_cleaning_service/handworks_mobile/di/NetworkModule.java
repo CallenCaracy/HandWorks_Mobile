@@ -2,6 +2,7 @@ package handworks_cleaning_service.handworks_mobile.di;
 
 import android.util.Log;
 
+import com.clerk.api.Clerk;
 import com.clerk.api.session.Session;
 import com.google.gson.Gson;
 
@@ -15,7 +16,6 @@ import handworks_cleaning_service.handworks_mobile.BuildConfig;
 import handworks_cleaning_service.handworks_mobile.data.remote.BookApi;
 import handworks_cleaning_service.handworks_mobile.data.remote.TaskApi;
 import handworks_cleaning_service.handworks_mobile.data.remote.UserApi;
-import handworks_cleaning_service.handworks_mobile.data.repository.AuthRepository;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -28,7 +28,7 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    public OkHttpClient provideOkHttpClient(AuthRepository authRepository) {
+    public OkHttpClient provideOkHttpClient() {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(message -> Log.d("HTTP", message));
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -36,9 +36,18 @@ public class NetworkModule {
                 .addInterceptor(chain -> {
                     Request original = chain.request();
 
-                    Session session = authRepository.getSession();
-                    String token = session != null && session.getLastActiveToken() != null ? session.getLastActiveToken().getJwt() : null;
-                    Log.d("Session", "Session: " + token);
+//                    Keep this just in case (Legacy)
+//                    Session session = authRepository.getSession();
+//                    String token = session != null && session.getLastActiveToken() != null ? session.getLastActiveToken().getJwt() : null;
+
+//                    We are compelled to use the Clerk.INSTANCE as it's the most relievable source of up-to-date jwt token preventing stale tokens
+                    var sessions = Clerk.INSTANCE.getClient().getSessions();
+                    Session lastSession = !sessions.isEmpty() ? sessions.get(sessions.size() - 1) : null;
+                    String token = null;
+                    if (lastSession != null && lastSession.getLastActiveToken() != null) {
+                        token = lastSession.getLastActiveToken().getJwt();
+                    }
+                    Log.d("HTTPs", "Session: " + token);
                     Request.Builder builder = original.newBuilder();
 
                     if (token != null) {

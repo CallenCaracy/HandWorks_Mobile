@@ -79,7 +79,7 @@ public class UserProfile extends AppCompatActivity {
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
-        signOutUser();
+        signOutUserConfirmation();
 
         User cachedUser = authViewModel.getCachedUser();
         if (cachedUser != null && cachedUser.getCreatedAt() != null) {
@@ -140,7 +140,7 @@ public class UserProfile extends AppCompatActivity {
         binding.btnExitProfile.setOnClickListener(v -> finish());
     }
 
-    private void signOutUser() {
+    private void signOutUserConfirmation() {
         binding.btnLogout.setOnClickListener(v -> new AlertDialog.Builder(this)
                 .setTitle("Logout")
                 .setMessage("Are you sure you want to logout?")

@@ -2,26 +2,21 @@ package handworks_cleaning_service.handworks_mobile.data.models.wrappers;
 
 import java.util.List;
 
+import handworks_cleaning_service.handworks_mobile.data.dto.book.BookingListResponse;
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.Booking;
 
 public class BookingWrapper {
-    private List<Booking> bookings;
-    private int bookingsRequested;
-    private int totalBookings;
+    BookingListResponse data;
 
-    public void setBookings(List<Booking> bookings) {
-        this.bookings = bookings;
+    public BookingWrapper(BookingListResponse data) {
+        this.data = data;
     }
 
-    public void setBookingsRequested(int bookingsRequested) {
-        this.bookingsRequested = bookingsRequested;
+    public BookingListResponse getData() {
+        return data;
     }
 
-    public void setTotalBookings(int totalBookings) {
-        this.totalBookings = totalBookings;
+    public void setData(BookingListResponse data) {
+        this.data = data;
     }
-
-    public List<Booking> getBookings() { return bookings; }
-    public int getBookingsRequested() { return bookingsRequested; }
-    public int getTotalBookings() { return totalBookings; }
 }

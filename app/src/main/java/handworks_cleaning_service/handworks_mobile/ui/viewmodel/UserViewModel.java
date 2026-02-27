@@ -1,5 +1,7 @@
 package handworks_cleaning_service.handworks_mobile.ui.viewmodel;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -55,6 +57,7 @@ public class UserViewModel extends ViewModel {
             @Override
             public void onFailure(@NonNull Call<UserWrapper<Employee>> call, @NonNull Throwable t) {
                 errorLiveData.postValue(t.getMessage());
+                Log.e("HTTPs", "NETWORK FAILURE", t); // DEBUGGING
             }
         });
     }

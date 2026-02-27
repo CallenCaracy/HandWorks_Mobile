@@ -3,63 +3,191 @@ package handworks_cleaning_service.handworks_mobile.ui.fragments;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 
-import com.clerk.api.user.User;
-
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+
+import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.databinding.FragmentHomeBinding;
-import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
+import handworks_cleaning_service.handworks_mobile.ui.adapters.BookingAdapter;
+import handworks_cleaning_service.handworks_mobile.ui.viewmodel.BookViewModel;
+import handworks_cleaning_service.handworks_mobile.ui.viewmodel.UserViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.DateUtil;
 
 @AndroidEntryPoint
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
+    private BookViewModel bookViewModel;
+    private UserViewModel userViewModel;
+    private String employeeId = null;
+    private LocalDate today = LocalDate.now();
+    private LocalDate endDate;
+    private BookingAdapter bookingAdapter;
+    private boolean isFirstSelection = true;
+    @Inject
+    SharedPreferences prefs;
 
     public HomeFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    public void onCreate(Bundle savedInstanceState) {super.onCreate(savedInstanceState);}
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
 
-        int workCount = 0;
+        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+        bookViewModel = new ViewModelProvider(requireActivity()).get(BookViewModel.class);
+        bookingAdapter = new BookingAdapter();
 
-        AuthViewModel authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        // RecyclerView
+        binding.bookingsRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.bookingsRecycler.setAdapter(bookingAdapter);
 
+        // Date display
         Date date = new Date();
-        String dateFormatted = DateUtil.formatDateFromIntToString(date);
-        String firstName = null;
+        binding.dateDisplay.setText(getString(R.string.as_of_display, DateUtil.formatDateFromIntToString(date)));
 
-        User cachedUser = authViewModel.getCachedUser();
-        if (cachedUser != null) {
-            firstName = cachedUser.getFirstName();
-        }
+        // Spinner
+        initSpinnerFilter();
+        setupSpinnerListener();
 
-        binding.cleanerNameDisplay.setText(getString(R.string.cleaner_name_display, (firstName != null ? firstName : "Error")));
-        binding.dateDisplay.setText(getString(R.string.as_of_display, dateFormatted));
-        binding.summaryTaskNumberDisplay.setText("3");
-        binding.noJobAssignedYet.getRoot().setVisibility((workCount == 0) ? VISIBLE : GONE);
+        // Observers
+        observeEmployee();
+        observeBookings();
+
+        // Infinite scroll
+        setupScrollListener();
 
         return binding.getRoot();
+    }
+
+    private void observeEmployee() {
+        userViewModel.loadEmployee(prefs.getString("EMP_ID", null));
+        userViewModel.getEmployee().observe(getViewLifecycleOwner(), employee -> {
+            if (employee != null) {
+                employeeId = employee.getId();
+                binding.cleanerNameDisplay.setText(
+                        getString(R.string.cleaner_name_display, employee.getAccount().getFirst_name())
+                );
+
+                if (today == null) today = LocalDate.now();
+                if (endDate == null) endDate = today.plusDays(7);
+
+                bookViewModel.resetPagination();
+                bookViewModel.loadNextPage(employeeId, today.toString(), endDate.toString());
+            } else {
+                binding.cleanerNameDisplay.setText(getString(R.string.cleaner_name_display, "Error"));
+            }
+        });
+    }
+
+    private void observeBookings() {
+        bookViewModel.getBookings().observe(getViewLifecycleOwner(), bookings -> {
+            boolean hasBooks = bookings != null && !bookings.isEmpty();
+
+            binding.summaryTaskNumberDisplay.setText(String.valueOf(bookings != null ? bookings.size() : 0));
+
+            updateUI(hasBooks, bookViewModel.getIsLoading().getValue() != null && bookViewModel.getIsLoading().getValue());
+
+            bookingAdapter.submitList(bookings);
+        });
+
+        // Observe loading
+        bookViewModel.getIsLoading().observe(getViewLifecycleOwner(), loading -> {
+            boolean hasBooks = bookViewModel.getBookings().getValue() != null &&
+                    !bookViewModel.getBookings().getValue().isEmpty();
+            updateUI(hasBooks, loading != null && loading);
+        });
+    }
+
+    private void initSpinnerFilter() {
+        List<String> options = Arrays.asList(
+                "This Week",
+                "Next 2 Weeks",
+                "This Month"
+        );
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_spinner_dropdown_item,
+                options
+        );
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.spinnerDateFilter.setAdapter(adapter);
+    }
+
+    private void setupSpinnerListener() {
+        binding.spinnerDateFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (isFirstSelection) { isFirstSelection = false; return; }
+
+                today = LocalDate.now();
+                endDate = switch (position) {
+                    case 1 -> today.plusDays(14);
+                    case 2 -> today.plusMonths(1);
+                    default -> today.plusDays(7);
+                };
+
+                if (employeeId != null) {
+                    bookViewModel.resetPagination();
+                    bookViewModel.loadNextPage(employeeId, today.toString(), endDate.toString());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    }
+
+    private void setupScrollListener() {
+        binding.bookingsRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView rv, int dx, int dy) {
+                LinearLayoutManager lm = (LinearLayoutManager) rv.getLayoutManager();
+                if (lm == null || employeeId == null || endDate == null) return;
+
+                int totalItemCount = lm.getItemCount();
+                int lastVisibleItem = lm.findLastVisibleItemPosition();
+
+                if (totalItemCount <= lastVisibleItem + 5) {
+                    bookViewModel.loadNextPage(employeeId, today.toString(), endDate.toString());
+                }
+            }
+        });
+    }
+
+    private void updateUI(boolean hasBooks, boolean loading) {
+        binding.loadingProgress.setVisibility(loading ? View.VISIBLE : View.GONE);
+
+        binding.bookingsRecycler.setVisibility(!loading && hasBooks ? View.VISIBLE : GONE);
+        binding.bookingsRecycler.setAlpha(loading ? 0.5f : 1f);
+
+        binding.noJobAssignedYet.getRoot().setVisibility(!loading && !hasBooks ? VISIBLE : GONE);
     }
 
     @Override

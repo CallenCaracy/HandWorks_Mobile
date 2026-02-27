@@ -1,5 +1,6 @@
 package handworks_cleaning_service.handworks_mobile.ui.pages.index;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -11,6 +12,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+
+import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
@@ -29,6 +32,8 @@ public class AppEntryScreenSplash extends AppCompatActivity {
     private ActivityAppEntryScreenSplashBinding binding;
     private AuthViewModel authViewModel;
     private UserViewModel userViewModel;
+    @Inject
+    SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +108,7 @@ public class AppEntryScreenSplash extends AppCompatActivity {
             NavigationUtil.navigateTo(this, Login.class);
             return;
         }
+        prefs.edit().putString("EMP_ID", empId).apply();
 
         userViewModel.loadEmployee(empId);
 
@@ -125,6 +131,8 @@ public class AppEntryScreenSplash extends AppCompatActivity {
         userViewModel.getError().observe(this, error -> {
             if (error != null) {
                 Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+                // Refactor this to have a pop-up when fail
+                binding.progressBarLoading.setVisibility(View.VISIBLE);
                 NavigationUtil.navigateNoFinishTo(this, NoInternet.class);
             }
         });

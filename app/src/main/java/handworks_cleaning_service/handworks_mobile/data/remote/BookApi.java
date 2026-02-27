@@ -6,7 +6,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface BookApi {
-    @GET("/booking/employee")
+    @GET("booking/employee")
     Call<BookingWrapper> getEmployeeBookings(
             @Query("employeeId") String employeeId,
             @Query("startDate") String startDate,

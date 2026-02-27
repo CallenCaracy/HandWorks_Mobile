@@ -9,4 +9,5 @@ public class Constant {
     public static final int TYPE_SWITCH = 2;
     public static final String PREFS_NAME = "app_prefs";
     public static final String KEY_THEME = "theme_mode";
+    public static final int PAGE_LIMIT = 10;
 }
