@@ -3,7 +3,6 @@ package handworks_cleaning_service.handworks_mobile.ui.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,7 +11,7 @@ import java.util.List;
 
 import handworks_cleaning_service.handworks_mobile.R;
 
-public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.SliderViewHolder> {
+public class SliderAdapter extends RecyclerView.Adapter<SliderViewHolder> {
     private final List<Integer> images;
 
     public SliderAdapter(List<Integer> images) {
@@ -35,14 +34,5 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.SliderView
     @Override
     public int getItemCount() {
         return images.size();
-    }
-
-    static class SliderViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
-
-        public SliderViewHolder(@NonNull View itemView) {
-            super(itemView);
-            imageView = itemView.findViewById(R.id.sliderImage);
-        }
     }
 }

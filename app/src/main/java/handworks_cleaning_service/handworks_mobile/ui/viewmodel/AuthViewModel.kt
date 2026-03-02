@@ -9,16 +9,17 @@ import com.clerk.api.Clerk
 import com.clerk.api.signin.SignIn
 import com.clerk.api.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
-import handworks_cleaning_service.handworks_mobile.data.dto.LoginRequest
+import handworks_cleaning_service.handworks_mobile.data.dto.auth.LoginRequest
 import handworks_cleaning_service.handworks_mobile.data.repository.AuthRepository
 import handworks_cleaning_service.handworks_mobile.utils.Result
 import handworks_cleaning_service.handworks_mobile.utils.uistate.AuthUiState
 import handworks_cleaning_service.handworks_mobile.utils.uistate.ResetPasswordUiState
 import handworks_cleaning_service.handworks_mobile.utils.uistate.SessionUiState
-import kotlinx.coroutines.*
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,6 +38,10 @@ class AuthViewModel @Inject constructor(private val repository: AuthRepository) 
         } else {
             _sessionState.value = SessionUiState.Idle
         }
+    }
+
+    fun clearCache() {
+        repository.clearCache()
     }
 
     private val _resetPasswordUiState = MutableStateFlow<ResetPasswordUiState>(ResetPasswordUiState.Loading)
@@ -86,6 +91,11 @@ class AuthViewModel @Inject constructor(private val repository: AuthRepository) 
                 _authState.value = AuthUiState.Error(e.message ?: "Logout failed")
             }
         }
+    }
+
+    fun logoutCompletely() {
+        signOut()
+        clearCache()
     }
 
     //region Forgot Password/Reset Password

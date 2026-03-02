@@ -10,14 +10,17 @@ import com.clerk.api.network.serialization.longErrorMessageOrNull
 import com.clerk.api.network.serialization.onFailure
 import com.clerk.api.network.serialization.onSuccess
 import com.clerk.api.session.Session
+import com.clerk.api.session.fetchToken
 import com.clerk.api.signin.SignIn
 import com.clerk.api.signin.attemptFirstFactor
 import com.clerk.api.signin.resetPassword
 import com.clerk.api.user.User
-import handworks_cleaning_service.handworks_mobile.data.dto.LoginRequest
+import handworks_cleaning_service.handworks_mobile.data.dto.auth.LoginRequest
 import handworks_cleaning_service.handworks_mobile.data.remote.AuthApi
 import handworks_cleaning_service.handworks_mobile.utils.Result
 import handworks_cleaning_service.handworks_mobile.utils.SignInHelper
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.suspendCancellableCoroutine
 import java.lang.Boolean
 import javax.inject.Inject
 import kotlin.Exception
@@ -25,22 +28,29 @@ import kotlin.String
 import kotlin.Throwable
 import kotlin.Unit
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 class AuthRepository @Inject constructor() : AuthApi {
     private var cachedUser: User? = null
 
+    fun getCachedUser(): User? = cachedUser
+
+    fun clearCache() { cachedUser = null }
+
     override suspend fun signIn(request: LoginRequest): Result<SignIn> {
         return try {
-            val signInResult = suspendCoroutine<Result<SignIn>> { cont ->
-                SignInHelper().signIn(request.email, request.password, object : SignInHelper.Callback {
-                    override fun onSuccess(user: SignIn) {
-                        cont.resume(Result.Success(user))
-                    }
-                    override fun onError(errorMessage: String) {
-                        cont.resume(Result.Failure(Exception(errorMessage)))
-                    }
-                })
+            val signInResult = suspendCancellableCoroutine<Result<SignIn>> { cont ->
+                SignInHelper().signIn(
+                    request.email,
+                    request.password,
+                    object : SignInHelper.Callback {
+                        override fun onSuccess(user: SignIn) {
+                            cont.resume(Result.Success(user))
+                        }
+
+                        override fun onError(errorMessage: String) {
+                            cont.resume(Result.Failure(Exception(errorMessage)))
+                        }
+                    })
             }
             signInResult
         } catch (e: Exception) {
@@ -65,6 +75,20 @@ class AuthRepository @Inject constructor() : AuthApi {
         return session
     }
 
+    suspend fun getFreshToken(): String? {
+        val session = session ?: return null
+
+        return when (val result = session.fetchToken()) {
+            is ClerkResult.Success -> result.value.jwt
+            is ClerkResult.Failure -> null
+        }
+    }
+
+    fun getFreshTokenBlocking(): String? =
+        runBlocking {
+            getFreshToken()
+        }
+
     override fun isSignedIn(): kotlin.Boolean {
         return isSignedIn
     }
@@ -76,8 +100,6 @@ class AuthRepository @Inject constructor() : AuthApi {
         cachedUser = session?.user
         return cachedUser
     }
-
-    fun getCachedUser(): User? = cachedUser
 
     //region Forgot Password/Reset Password
     override suspend fun createSignIn(email: String): SignIn.Status {

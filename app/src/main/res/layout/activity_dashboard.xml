@@ -10,7 +10,6 @@
 
     <include
         android:id="@+id/header"
-
         layout="@layout/header" />
 
     <FrameLayout

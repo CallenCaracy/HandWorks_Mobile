@@ -1,8 +1,6 @@
 package handworks_cleaning_service.handworks_mobile.ui.pages.index;
 
 import android.os.Bundle;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,9 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
-import com.clerk.api.Clerk;
 import com.clerk.api.user.User;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
@@ -26,11 +22,10 @@ import handworks_cleaning_service.handworks_mobile.ui.fragments.ChatFragment;
 import handworks_cleaning_service.handworks_mobile.ui.fragments.HistoryFragment;
 import handworks_cleaning_service.handworks_mobile.ui.fragments.HomeFragment;
 import handworks_cleaning_service.handworks_mobile.ui.fragments.NotificationFragment;
-import handworks_cleaning_service.handworks_mobile.ui.pages.auth.Login;
+import handworks_cleaning_service.handworks_mobile.ui.fragments.WeekViewFragment;
 import handworks_cleaning_service.handworks_mobile.ui.pages.user.UserProfile;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
-import handworks_cleaning_service.handworks_mobile.utils.uistate.SessionUiState;
 
 @AndroidEntryPoint
 public class Dashboard extends AppCompatActivity {
@@ -41,22 +36,21 @@ public class Dashboard extends AppCompatActivity {
 
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         EdgeToEdge.enable(this);
+
         ActivityDashboardBinding binding = ActivityDashboardBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
+
         if (savedInstanceState == null) {
             replaceFrameFragment(new HomeFragment());
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(bottomNav, (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNavigationView, (v, insets) -> {
             int bottomInset = insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom;
             v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), bottomInset);
             return insets;
         });
 
         AuthViewModel authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-
-        ImageView userPfp = findViewById(R.id.userPfp);
 
         User cachedUser = authViewModel.getCachedUser();
         if (cachedUser != null) {
@@ -65,16 +59,18 @@ public class Dashboard extends AppCompatActivity {
                     .load(userPfpUrl)
                     .placeholder(R.drawable.pfp_placeholder)
                     .circleCrop()
-                    .into(userPfp);
+                    .into(binding.header.userPfp);
         }
 
-        userPfp.setOnClickListener(v -> NavigationUtil.navigateNoFinishTo(this, UserProfile.class));
+        binding.header.userPfp.setOnClickListener(v -> NavigationUtil.navigateNoFinishTo(this, UserProfile.class));
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
 
             if (id == R.id.homeIcon) {
                 replaceFrameFragment(new HomeFragment());
+            } else if (id == R.id.calendarIcon) {
+                replaceFrameFragment(new WeekViewFragment());
             } else if (id == R.id.historyIcon) {
                 replaceFrameFragment(new HistoryFragment());
             } else if (id == R.id.chatIcon) {

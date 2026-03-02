@@ -67,7 +67,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardInfo"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_margin="24dp"
             app:cardCornerRadius="16dp"
@@ -103,6 +103,7 @@
                         app:cardElevation="4dp"
                         android:layout_marginTop="10dp"
                         android:layout_gravity="center"
+                        android:layout_marginHorizontal="10dp"
                         android:layout_marginBottom="16dp" >
 
                         <ImageView
@@ -223,8 +224,8 @@
         android:layout_height="wrap_content"
         android:text="@string/get_started"
         app:cornerRadius="8dp"
-        android:textColor="@color/textSecondary"
-        android:backgroundTint="@color/colorTertiary"
+        android:textColor="@color/whiten"
+        android:backgroundTint="@color/colorPrimary"
         app:layout_constraintTop_toTopOf="@id/btnGoBackToLanding"
         app:layout_constraintStart_toEndOf="@id/btnGoBackToLanding"
         android:layout_marginStart="10dp"
@@ -242,7 +243,8 @@
         app:iconGravity="textStart"
         app:iconPadding="8dp"
         app:cornerRadius="8dp"
-        app:iconTint="@color/textSecondary"
+        android:textColor="@color/darken"
+        app:iconTint="@color/darken"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layoutInfo" />
 

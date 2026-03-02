@@ -7,15 +7,20 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DateUtil {
-    public static String formatOrderDate(String isoDateString) {
-        OffsetDateTime dateTime = OffsetDateTime.parse(isoDateString); // e.g. 2025-05-13T00:29:45+08:00
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy 'at' h:mm a"); // e.g. May 13, 2025 at 12:29 AM
-        return dateTime.format(formatter);
-    }
-
     public static String formatDateFromIntToString(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault());
         return sdf.format(date);
+    }
+
+    public static String formatStringDate(String strDate) {
+        OffsetDateTime date = OffsetDateTime.parse(strDate);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
+        return date.format(formatter);
+    }
+
+    public static long convertStringToLong(String strDate) {
+        OffsetDateTime dateTime = OffsetDateTime.parse(strDate);
+        return dateTime.toInstant().toEpochMilli();
     }
 
     public static String getTimeAgo(long timeMillis) {
@@ -41,5 +46,16 @@ public class DateUtil {
         if (minutes > 0) return minutes + " minute" + (minutes > 1 ? "s" : "") + " ago";
 
         return "Just now";
+    }
+
+    public static String extractDateFromISO8601TimeStamps(String isoDate){
+        OffsetDateTime dateTime = OffsetDateTime.parse(isoDate);
+        return dateTime.toLocalDate().toString();
+    }
+
+    public static String extractTimeFromISO8601TimeStamps(String isoDate){
+        OffsetDateTime dateTime = OffsetDateTime.parse(isoDate);
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
+        return dateTime.format(timeFormatter);
     }
 }

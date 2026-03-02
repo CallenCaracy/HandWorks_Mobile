@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp"
+    android:padding="10dp"
     android:background="@color/colorPrimary">
 
     <TextView
@@ -14,7 +14,7 @@
         android:text="@string/handworks_cleaning"
         android:textSize="22sp"
         android:textStyle="bold"
-        android:textColor="@color/textPrimary"
+        android:textColor="@color/background"
         android:textAllCaps="true"
         android:fontFamily="sans-serif-medium"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,8 +23,8 @@
 
     <ImageView
         android:id="@+id/userPfp"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:src="@drawable/pfp_placeholder"
         android:background="@drawable/circle_background"
         android:scaleType="centerCrop"

@@ -6,13 +6,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragments.HomeFragment">
 
-    <include
-        android:id="@+id/noJobAssignedYet"
-        layout="@layout/no_job_assigned_yet"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"/>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -21,7 +14,9 @@
             android:id="@+id/summaryCard"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_marginTop="-10dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginHorizontal="16dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -39,6 +34,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/welcome"
+                    android:layout_marginTop="6dp"
                     android:textColor="@color/textPrimary"
                     android:textSize="12sp" />
 
@@ -90,10 +86,44 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!--
-            MAKE THE CALENDAR... REFER TO THIS
-            https://github.com/codeWithCal/CalendarTutorialAndroidStudio/blob/WeeklyCalendar/app/src/main/java/codewithcal/au/calendarappexample/Event.java
-        -->
+        <Spinner
+            android:id="@+id/spinnerDateFilter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/summaryCard"
+            tools:layout_editor_absoluteX="16dp" />
+
+        <include
+            android:id="@+id/noJobAssignedYet"
+            layout="@layout/no_job_assigned_yet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinnerDateFilter" />
+
+        <ProgressBar
+            android:id="@+id/loadingProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinnerDateFilter" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/bookingsRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinnerDateFilter"
+            tools:layout_editor_absoluteX="16dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

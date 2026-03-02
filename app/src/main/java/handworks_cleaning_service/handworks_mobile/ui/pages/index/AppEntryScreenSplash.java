@@ -1,91 +1,140 @@
 package handworks_cleaning_service.handworks_mobile.ui.pages.index;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.clerk.api.Clerk;
+import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
+import handworks_cleaning_service.handworks_mobile.data.models.users.Employee;
+import handworks_cleaning_service.handworks_mobile.databinding.ActivityAppEntryScreenSplashBinding;
 import handworks_cleaning_service.handworks_mobile.ui.pages.auth.Login;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
+import handworks_cleaning_service.handworks_mobile.ui.viewmodel.UserViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
 import handworks_cleaning_service.handworks_mobile.utils.uistate.SessionUiState;
+import kotlinx.serialization.json.JsonElement;
+import kotlinx.serialization.json.JsonObject;
 
 @AndroidEntryPoint
 public class AppEntryScreenSplash extends AppCompatActivity {
-
-    private ProgressBar progressBar;
+    private ActivityAppEntryScreenSplashBinding binding;
     private AuthViewModel authViewModel;
+    private UserViewModel userViewModel;
+    private String empId;
+    @Inject
+    SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        binding = ActivityAppEntryScreenSplashBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_app_entry_screen_splash);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        authViewModel = new ViewModelProvider(this)
-                .get(AuthViewModel.class);
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
-        progressBar = findViewById(R.id.progressBarLoading);
-        
-        authViewModel.getSessionState()
-                .observe(this, state -> {
-
-                    if (state instanceof SessionUiState.Loading
-                            || state instanceof SessionUiState.Idle) {
-                        progressBar.setVisibility(View.VISIBLE);
-                    }
-
-                    else if (state instanceof SessionUiState.Authenticated) {
-                        progressBar.setVisibility(View.GONE);
-                        NavigationUtil.navigateTo(this, Dashboard.class);
-                        finish();
-                    }
-
-                    else if (state instanceof SessionUiState.Unauthenticated) {
-                        progressBar.setVisibility(View.GONE);
-                        NavigationUtil.navigateTo(this, Login.class);
-                        finish();
-                    }
-
-                    else if (state instanceof SessionUiState.Error) {
-                        progressBar.setVisibility(View.GONE);
-                        showRetryUI();
-                    }
-                });
-
+        authViewModel.getSessionState().observe(this, this::render);
         authViewModel.checkSession();
+        binding.btnRetry.setOnClickListener(v -> authViewModel.checkSession());
+    }
+
+    private void render(SessionUiState state) {
+        binding.progressBarLoading.setVisibility(View.GONE);
+        binding.tvRetryMessage.setVisibility(View.GONE);
+        binding.btnRetry.setVisibility(View.GONE);
+
+        if (state instanceof SessionUiState.Loading || state instanceof SessionUiState.Idle) {
+            binding.progressBarLoading.setVisibility(View.VISIBLE);
+        } else if (state instanceof SessionUiState.Authenticated) {
+            checkPoint();
+        } else if (state instanceof SessionUiState.Unauthenticated) {
+            NavigationUtil.navigateTo(this, Login.class);
+        } else if (state instanceof SessionUiState.Error) {
+            binding.tvRetryMessage.setVisibility(View.VISIBLE);
+            binding.btnRetry.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void checkPoint() {
+        JsonObject metadata = authViewModel.getCachedUser().getPublicMetadata();
+        if (metadata == null || !metadata.containsKey("empId")) {
+            forceLogout();
+            NavigationUtil.navigateTo(this, Login.class);
+            return;
+        }
+
+        JsonElement element = metadata.get("empId");
+        empId = element.toString().replace("\"", "");
+        if (empId.isEmpty()) {
+            forceLogout();
+            NavigationUtil.navigateTo(this, Login.class);
+            return;
+        }
+        prefs.edit().putString("EMP_ID", empId).apply();
+
+        userViewModel.loadEmployee(empId);
+
+        userViewModel.getEmployee().observe(this, new Observer<>() {
+            @Override
+            public void onChanged(Employee employee) {
+                userViewModel.getEmployee().removeObserver(this);
+
+                if (employee != null && "employee".equals(employee.getAccount().getRole())) {
+                    Toast.makeText(AppEntryScreenSplash.this, "Welcome back!", Toast.LENGTH_LONG).show();
+                    NavigationUtil.navigateTo(AppEntryScreenSplash.this, Dashboard.class);
+                } else {
+                    Toast.makeText(AppEntryScreenSplash.this, "Unauthorized account", Toast.LENGTH_LONG).show();
+                    forceLogout();
+                    NavigationUtil.navigateTo(AppEntryScreenSplash.this, Login.class);
+                }
+            }
+        });
+
+        userViewModel.getError().observe(this, error -> {
+            if (error != null) {
+                Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+                if (!error.equals("timeout")) {
+                    binding.progressBarLoading.setVisibility(View.GONE);
+                    binding.errorUI.getRoot().setVisibility(View.VISIBLE);
+                    binding.errorUI.errorBtntnRetry.setOnClickListener(v -> showRetryUI());
+                } else {
+                    binding.progressBarLoading.setVisibility(View.GONE);
+                    showRetryUI();
+                }
+            }
+        });
     }
 
     private void showRetryUI() {
-        TextView message = findViewById(R.id.tvRetryMessage);
-        Button retryButton = findViewById(R.id.btnRetry);
+        binding.progressBarLoading.setVisibility(View.VISIBLE);
+        binding.tvRetryMessage.setVisibility(View.GONE);
+        binding.btnRetry.setVisibility(View.GONE);
+        userViewModel.loadEmployee(empId);
+    }
 
-        message.setVisibility(View.VISIBLE);
-        retryButton.setVisibility(View.VISIBLE);
-
-        retryButton.setOnClickListener(v -> {
-            message.setVisibility(View.GONE);
-            retryButton.setVisibility(View.GONE);
-            progressBar.setVisibility(View.VISIBLE);
-
-            authViewModel.checkSession();
-        });
+    private void forceLogout() {
+        authViewModel.logoutCompletely();
+        userViewModel.clearCache();
+        NavigationUtil.navigateTo(this, Login.class);
     }
 }

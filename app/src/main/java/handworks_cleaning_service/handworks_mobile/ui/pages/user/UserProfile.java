@@ -1,19 +1,17 @@
 package handworks_cleaning_service.handworks_mobile.ui.pages.user;
 
-import static handworks_cleaning_service.handworks_mobile.utils.Constant.PREFS_NAME;
+import static android.view.View.GONE;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,30 +19,33 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.clerk.api.Clerk;
 import com.clerk.api.user.User;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.inject.Inject;
+
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
+import handworks_cleaning_service.handworks_mobile.databinding.ActivityUserProfileBinding;
 import handworks_cleaning_service.handworks_mobile.ui.adapters.ProfileSettingsAdapter;
 import handworks_cleaning_service.handworks_mobile.ui.models.ProfileItem;
 import handworks_cleaning_service.handworks_mobile.ui.models.ThemeOption;
 import handworks_cleaning_service.handworks_mobile.ui.pages.auth.Login;
 import handworks_cleaning_service.handworks_mobile.ui.pages.index.FullscreenImageView;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
+import handworks_cleaning_service.handworks_mobile.ui.viewmodel.UserViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.Constant;
 import handworks_cleaning_service.handworks_mobile.utils.DateUtil;
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
@@ -53,70 +54,97 @@ import handworks_cleaning_service.handworks_mobile.utils.uistate.AuthUiState;
 
 @AndroidEntryPoint
 public class UserProfile extends AppCompatActivity {
+    @Inject
+    SharedPreferences prefs;
     private AuthViewModel authViewModel;
-    private Button signOut;
-    private RecyclerView recyclerView;
+    private UserViewModel userViewModel;
+    private ActivityUserProfileBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        binding = ActivityUserProfileBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_user_profile);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        ImageView back = findViewById(R.id.btnExitProfile);
-        ImageView userPfp = findViewById(R.id.userPfp);
-        TextView cleanerFName = findViewById(R.id.cleanerFirstNameDisplay);
-        TextView cleanerLName = findViewById(R.id.cleanerLastNameDisplay);
-        TextView joinedAt = findViewById(R.id.joinedValue);
-        RatingBar ratingBar = findViewById(R.id.ratingBar);
-        TextView ratingValue = findViewById(R.id.ratingValue);
-        signOut = findViewById(R.id.btnLogout);
-
-        recyclerView = findViewById(R.id.profileRecycler);
         setUpRecyclerView();
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-        signOutUser();
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        signOutUserConfirmation();
 
         User cachedUser = authViewModel.getCachedUser();
         if (cachedUser != null && cachedUser.getCreatedAt() != null) {
-            cleanerFName.setText(cachedUser.getFirstName());
-            cleanerLName.setText(cachedUser.getLastName());
+            binding.cleanerFirstNameDisplay.setText(cachedUser.getFirstName());
+            binding.cleanerLastNameDisplay.setText(cachedUser.getLastName());
 
             Glide.with(this)
                     .load(cachedUser.getImageUrl())
                     .placeholder(R.drawable.pfp_placeholder)
                     .error(R.drawable.pfp_placeholder)
                     .circleCrop()
-                    .into(userPfp);
+                    .into(binding.userPfp);
 
-            long createdAt = cachedUser.getCreatedAt();
-            joinedAt.setText(DateUtil.getTimeAgo(createdAt));
-
-
-            userPfp.setOnClickListener(v -> {
+            binding.userPfp.setOnClickListener(v -> {
                 Intent intent = new Intent(this, FullscreenImageView.class);
                 intent.putExtra("image_url", cachedUser.getImageUrl());
                 startActivity(intent);
             });
+
+            userViewModel.getEmployee().observe(this, employee -> {
+                if (employee != null) {
+                    String formattedDate = DateUtil.formatStringDate(employee.getHire_date());
+                    long longDate = DateUtil.convertStringToLong(employee.getHire_date());
+
+                    binding.joinedValue.setText(DateUtil.getTimeAgo(longDate));
+                    binding.ratingBar.setRating((float) employee.getPerformance_score());
+                    binding.ratingValue.setText(String.valueOf((int) employee.getPerformance_score()));
+                    binding.ratingNumber.setText(
+                            getResources().getQuantityString(
+                                    R.plurals.reviews_count,
+                                    employee.getNum_ratings(),
+                                    employee.getNum_ratings()
+                            )
+                    );
+                    binding.employeeEmailValue.setText(employee.getAccount().getEmail());
+                    binding.employeeHireDateValue.setText(formattedDate);
+                    binding.employeePositionValue.setText(employee.getPosition());
+                    binding.employeeStatus.setText(
+                            getString(R.string.status_colon, employee.getStatus())
+                    );
+                }
+            });
+
+            userViewModel.getError().observe(this, error -> {
+                Toast.makeText(this, "Error fetching user info.", Toast.LENGTH_LONG).show();
+                binding.ratingBar.setRating(0.0f);
+                binding.joinedValue.setText(R.string._0_months_ago);
+                binding.ratingValue.setText("0.0");
+                binding.ratingNumber.setVisibility(GONE);
+                binding.employeeEmailValue.setText(R.string.error);
+                binding.employeeHireDateValue.setText(R.string.error);
+                binding.employeePositionValue.setText(R.string.error);
+                binding.employeeStatus.setText(R.string.error);
+            });
+            userViewModel.loadEmployee(cachedUser.getId());
         }
 
-        ratingBar.setRating(4.5f);
-        ratingValue.setText("4.5");
-
-        back.setOnClickListener(v -> finish());
+        binding.btnExitProfile.setOnClickListener(v -> finish());
     }
 
-    private void signOutUser() {
-        signOut.setOnClickListener(v -> new AlertDialog.Builder(this)
+    private void signOutUserConfirmation() {
+        binding.btnLogout.setOnClickListener(v -> new AlertDialog.Builder(this)
                 .setTitle("Logout")
                 .setMessage("Are you sure you want to logout?")
-                .setPositiveButton("Yes", (dialog, which) -> authViewModel.signOut())
+                .setPositiveButton("Yes", (dialog, which) -> logoutCompletely())
                 .setNegativeButton("No", null)
                 .show());
 
@@ -130,12 +158,9 @@ public class UserProfile extends AppCompatActivity {
     }
 
     private void setUpRecyclerView() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.profileRecycler.setLayoutManager(new LinearLayoutManager(this));
 
         List<ProfileItem> items = new ArrayList<>();
-
-        items.add(new ProfileItem(Constant.TYPE_HEADER, "Profile", 0));
-        items.add(new ProfileItem(Constant.TYPE_ITEM, "Manage user", R.drawable.target_svgrepo_com));
 
         items.add(new ProfileItem(Constant.TYPE_HEADER, "Settings", 0));
         items.add(new ProfileItem(Constant.TYPE_SWITCH, "Notifications", R.drawable.bell_svgrepo_com));
@@ -143,15 +168,10 @@ public class UserProfile extends AppCompatActivity {
 
         ProfileSettingsAdapter adapter = new ProfileSettingsAdapter(items, item -> {
             switch (item.title) {
-                case "Manage user":
-                    // open manage user
-                    break;
                 case "Notifications":
-                    SharedPreferences prefs = this.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
                     SwitchCompat switchView = findViewById(R.id.switchView);
 
                     switchView.setChecked(prefs.getBoolean("Notification_Toggle", false));
-
                     switchView.setOnCheckedChangeListener((btn, checked) -> prefs.edit().putBoolean("Notification_Toggle", checked).apply());
                     break;
                 case "Theme":
@@ -160,7 +180,7 @@ public class UserProfile extends AppCompatActivity {
             }
         });
 
-        recyclerView.setAdapter(adapter);
+        binding.profileRecycler.setAdapter(adapter);
     }
 
     private void showThemeModal() {
@@ -186,18 +206,27 @@ public class UserProfile extends AppCompatActivity {
                 }
 
                 ThemeOption theme = Objects.requireNonNull(getItem(position), "ThemeOption cannot be null");
-                TextView text = convertView.findViewById(R.id.text);
-                ImageView icon = convertView.findViewById(R.id.icon);
+                TextView textAndIcon = convertView.findViewById(R.id.textAndIcon);
 
-                text.setText(theme.name);
-                icon.setImageResource(theme.iconRes);
+                textAndIcon.setText(theme.name);
+
+                Context context = getContext();
+                Drawable icon = AppCompatResources.getDrawable(context, theme.iconRes);
+                if (icon != null) {
+                    float scale = context.getResources().getDisplayMetrics().density;
+                    int sizeInPx = (int) (24 * scale + 0.5f);
+                    icon.setBounds(0, 0, sizeInPx, sizeInPx);
+
+                    textAndIcon.setCompoundDrawables(icon, null, null, null);
+                    textAndIcon.setCompoundDrawablePadding(12);
+                }
 
                 if (ThemeUtil.themeMatchesCurrent(theme, currentTheme)) {
-                    text.setTypeface(null, Typeface.BOLD);
-                    text.setTextColor(getContext().getColor(R.color.colorTertiary));
+                    textAndIcon.setTypeface(null, Typeface.BOLD);
+                    textAndIcon.setTextColor(getContext().getColor(R.color.colorTertiary));
                 } else {
-                    text.setTypeface(null, Typeface.NORMAL);
-                    text.setTextColor(getContext().getColor(R.color.textPrimary));
+                    textAndIcon.setTypeface(null, Typeface.NORMAL);
+                    textAndIcon.setTextColor(getContext().getColor(R.color.textPrimary));
                 }
 
                 return convertView;
@@ -216,5 +245,10 @@ public class UserProfile extends AppCompatActivity {
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
+    }
+
+    private void logoutCompletely() {
+        authViewModel.logoutCompletely();
+        userViewModel.clearCache();
     }
 }
