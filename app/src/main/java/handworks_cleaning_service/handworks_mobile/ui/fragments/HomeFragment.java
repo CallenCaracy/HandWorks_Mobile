@@ -3,6 +3,7 @@ package handworks_cleaning_service.handworks_mobile.ui.fragments;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -18,7 +19,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
+import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +32,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.databinding.FragmentHomeBinding;
 import handworks_cleaning_service.handworks_mobile.ui.adapters.BookingAdapter;
+import handworks_cleaning_service.handworks_mobile.ui.pages.booking.BookingDetails;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.BookViewModel;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.UserViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.DateUtil;
@@ -60,7 +64,12 @@ public class HomeFragment extends Fragment {
 
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         bookViewModel = new ViewModelProvider(requireActivity()).get(BookViewModel.class);
-        bookingAdapter = new BookingAdapter();
+        bookingAdapter = new BookingAdapter(new ArrayList<>(), booking -> {
+            Intent intent = new Intent(requireContext(), BookingDetails.class);
+            intent.putExtra("booking", booking);
+            startActivity(intent);
+        });
+        binding.bookingsRecycler.setAdapter(bookingAdapter);
 
         // RecyclerView
         binding.bookingsRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -97,7 +106,7 @@ public class HomeFragment extends Fragment {
                 if (endDate == null) endDate = today.plusDays(7);
 
                 bookViewModel.resetPagination();
-                bookViewModel.loadNextPage(employeeId, today.toString(), endDate.toString());
+                bookViewModel.loadNextPage(employeeId, today.minusMonths(3).toString(), today.plusMonths(3).toString());
             } else {
                 binding.cleanerNameDisplay.setText(getString(R.string.cleaner_name_display, "Error"));
             }
@@ -108,14 +117,13 @@ public class HomeFragment extends Fragment {
         bookViewModel.getBookings().observe(getViewLifecycleOwner(), bookings -> {
             boolean hasBooks = bookings != null && !bookings.isEmpty();
 
-            binding.summaryTaskNumberDisplay.setText(String.valueOf(bookings != null ? bookings.size() : 0));
+            binding.summaryTaskNumberDisplay.setText(String.valueOf(bookings != null ? bookViewModel.getTotalBookings() : 0));
 
             updateUI(hasBooks, bookViewModel.getIsLoading().getValue() != null && bookViewModel.getIsLoading().getValue());
 
             bookingAdapter.submitList(bookings);
         });
 
-        // Observe loading
         bookViewModel.getIsLoading().observe(getViewLifecycleOwner(), loading -> {
             boolean hasBooks = bookViewModel.getBookings().getValue() != null &&
                     !bookViewModel.getBookings().getValue().isEmpty();
@@ -155,7 +163,7 @@ public class HomeFragment extends Fragment {
 
                 if (employeeId != null) {
                     bookViewModel.resetPagination();
-                    bookViewModel.loadNextPage(employeeId, today.toString(), endDate.toString());
+                    bookViewModel.loadNextPage(employeeId, today.minusMonths(3).toString(), today.plusMonths(3).toString());
                 }
             }
 
@@ -175,7 +183,7 @@ public class HomeFragment extends Fragment {
                 int lastVisibleItem = lm.findLastVisibleItemPosition();
 
                 if (totalItemCount <= lastVisibleItem + 5) {
-                    bookViewModel.loadNextPage(employeeId, today.toString(), endDate.toString());
+                    bookViewModel.loadNextPage(employeeId, today.minusMonths(3).toString(), today.plusMonths(3).toString());
                 }
             }
         });

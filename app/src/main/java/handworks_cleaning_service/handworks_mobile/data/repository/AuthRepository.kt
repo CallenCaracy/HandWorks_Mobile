@@ -10,6 +10,7 @@ import com.clerk.api.network.serialization.longErrorMessageOrNull
 import com.clerk.api.network.serialization.onFailure
 import com.clerk.api.network.serialization.onSuccess
 import com.clerk.api.session.Session
+import com.clerk.api.session.fetchToken
 import com.clerk.api.signin.SignIn
 import com.clerk.api.signin.attemptFirstFactor
 import com.clerk.api.signin.resetPassword
@@ -18,6 +19,7 @@ import handworks_cleaning_service.handworks_mobile.data.dto.auth.LoginRequest
 import handworks_cleaning_service.handworks_mobile.data.remote.AuthApi
 import handworks_cleaning_service.handworks_mobile.utils.Result
 import handworks_cleaning_service.handworks_mobile.utils.SignInHelper
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.lang.Boolean
 import javax.inject.Inject
@@ -72,6 +74,20 @@ class AuthRepository @Inject constructor() : AuthApi {
     override fun getSession(): Session? {
         return session
     }
+
+    suspend fun getFreshToken(): String? {
+        val session = session ?: return null
+
+        return when (val result = session.fetchToken()) {
+            is ClerkResult.Success -> result.value.jwt
+            is ClerkResult.Failure -> null
+        }
+    }
+
+    fun getFreshTokenBlocking(): String? =
+        runBlocking {
+            getFreshToken()
+        }
 
     override fun isSignedIn(): kotlin.Boolean {
         return isSignedIn

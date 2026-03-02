@@ -15,7 +15,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import handworks_cleaning_service.handworks_mobile.data.dto.book.BooksByEmployeeIdResponse;
+import handworks_cleaning_service.handworks_mobile.data.dto.book.BooksByEmployeeIdRequest;
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.Booking;
 import handworks_cleaning_service.handworks_mobile.data.models.wrappers.BookingWrapper;
 import handworks_cleaning_service.handworks_mobile.data.repository.BookRepository;
@@ -32,6 +32,7 @@ public class BookViewModel extends ViewModel {
     private int currentPage = 0;
     private boolean isLastPage = false;
     private boolean isLoading = false;
+    private int totalBookings;
 
     public LiveData<Boolean> getIsLoading() {
         return isLoadingLive;
@@ -65,7 +66,7 @@ public class BookViewModel extends ViewModel {
         isLoading = true;
         isLoadingLive.setValue(true);
 
-        BooksByEmployeeIdResponse request = new BooksByEmployeeIdResponse(
+        BooksByEmployeeIdRequest request = new BooksByEmployeeIdRequest(
                 employeeId,
                 startDate,
                 endDate,
@@ -92,8 +93,11 @@ public class BookViewModel extends ViewModel {
                     accumulatedList.addAll(newBookings);
                     bookingsLiveData.postValue(new ArrayList<>(accumulatedList));
 
-                    currentPage++;
+                    totalBookings = response.body().getData().getTotalBookings();
+                    int totalPages = (int) Math.ceil((double) totalBookings / PAGE_LIMIT);
 
+                    currentPage++;
+                    isLastPage = currentPage >= totalPages;
                 } else {
                     errorLiveData.postValue("Empty or unsuccessful response");
                 }
@@ -107,5 +111,9 @@ public class BookViewModel extends ViewModel {
                 Log.e("HTTPs", "NETWORK FAILURE", t); // DEBUGGING
             }
         });
+    }
+
+    public int getTotalBookings() {
+        return totalBookings;
     }
 }

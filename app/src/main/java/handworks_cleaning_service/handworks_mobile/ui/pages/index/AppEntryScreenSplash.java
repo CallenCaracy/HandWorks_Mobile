@@ -32,6 +32,7 @@ public class AppEntryScreenSplash extends AppCompatActivity {
     private ActivityAppEntryScreenSplashBinding binding;
     private AuthViewModel authViewModel;
     private UserViewModel userViewModel;
+    private String empId;
     @Inject
     SharedPreferences prefs;
 
@@ -43,7 +44,6 @@ public class AppEntryScreenSplash extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         EdgeToEdge.enable(this);
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -53,44 +53,26 @@ public class AppEntryScreenSplash extends AppCompatActivity {
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
-        authViewModel.getSessionState()
-                .observe(this, state -> {
-
-                    if (state instanceof SessionUiState.Loading
-                            || state instanceof SessionUiState.Idle) {
-                        binding.progressBarLoading.setVisibility(View.VISIBLE);
-                    }
-
-                    else if (state instanceof SessionUiState.Authenticated) {
-                        binding.progressBarLoading.setVisibility(View.GONE);
-                        checkPoint();
-                    }
-
-                    else if (state instanceof SessionUiState.Unauthenticated) {
-                        binding.progressBarLoading.setVisibility(View.GONE);
-                        NavigationUtil.navigateTo(this, Login.class);
-                    }
-
-                    else if (state instanceof SessionUiState.Error) {
-                        binding.progressBarLoading.setVisibility(View.GONE);
-                        showRetryUI();
-                    }
-                });
-
+        authViewModel.getSessionState().observe(this, this::render);
         authViewModel.checkSession();
+        binding.btnRetry.setOnClickListener(v -> authViewModel.checkSession());
     }
 
-    private void showRetryUI() {
-        binding.tvRetryMessage.setVisibility(View.VISIBLE);
-        binding.btnRetry.setVisibility(View.VISIBLE);
+    private void render(SessionUiState state) {
+        binding.progressBarLoading.setVisibility(View.GONE);
+        binding.tvRetryMessage.setVisibility(View.GONE);
+        binding.btnRetry.setVisibility(View.GONE);
 
-        binding.btnRetry.setOnClickListener(v -> {
-            binding.tvRetryMessage.setVisibility(View.GONE);
-            binding.btnRetry.setVisibility(View.GONE);
+        if (state instanceof SessionUiState.Loading || state instanceof SessionUiState.Idle) {
             binding.progressBarLoading.setVisibility(View.VISIBLE);
-
-            authViewModel.checkSession();
-        });
+        } else if (state instanceof SessionUiState.Authenticated) {
+            checkPoint();
+        } else if (state instanceof SessionUiState.Unauthenticated) {
+            NavigationUtil.navigateTo(this, Login.class);
+        } else if (state instanceof SessionUiState.Error) {
+            binding.tvRetryMessage.setVisibility(View.VISIBLE);
+            binding.btnRetry.setVisibility(View.VISIBLE);
+        }
     }
 
     private void checkPoint() {
@@ -102,7 +84,7 @@ public class AppEntryScreenSplash extends AppCompatActivity {
         }
 
         JsonElement element = metadata.get("empId");
-        String empId = element.toString().replace("\"", "");
+        empId = element.toString().replace("\"", "");
         if (empId.isEmpty()) {
             forceLogout();
             NavigationUtil.navigateTo(this, Login.class);
@@ -131,11 +113,17 @@ public class AppEntryScreenSplash extends AppCompatActivity {
         userViewModel.getError().observe(this, error -> {
             if (error != null) {
                 Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-                // Refactor this to have a pop-up when fail
-                binding.progressBarLoading.setVisibility(View.VISIBLE);
-                NavigationUtil.navigateNoFinishTo(this, NoInternet.class);
+                binding.progressBarLoading.setVisibility(View.GONE);
+                showRetryUI();
             }
         });
+    }
+
+    private void showRetryUI() {
+        binding.progressBarLoading.setVisibility(View.VISIBLE);
+        binding.tvRetryMessage.setVisibility(View.GONE);
+        binding.btnRetry.setVisibility(View.GONE);
+        userViewModel.loadEmployee(empId);
     }
 
     private void forceLogout() {

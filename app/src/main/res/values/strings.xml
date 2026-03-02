@@ -7,6 +7,14 @@
     <string name="handworks_cleaning_services_2025">© Handworks Cleaning Services 2026</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="error">Error</string>
+    <string name="vertical_line"> | </string>
+    <string name="dash">-</string>
+    <string name="service_general_cleaning">General Cleaning</string>
+    <string name="service_couch">Couch Cleaning</string>
+    <string name="service_mattress">Mattress Cleaning</string>
+    <string name="service_car">Car Interior Cleaning</string>
+    <string name="service_post">Post-Construction Cleaning</string>
+    <string name="service_unknown">Unknown Service</string>
     <!--  General Strings EndRegion  -->
 
     <!--  User Profile Activity Region  -->
@@ -93,6 +101,9 @@
     <string name="_4">4</string>
     <string name="cleaner_name">Cleaner Name</string>
     <string name="welcome">Welcome</string>
+    <string name="today">Today</string>
+    <string name="past">Past</string>
+    <string name="upcoming">Upcoming</string>
     <!--  Home Fragment EndRegion  -->
 
     <!--  Calendar Components Activity StartRegion  -->

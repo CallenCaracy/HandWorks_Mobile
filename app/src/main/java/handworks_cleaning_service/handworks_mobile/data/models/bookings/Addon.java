@@ -1,6 +1,8 @@
 package handworks_cleaning_service.handworks_mobile.data.models.bookings;
 
-public class Addon {
+import java.io.Serializable;
+
+public class Addon implements Serializable {
     private String id;
     private double price;
     private ServiceDetail serviceDetail;

@@ -10,4 +10,9 @@ public class Constant {
     public static final String PREFS_NAME = "app_prefs";
     public static final String KEY_THEME = "theme_mode";
     public static final int PAGE_LIMIT = 10;
+    public static final String GENERAL_CLEANING = "GENERAL_CLEANING";
+    public static final String COUCH = "COUCH";
+    public static final String MATTRESS = "MATTRESS";
+    public static final String CAR = "CAR";
+    public static final String POST = "POST ";
 }

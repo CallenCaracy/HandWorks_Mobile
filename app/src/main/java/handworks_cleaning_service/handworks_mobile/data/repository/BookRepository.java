@@ -2,7 +2,7 @@ package handworks_cleaning_service.handworks_mobile.data.repository;
 
 import javax.inject.Inject;
 
-import handworks_cleaning_service.handworks_mobile.data.dto.book.BooksByEmployeeIdResponse;
+import handworks_cleaning_service.handworks_mobile.data.dto.book.BooksByEmployeeIdRequest;
 import handworks_cleaning_service.handworks_mobile.data.models.wrappers.BookingWrapper;
 import handworks_cleaning_service.handworks_mobile.data.remote.BookApi;
 import retrofit2.Callback;
@@ -17,7 +17,7 @@ public class BookRepository {
     }
 
     public void fetchBookingsByEmployeeId(
-            BooksByEmployeeIdResponse request,
+            BooksByEmployeeIdRequest request,
             Callback<BookingWrapper> callback
     ) {
         bookApi.getEmployeeBookings(

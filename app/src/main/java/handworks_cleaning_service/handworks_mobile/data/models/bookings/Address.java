@@ -1,6 +1,8 @@
 package handworks_cleaning_service.handworks_mobile.data.models.bookings;
 
-public class Address {
+import java.io.Serializable;
+
+public class Address implements Serializable {
     private String addressHuman;
     private double addressLat;
     private double addressLng;

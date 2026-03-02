@@ -1,6 +1,8 @@
 package handworks_cleaning_service.handworks_mobile.data.models.bookings;
 
-public class MainService {
+import java.io.Serializable;
+
+public class MainService implements Serializable {
     private String id;
     private ServiceDetail details;
     private String serviceType;

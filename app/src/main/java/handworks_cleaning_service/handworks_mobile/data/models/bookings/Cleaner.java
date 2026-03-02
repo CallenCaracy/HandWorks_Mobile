@@ -1,6 +1,8 @@
 package handworks_cleaning_service.handworks_mobile.data.models.bookings;
 
-public class Cleaner {
+import java.io.Serializable;
+
+public class Cleaner implements Serializable {
     private String id;
     private String cleanerFirstName;
     private String cleanerLastName;

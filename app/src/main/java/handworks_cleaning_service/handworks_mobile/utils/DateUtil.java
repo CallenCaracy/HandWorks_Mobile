@@ -47,4 +47,15 @@ public class DateUtil {
 
         return "Just now";
     }
+
+    public static String extractDateFromISO8601TimeStamps(String isoDate){
+        OffsetDateTime dateTime = OffsetDateTime.parse(isoDate);
+        return dateTime.toLocalDate().toString();
+    }
+
+    public static String extractTimeFromISO8601TimeStamps(String isoDate){
+        OffsetDateTime dateTime = OffsetDateTime.parse(isoDate);
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
+        return dateTime.format(timeFormatter);
+    }
 }

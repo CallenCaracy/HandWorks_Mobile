@@ -1,8 +1,9 @@
 package handworks_cleaning_service.handworks_mobile.data.models.bookings;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Base {
+public class Base implements Serializable {
     private String id;
     private String custId;
     private String customerFirstName;
