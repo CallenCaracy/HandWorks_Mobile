@@ -21,9 +21,6 @@
             android:name=".ui.pages.booking.BookingDetails"
             android:exported="false" />
         <activity
-            android:name=".ui.pages.index.NoInternet"
-            android:exported="false" />
-        <activity
             android:name=".ui.pages.index.FullscreenImageView"
             android:exported="false" />
         <activity

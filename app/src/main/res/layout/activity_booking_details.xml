@@ -3,82 +3,284 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.pages.booking.BookingDetails">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/profileHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="start">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Customer Info -->
+        <ImageView
+            android:id="@+id/btnExitBookingDetails"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:clickable="true"
+            android:contentDescription="@string/back"
+            android:focusable="true"
+            android:padding="4dp"
+            android:src="@drawable/outline_chevron_left"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:tint="@color/textPrimary" />
+
         <TextView
-            android:id="@+id/customerNameText"
+            android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
+            android:text="@string/booking_details"
             android:textSize="20sp"
-            android:text="Customer Name" />
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TextView
-            android:id="@+id/addressText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Address"
-            android:layout_marginTop="4dp" />
+    <TextView
+        android:id="@+id/customerNameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Customer Name"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileHeader" />
 
-        <!-- Booking Info -->
-        <TextView
-            android:id="@+id/serviceTypeText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Service Type"
-            android:layout_marginTop="12dp" />
+    <TextView
+        android:id="@+id/dirtyScaleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dirty Scale"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/customerNameText" />
 
-        <TextView
-            android:id="@+id/startDateText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Start Date" />
+    <TextView
+        android:id="@+id/progressStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Progress Status"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileHeader" />
 
-        <TextView
-            android:id="@+id/endDateText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="End Date" />
+    <TextView
+        android:id="@+id/paymentStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Payment Status"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progressStatus" />
 
-        <TextView
-            android:id="@+id/dirtyScaleText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Dirty Scale"
-            android:layout_marginTop="8dp" />
+    <TextView
+        android:id="@+id/totalPriceText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total Price"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/paymentStatus" />
 
-        <TextView
-            android:id="@+id/totalPriceText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Total Price"
-            android:layout_marginTop="8dp" />
+    <TextView
+        android:id="@+id/startDateText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start Date"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dirtyScaleText" />
 
-        <!-- Addons -->
-        <TextView
-            android:id="@+id/addonsText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Addons"
-            android:layout_marginTop="12dp" />
+    <TextView
+        android:id="@+id/endDateText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="End Date"
+        app:layout_constraintStart_toEndOf="@+id/startDateText"
+        app:layout_constraintTop_toBottomOf="@+id/dirtyScaleText" />
 
-        <!-- Cleaners -->
-        <TextView
-            android:id="@+id/cleanersText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cleaners"
-            android:layout_marginTop="12dp" />
+    <TextView
+        android:id="@+id/addressText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Address"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/startDateText" />
 
-    </LinearLayout>
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/flexLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:flexWrap="wrap"
+        app:justifyContent="flex_start"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addressText">
+    </com.google.android.flexbox.FlexboxLayout>
+
+    <TextView
+        android:id="@+id/mainServiceTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Main Service:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/flexLayout" />
+
+    <TextView
+        android:id="@+id/mainServiceDetailsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Service Details"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainServiceTitle" />
+
+    <TextView
+        android:id="@+id/mainServiceTypeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Service Type"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainServiceDetailsText" />
+
+    <TextView
+        android:id="@+id/addonServiceTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Addons:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainServiceTypeText" />
+
+    <TextView
+        android:id="@+id/addonServiceDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="Service Details"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addonServiceTitle" />
+
+    <TextView
+        android:id="@+id/addonServicePrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Service Price"
+        app:layout_constraintBottom_toBottomOf="@+id/addonServiceDetails"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/addonServiceDetails" />
+
+    <TextView
+        android:id="@+id/addonServiceType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="Service Type"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addonServiceDetails" />
+
+    <TextView
+        android:id="@+id/cleanersAssignedTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Assigned Cleaners:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addonServiceType" />
+
+    <ImageView
+        android:id="@+id/cleanerPfpUrl"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cleanersAssignedTitle" />
+
+    <TextView
+        android:id="@+id/cleanersAssignedFullName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cleaner Full Name:"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/cleanerPfpUrl"
+        app:layout_constraintStart_toEndOf="@+id/cleanerPfpUrl"
+        app:layout_constraintTop_toTopOf="@+id/cleanerPfpUrl" />
+
+    <TextView
+        android:id="@+id/equipmentAllocatedTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Allcated Equipments:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cleanerPfpUrl" />
+
+    <ImageView
+        android:id="@+id/equipmentAllocatedImageUrl"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/equipmentAllocatedTitle" />
+
+    <TextView
+        android:id="@+id/equipmentAllocatedName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Equipment Name:"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/equipmentAllocatedImageUrl"
+        app:layout_constraintStart_toEndOf="@+id/equipmentAllocatedImageUrl"
+        app:layout_constraintTop_toTopOf="@+id/equipmentAllocatedImageUrl" />
+
+    <TextView
+        android:id="@+id/equipmentAllocatedType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Equipment Type:"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/equipmentAllocatedName"
+        app:layout_constraintStart_toEndOf="@+id/equipmentAllocatedName"
+        app:layout_constraintTop_toTopOf="@+id/equipmentAllocatedName" />
+
+    <TextView
+        android:id="@+id/resourceAllocatedTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Allcated Resource:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/equipmentAllocatedImageUrl" />
+
+    <ImageView
+        android:id="@+id/resourceAllocatedImageUrl"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/resourceAllocatedTitle" />
+
+    <TextView
+        android:id="@+id/resourceAllocatedName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Resource Name:"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/resourceAllocatedImageUrl"
+        app:layout_constraintStart_toEndOf="@+id/resourceAllocatedImageUrl"
+        app:layout_constraintTop_toTopOf="@+id/resourceAllocatedImageUrl" />
+
+    <TextView
+        android:id="@+id/resourceAllocatedType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Resource Type:"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/resourceAllocatedName"
+        app:layout_constraintStart_toEndOf="@+id/resourceAllocatedName"
+        app:layout_constraintTop_toTopOf="@+id/resourceAllocatedName" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

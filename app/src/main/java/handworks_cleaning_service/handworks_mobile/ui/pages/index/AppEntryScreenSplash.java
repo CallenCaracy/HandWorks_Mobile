@@ -113,8 +113,14 @@ public class AppEntryScreenSplash extends AppCompatActivity {
         userViewModel.getError().observe(this, error -> {
             if (error != null) {
                 Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-                binding.progressBarLoading.setVisibility(View.GONE);
-                showRetryUI();
+                if (!error.equals("timeout")) {
+                    binding.progressBarLoading.setVisibility(View.GONE);
+                    binding.errorUI.getRoot().setVisibility(View.VISIBLE);
+                    binding.errorUI.errorBtntnRetry.setOnClickListener(v -> showRetryUI());
+                } else {
+                    binding.progressBarLoading.setVisibility(View.GONE);
+                    showRetryUI();
+                }
             }
         });
     }

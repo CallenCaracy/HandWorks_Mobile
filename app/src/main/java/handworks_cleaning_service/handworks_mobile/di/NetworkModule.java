@@ -2,11 +2,6 @@ package handworks_cleaning_service.handworks_mobile.di;
 
 import android.util.Log;
 
-import com.clerk.api.Clerk;
-import com.clerk.api.log.ClerkLog;
-import com.clerk.api.network.ClerkApi;
-import com.clerk.api.network.model.error.ClerkErrorResponse;
-import com.clerk.api.session.Session;
 import com.google.gson.Gson;
 
 import dagger.Module;
@@ -40,8 +35,6 @@ public class NetworkModule {
                 .addInterceptor(chain -> {
                     Request original = chain.request();
 
-//                    var session = authRepository.getSession();
-//                    String token = session != null && session.getLastActiveToken() != null ? session.getLastActiveToken().getJwt() : null;
                     String token = authRepository.getFreshTokenBlocking();
                     Log.d("HTTPs", "Session: " + token);
                     Request.Builder builder = original.newBuilder();

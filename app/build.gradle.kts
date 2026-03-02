@@ -26,8 +26,8 @@ android {
             buildConfigField(
                 type = "String",
                 name = "BASE_URL",
-                value = "\"http://192.168.1.4:8080/api/\"",
-//                value = "\"https://qa-handworks-api.onrender.com/api/\"",
+//                value = "\"http://192.168.1.4:8080/api/\"",
+                value = "\"https://qa-handworks-api.onrender.com/api/\"",
             )
         }
         release {
@@ -75,8 +75,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation(libs.glide.v4151)
-    ksp(libs.hilt.android.compiler)
     implementation(libs.logging.interceptor)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.google.flexbox)
+    implementation(libs.glide.v4151)
+    ksp(libs.hilt.android.compiler)
 }
