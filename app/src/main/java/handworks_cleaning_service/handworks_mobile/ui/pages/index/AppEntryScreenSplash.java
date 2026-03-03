@@ -112,7 +112,7 @@ public class AppEntryScreenSplash extends AppCompatActivity {
 
         userViewModel.getError().observe(this, error -> {
             if (error != null) {
-                Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, error + ": Taking longer than usual.", Toast.LENGTH_LONG).show();
                 if (!error.equals("timeout")) {
                     binding.progressBarLoading.setVisibility(View.GONE);
                     binding.errorUI.getRoot().setVisibility(View.VISIBLE);

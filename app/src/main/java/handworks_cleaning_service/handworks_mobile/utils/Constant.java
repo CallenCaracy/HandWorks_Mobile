@@ -14,5 +14,5 @@ public class Constant {
     public static final String COUCH = "COUCH";
     public static final String MATTRESS = "MATTRESS";
     public static final String CAR = "CAR";
-    public static final String POST = "POST ";
+    public static final String POST = "POST";
 }

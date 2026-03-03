@@ -1,4 +1,4 @@
-package handworks_cleaning_service.handworks_mobile.data.models.bookings;
+package handworks_cleaning_service.handworks_mobile.data.models.bookings.services;
 
 import java.io.Serializable;
 

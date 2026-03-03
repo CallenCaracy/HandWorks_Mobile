@@ -3,10 +3,10 @@ package handworks_cleaning_service.handworks_mobile.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import handworks_cleaning_service.handworks_mobile.data.models.bookings.Addon;
-import handworks_cleaning_service.handworks_mobile.data.models.bookings.Asset;
+import handworks_cleaning_service.handworks_mobile.data.models.bookings.services.Addon;
+import handworks_cleaning_service.handworks_mobile.data.models.bookings.infos.Asset;
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.Booking;
-import handworks_cleaning_service.handworks_mobile.data.models.bookings.Cleaner;
+import handworks_cleaning_service.handworks_mobile.data.models.bookings.infos.Cleaner;
 import handworks_cleaning_service.handworks_mobile.ui.models.BookingUiModel;
 
 public class BookingMapper {

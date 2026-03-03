@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import handworks_cleaning_service.handworks_mobile.R;
-import handworks_cleaning_service.handworks_mobile.data.models.bookings.Addon;
+import handworks_cleaning_service.handworks_mobile.data.models.bookings.services.Addon;
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.Booking;
 import handworks_cleaning_service.handworks_mobile.databinding.ActivityBookingDetailsBinding;
 
@@ -61,6 +61,8 @@ public class BookingDetails extends AppCompatActivity {
             binding.endDateText.setText(booking.getBase().getEndSched());
             binding.dirtyScaleText.setText(String.valueOf(booking.getBase().getDirtyScale()));
             binding.totalPriceText.setText(String.valueOf(booking.getTotalPrice()));
+            binding.equipmentAllocatedName.setText(booking.getEquipments().get(0).getName());
+            binding.equipmentAllocatedName.setText(booking.getResources().get(0).getName());
             if (booking.getAddons() != null && !booking.getAddons().isEmpty()) {
                 List<String> addonNames = new ArrayList<>();
                 for (Addon addon : booking.getAddons()) {

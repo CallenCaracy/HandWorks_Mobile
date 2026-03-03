@@ -6,12 +6,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
+import handworks_cleaning_service.handworks_mobile.data.deserializer.ServiceWithDetailsDeserializer;
+import handworks_cleaning_service.handworks_mobile.data.models.bookings.services.MainService;
+import handworks_cleaning_service.handworks_mobile.data.models.bookings.services.ServiceDetail;
 
 import javax.inject.Singleton;
 
@@ -28,7 +32,12 @@ public class AppModule {
     @Provides
     @Singleton
     public Gson provideGson() {
-        return new Gson();
-    }
+        return new GsonBuilder()
+                .registerTypeAdapter(MainService.class,
+                        new ServiceWithDetailsDeserializer<>(MainService.class))
+                .registerTypeAdapter(ServiceDetail.class,
+                        new ServiceWithDetailsDeserializer<>(ServiceDetail.class))
+                .create();
+    };
 }
 
