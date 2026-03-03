@@ -18,4 +18,24 @@ public class CouchCleaningSpecification implements Serializable {
         this.widthCm = widthCm;
         this.quantity = quantity;
     }
+
+    public String getCouchType() {
+        return couchType;
+    }
+
+    public int getDepthCm() {
+        return depthCm;
+    }
+
+    public int getHeightCm() {
+        return heightCm;
+    }
+
+    public int getWidthCm() {
+        return widthCm;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
 }

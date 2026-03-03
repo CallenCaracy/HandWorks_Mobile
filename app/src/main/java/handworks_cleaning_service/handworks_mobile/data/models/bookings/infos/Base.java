@@ -1,9 +1,7 @@
-package handworks_cleaning_service.handworks_mobile.data.models.bookings;
+package handworks_cleaning_service.handworks_mobile.data.models.bookings.infos;
 
 import java.io.Serializable;
 import java.util.List;
-
-import handworks_cleaning_service.handworks_mobile.data.models.bookings.infos.Address;
 
 public class Base implements Serializable {
     private String id;

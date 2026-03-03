@@ -17,4 +17,16 @@ public class GeneralCleaningDetails extends CleaningDetails implements Serializa
         this.hours = hours;
         this.sqm = sqm;
     }
+
+    public String getHomeType() {
+        return homeType;
+    }
+
+    public int getHours() {
+        return hours;
+    }
+
+    public int getSqm() {
+        return sqm;
+    }
 }

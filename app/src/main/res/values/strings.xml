@@ -187,6 +187,7 @@
 
     <!--  New Strings StartRegion  -->
     <string name="placeholder">Placeholder</string>
+    <string name="no_cleaning_site_provided">No cleaning site provided</string>
     <!--  New Strings EndRegion  -->
 
 </resources>

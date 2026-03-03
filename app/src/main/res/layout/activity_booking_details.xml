@@ -90,19 +90,20 @@
         app:layout_constraintTop_toBottomOf="@+id/paymentStatus" />
 
     <TextView
-        android:id="@+id/startDateText"
+        android:id="@+id/workDateText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start Date"
+        android:text="Work Date"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dirtyScaleText" />
 
     <TextView
-        android:id="@+id/endDateText"
+        android:id="@+id/startAndEndTimeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="End Date"
-        app:layout_constraintStart_toEndOf="@+id/startDateText"
+        android:text="Start and End Time"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@+id/workDateText"
         app:layout_constraintTop_toBottomOf="@+id/dirtyScaleText" />
 
     <TextView
@@ -111,7 +112,7 @@
         android:layout_height="wrap_content"
         android:text="Address"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startDateText" />
+        app:layout_constraintTop_toBottomOf="@+id/workDateText" />
 
     <com.google.android.flexbox.FlexboxLayout
         android:id="@+id/flexLayout"
@@ -122,6 +123,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addressText">
     </com.google.android.flexbox.FlexboxLayout>
+
+    <TextView
+        android:id="@+id/noSiteImages"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_cleaning_site_provided"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addressText" />
 
     <TextView
         android:id="@+id/mainServiceTitle"

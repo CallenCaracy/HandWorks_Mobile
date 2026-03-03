@@ -14,4 +14,8 @@ public class MattressCleaningDetails extends CleaningDetails implements Serializ
     public MattressCleaningDetails(List<MattressCleaningSpecification> cleaningSpecs) {
         this.cleaningSpecs = cleaningSpecs;
     }
+
+    public List<MattressCleaningSpecification> getCleaningSpecs() {
+        return cleaningSpecs;
+    }
 }

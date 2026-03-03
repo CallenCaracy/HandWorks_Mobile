@@ -13,4 +13,8 @@ public class PostConstructionDetails extends CleaningDetails implements Serializ
     public PostConstructionDetails(int sqm) {
         this.sqm = sqm;
     }
+
+    public int getSqm() {
+        return sqm;
+    }
 }

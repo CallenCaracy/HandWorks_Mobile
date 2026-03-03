@@ -21,4 +21,24 @@ public class MattressCleaningSpecification implements Serializable {
         this.widthCm = widthCm;
         this.quantity = quantity;
     }
+
+    public String getBedType() {
+        return bedType;
+    }
+
+    public int getDepthCm() {
+        return depthCm;
+    }
+
+    public int getHeightCm() {
+        return heightCm;
+    }
+
+    public int getWidthCm() {
+        return widthCm;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
 }

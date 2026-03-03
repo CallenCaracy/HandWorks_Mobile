@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.infos.Asset;
+import handworks_cleaning_service.handworks_mobile.data.models.bookings.infos.Base;
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.infos.Cleaner;
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.services.Addon;
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.services.MainService;
