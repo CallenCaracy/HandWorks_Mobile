@@ -37,7 +37,8 @@ public class EnumHelper {
         if (details == null) return "";
 
         if (details instanceof GeneralCleaningDetails general) {
-            return "General: " + general.getHomeType() +
+            return "General: \n" +
+                    general.getHomeType() +
                     ", Size: " + general.getSqm() + " sqm" +
                     ", Hours: " + general.getHours();
         } else if (details instanceof CarCleaningDetails car) {
@@ -52,7 +53,8 @@ public class EnumHelper {
             return "Mattress: \n" +
                     buildMattressSpecsSummary(mattress.getCleaningSpecs());
         } else if (details instanceof PostConstructionDetails post) {
-            return "Post Construction: " + post.getSqm() + " sqm";
+            return "Post Construction: \n" +
+                    post.getSqm() + " sqm";
         }
         return "";
     }
