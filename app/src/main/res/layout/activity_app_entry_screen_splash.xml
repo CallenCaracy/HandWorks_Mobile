@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:background="@color/colorPrimary"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.pages.index.AppEntryScreenSplash">
@@ -26,6 +27,19 @@
         android:layout_gravity="center"
         android:visibility="gone"
         android:text="@string/still_checking_your_session_nplease_check_your_internet_connection"
+        android:textColor="@color/whiten"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/handworks_logo" />
+
+    <ImageView
+        android:id="@+id/handworks_logo"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginBottom="110dp"
+        android:contentDescription="@string/handworks_logo"
+        android:src="@drawable/handworks_logo_v2"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,21 +51,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:indeterminate="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@+id/handworks_logo"
+        app:layout_constraintEnd_toEndOf="@+id/handworks_logo"
+        app:layout_constraintStart_toStartOf="@+id/handworks_logo" />
 
     <include
         android:id="@+id/errorUI"
         layout="@layout/activity_error"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:layout_margin="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -115,6 +115,7 @@ public class AppEntryScreenSplash extends AppCompatActivity {
                 Toast.makeText(this, error + ": Taking longer than usual.", Toast.LENGTH_LONG).show();
                 if (!error.equals("timeout")) {
                     binding.progressBarLoading.setVisibility(View.GONE);
+                    binding.handworksLogo.setVisibility(View.GONE);
                     binding.errorUI.getRoot().setVisibility(View.VISIBLE);
                     binding.errorUI.errorBtntnRetry.setOnClickListener(v -> showRetryUI());
                 } else {
@@ -126,6 +127,7 @@ public class AppEntryScreenSplash extends AppCompatActivity {
     }
 
     private void showRetryUI() {
+        binding.handworksLogo.setVisibility(View.VISIBLE);
         binding.progressBarLoading.setVisibility(View.VISIBLE);
         binding.tvRetryMessage.setVisibility(View.GONE);
         binding.btnRetry.setVisibility(View.GONE);

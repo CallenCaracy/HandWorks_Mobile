@@ -139,11 +139,11 @@ public class HomeFragment extends Fragment {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 requireContext(),
-                android.R.layout.simple_spinner_dropdown_item,
+                R.layout.item_spinner_book_filter,
                 options
         );
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         binding.spinnerDateFilter.setAdapter(adapter);
     }
 

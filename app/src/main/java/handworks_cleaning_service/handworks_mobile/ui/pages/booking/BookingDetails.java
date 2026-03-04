@@ -20,12 +20,14 @@ import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.Booking;
 import handworks_cleaning_service.handworks_mobile.databinding.ActivityBookingDetailsBinding;
 import handworks_cleaning_service.handworks_mobile.ui.adapters.AddonAdapter;
+import handworks_cleaning_service.handworks_mobile.ui.adapters.CleanerAdapter;
 import handworks_cleaning_service.handworks_mobile.utils.DateUtil;
 import handworks_cleaning_service.handworks_mobile.utils.EnumHelper;
 
 public class BookingDetails extends AppCompatActivity {
     private ActivityBookingDetailsBinding binding;
     private AddonAdapter addonAdapter;
+    private CleanerAdapter cleanerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +43,7 @@ public class BookingDetails extends AppCompatActivity {
         binding = ActivityBookingDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        addonAdapter = new AddonAdapter();
-        binding.addonRecycler.setLayoutManager(new LinearLayoutManager(this));
-        binding.addonRecycler.setAdapter(addonAdapter);
+        setUpRecyclerAdapters();
 
         binding.btnExitBookingDetails.setOnClickListener(v -> finish());
 
@@ -87,9 +87,23 @@ public class BookingDetails extends AppCompatActivity {
                 addonAdapter.setAddons(booking.getAddons());
             }
 
-            binding.cleanersAssignedFullName.setText(booking.getCleaners().get(0).getCleanerFirstName().toString());
+            if (booking.getCleaners() != null) {
+                cleanerAdapter.setCleaners(booking.getCleaners());
+            }
+
             binding.equipmentAllocatedName.setText(booking.getEquipments().get(0).getName());
             binding.equipmentAllocatedName.setText(booking.getResources().get(0).getName());
         }
+    }
+
+    public void setUpRecyclerAdapters() {
+
+        addonAdapter = new AddonAdapter();
+        binding.addonRecycler.setLayoutManager(new LinearLayoutManager(this));
+        binding.addonRecycler.setAdapter(addonAdapter);
+
+        cleanerAdapter = new CleanerAdapter();
+        binding.cleanerRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        binding.cleanerRecycler.setAdapter(cleanerAdapter);
     }
 }
