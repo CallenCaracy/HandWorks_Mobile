@@ -152,48 +152,20 @@
         app:layout_constraintTop_toBottomOf="@+id/mainServiceTitle" />
 
     <TextView
-        android:id="@+id/mainServiceTypeText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Service Type"
-        android:layout_marginStart="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainServiceDetailsText" />
-
-    <TextView
         android:id="@+id/addonServiceTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Addons:"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainServiceTypeText" />
+        app:layout_constraintTop_toBottomOf="@+id/mainServiceDetailsText" />
 
-    <TextView
-        android:id="@+id/addonServiceDetails"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:text="Service Details"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@id/addonRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        app:layout_constraintBottom_toTopOf="@+id/cleanersAssignedTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addonServiceTitle" />
-
-    <TextView
-        android:id="@+id/addonServicePrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Service Price"
-        app:layout_constraintBottom_toBottomOf="@+id/addonServiceDetails"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/addonServiceDetails" />
-
-    <TextView
-        android:id="@+id/addonServiceType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:text="Service Type"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addonServiceDetails" />
 
     <TextView
         android:id="@+id/cleanersAssignedTitle"
@@ -201,7 +173,7 @@
         android:layout_height="wrap_content"
         android:text="Assigned Cleaners:"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addonServiceType" />
+        app:layout_constraintTop_toBottomOf="@+id/addonRecycler" />
 
     <ImageView
         android:id="@+id/cleanerPfpUrl"

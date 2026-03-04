@@ -15,10 +15,12 @@
     <string name="service_car">Car Interior Cleaning</string>
     <string name="service_post">Post-Construction Cleaning</string>
     <string name="service_unknown">Unknown Service</string>
+    <string name="none">None</string>
     <!--  General Strings EndRegion  -->
 
     <!--  Booking Details Activity StartRegion  -->
     <string name="booking_details">Booking Details</string>
+    <string name="no_cleaning_site_provided">No cleaning site provided</string>
     <!--  Booking Details Activity EndRegion  -->
 
     <!--  User Profile Activity StartRegion  -->
@@ -187,7 +189,6 @@
 
     <!--  New Strings StartRegion  -->
     <string name="placeholder">Placeholder</string>
-    <string name="no_cleaning_site_provided">No cleaning site provided</string>
     <!--  New Strings EndRegion  -->
 
 </resources>

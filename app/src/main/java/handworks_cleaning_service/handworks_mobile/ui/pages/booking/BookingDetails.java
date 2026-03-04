@@ -9,23 +9,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.google.android.flexbox.FlexboxLayout;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import handworks_cleaning_service.handworks_mobile.R;
-import handworks_cleaning_service.handworks_mobile.data.models.bookings.services.Addon;
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.Booking;
 import handworks_cleaning_service.handworks_mobile.databinding.ActivityBookingDetailsBinding;
+import handworks_cleaning_service.handworks_mobile.ui.adapters.AddonAdapter;
 import handworks_cleaning_service.handworks_mobile.utils.DateUtil;
 import handworks_cleaning_service.handworks_mobile.utils.EnumHelper;
 
 public class BookingDetails extends AppCompatActivity {
     private ActivityBookingDetailsBinding binding;
+    private AddonAdapter addonAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +41,10 @@ public class BookingDetails extends AppCompatActivity {
         binding = ActivityBookingDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        addonAdapter = new AddonAdapter();
+        binding.addonRecycler.setLayoutManager(new LinearLayoutManager(this));
+        binding.addonRecycler.setAdapter(addonAdapter);
+
         binding.btnExitBookingDetails.setOnClickListener(v -> finish());
 
         Booking booking = (Booking) getIntent().getSerializableExtra("booking");
@@ -48,7 +52,7 @@ public class BookingDetails extends AppCompatActivity {
             String customerFullName = booking.getBase().getCustomerFirstName() + ' ' + booking.getBase().getCustomerLastName();
             binding.customerNameText.setText(customerFullName);
 
-            binding.dirtyScaleText.setText("Dirty Scale: " + String.valueOf(booking.getBase().getDirtyScale()) + "/5");
+            binding.dirtyScaleText.setText("Dirty Scale: " + booking.getBase().getDirtyScale() + "/5");
 
             String isoDate = booking.getBase().getStartSched();
             String startTime = DateUtil.extractTimeFromISO8601TimeStamps(isoDate);
@@ -60,8 +64,7 @@ public class BookingDetails extends AppCompatActivity {
             binding.startAndEndTimeText.setText(startTime + " - " + endTime);
 
             binding.addressText.setText("Cleaning Site: " + booking.getBase().getAddress().getAddressHuman());
-
-            binding.totalPriceText.setText("Total Price: " + String.valueOf(booking.getTotalPrice()));
+            binding.totalPriceText.setText("Total Price: " + booking.getTotalPrice());
 
             List<String> photoUrls = booking.getBase().getPhotos();
             if (photoUrls.isEmpty()) {
@@ -78,24 +81,15 @@ public class BookingDetails extends AppCompatActivity {
                 }
             }
 
-            binding.mainServiceDetailsText.setText(booking.getMainService().getDetails().toString());
-            binding.mainServiceTypeText.setText(EnumHelper.getReadableServiceType(this, booking.getMainService().getServiceType()));
+            binding.mainServiceDetailsText.setText(EnumHelper.getReadableServiceDetails(booking.getMainService().getDetails()));
 
+            if (booking.getAddons() != null) {
+                addonAdapter.setAddons(booking.getAddons());
+            }
 
+            binding.cleanersAssignedFullName.setText(booking.getCleaners().get(0).getCleanerFirstName().toString());
             binding.equipmentAllocatedName.setText(booking.getEquipments().get(0).getName());
             binding.equipmentAllocatedName.setText(booking.getResources().get(0).getName());
-            if (booking.getAddons() != null && !booking.getAddons().isEmpty()) {
-                List<String> addonNames = new ArrayList<>();
-                for (Addon addon : booking.getAddons()) {
-                    if (addon.getServiceDetail() != null) {
-                        addonNames.add(addon.getServiceDetail().getServiceType());
-                    }
-                }
-                binding.addonServiceDetails.setText("Addons: " + String.join(", ", addonNames));
-            } else {
-                binding.addonServiceDetails.setText("Addons: None");
-            }
-            binding.cleanersAssignedFullName.setText(booking.getCleaners().get(0).getCleanerFirstName().toString());
         }
     }
 }
