@@ -12,7 +12,10 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
+import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayout;
+import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.flexbox.JustifyContent;
 
 import java.util.List;
 
@@ -102,8 +105,11 @@ public class BookingDetails extends AppCompatActivity {
         binding.addonRecycler.setLayoutManager(new LinearLayoutManager(this));
         binding.addonRecycler.setAdapter(addonAdapter);
 
+        FlexboxLayoutManager flexboxLayoutManager = new FlexboxLayoutManager(this);
+        flexboxLayoutManager.setFlexDirection(FlexDirection.ROW);
+        flexboxLayoutManager.setJustifyContent(JustifyContent.SPACE_EVENLY);
         cleanerAdapter = new CleanerAdapter();
-        binding.cleanerRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        binding.cleanerRecycler.setLayoutManager(flexboxLayoutManager);
         binding.cleanerRecycler.setAdapter(cleanerAdapter);
     }
 }
