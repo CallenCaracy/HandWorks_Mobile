@@ -88,6 +88,7 @@
                     <TextView
                         android:id="@+id/customerNameText"
                         android:layout_width="wrap_content"
+                        android:maxWidth="212dp"
                         android:layout_height="wrap_content"
                         android:textSize="20sp"
                         android:textStyle="bold"
@@ -105,21 +106,33 @@
                         android:id="@+id/progressStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/dirtyScaleText" />
+                        android:background="@drawable/status_badge_bg"
+                        android:layout_marginEnd="10dp"
+                        android:paddingVertical="6dp"
+                        android:paddingHorizontal="16dp"
+                        android:text="Done"
+                        app:layout_constraintBottom_toBottomOf="@+id/customerNameText"
+                        app:layout_constraintEnd_toStartOf="@+id/paymentStatus"
+                        app:layout_constraintTop_toTopOf="@+id/customerNameText" />
 
                     <TextView
                         android:id="@+id/paymentStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/status_badge_bg"
+                        android:paddingVertical="6dp"
+                        android:paddingHorizontal="16dp"
+                        android:text="Paid"
+                        app:layout_constraintBottom_toBottomOf="@+id/progressStatus"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/progressStatus" />
+                        app:layout_constraintTop_toTopOf="@+id/progressStatus" />
 
                     <TextView
                         android:id="@+id/totalPriceText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/paymentStatus"
+                        app:layout_constraintStart_toStartOf="@+id/progressStatus"
                         app:layout_constraintTop_toBottomOf="@+id/paymentStatus" />
 
                     <TextView

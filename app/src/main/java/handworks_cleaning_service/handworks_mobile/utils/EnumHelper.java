@@ -66,7 +66,7 @@ public class EnumHelper {
         for (CarCleaningSpecification spec : specs) {
             sb.append("\n\tType: ").append(spec.getCarType())
                     .append(",\n\tQuantity: ").append(spec.getQuantity())
-                    .append("\n");
+                    .append("\n\n");
         }
         return sb.toString();
     }
@@ -81,7 +81,7 @@ public class EnumHelper {
                     .append(",\n\tWidth: ").append(spec.getWidthCm())
                     .append(",\n\tHeight: ").append(spec.getHeightCm())
                     .append(",\n\tDepth: ").append(spec.getDepthCm())
-                    .append("\n");
+                    .append("\n\n");
         }
         return sb.toString();
     }
@@ -96,7 +96,7 @@ public class EnumHelper {
                     .append(",\n\tWidth: ").append(spec.getWidthCm())
                     .append(",\n\tHeight: ").append(spec.getHeightCm())
                     .append(",\n\tDepth: ").append(spec.getDepthCm())
-                    .append("\n");
+                    .append("\n\n");
         }
         return sb.toString();
     }
