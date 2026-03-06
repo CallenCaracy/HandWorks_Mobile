@@ -39,7 +39,7 @@ public class FullscreenImageView extends AppCompatActivity {
             Glide.with(this)
                     .load(url)
                     .placeholder(R.drawable.pfp_placeholder)
-                    .error(R.drawable.error)
+                    .error(R.drawable.error_svgrepo_com)
                     .into(binding.fullImage);
         }
 

@@ -37,17 +37,17 @@ public class EnumHelper {
         if (details == null) return "";
 
         if (details instanceof GeneralCleaningDetails general) {
-            return "General: \n" +
+            return "General: \n\t" +
                     general.getHomeType() +
-                    ", Size: " + general.getSqm() + " sqm" +
-                    ", Hours: " + general.getHours();
+                    ",\n\t Size: " + general.getSqm() + " sqm" +
+                    ",\n\t Hours: " + general.getHours();
         } else if (details instanceof CarCleaningDetails car) {
-            return "Car: \n" +
+            return "Car: \n\t" +
                     "Child Seats: " + car.getChildSeats() +
                     buildCarSpecsSummary(car.getCleaningSpecs());
         } else if (details instanceof CouchCleaningDetails couch) {
             return "Couch: \n" +
-                    "Bed Pillows: " + couch.getBedPillows() +
+                    "\tBed Pillows: " + couch.getBedPillows() +
                     buildCouchSpecsSummary(couch.getCleaningSpecs());
         } else if (details instanceof MattressCleaningDetails mattress) {
             return "Mattress: \n" +
@@ -64,8 +64,8 @@ public class EnumHelper {
 
         StringBuilder sb = new StringBuilder();
         for (CarCleaningSpecification spec : specs) {
-            sb.append("Type: ").append(spec.getCarType())
-                    .append(", Quantity: ").append(spec.getQuantity())
+            sb.append("\n\tType: ").append(spec.getCarType())
+                    .append(",\n\tQuantity: ").append(spec.getQuantity())
                     .append("\n");
         }
         return sb.toString();
@@ -76,11 +76,11 @@ public class EnumHelper {
 
         StringBuilder sb = new StringBuilder();
         for (CouchCleaningSpecification spec : specs) {
-            sb.append("Type: ").append(spec.getCouchType())
-                    .append(", Quantity: ").append(spec.getQuantity())
-                    .append(", Width: ").append(spec.getWidthCm())
-                    .append(", Height: ").append(spec.getHeightCm())
-                    .append(", Depth: ").append(spec.getDepthCm())
+            sb.append("\tType: ").append(spec.getCouchType())
+                    .append(",\n\tQuantity: ").append(spec.getQuantity())
+                    .append(",\n\tWidth: ").append(spec.getWidthCm())
+                    .append(",\n\tHeight: ").append(spec.getHeightCm())
+                    .append(",\n\tDepth: ").append(spec.getDepthCm())
                     .append("\n");
         }
         return sb.toString();
@@ -91,11 +91,11 @@ public class EnumHelper {
 
         StringBuilder sb = new StringBuilder();
         for (MattressCleaningSpecification spec : specs) {
-            sb.append("Type: ").append(spec.getBedType())
-                    .append(", Quantity: ").append(spec.getQuantity())
-                    .append(", Width: ").append(spec.getWidthCm())
-                    .append(", Height: ").append(spec.getHeightCm())
-                    .append(", Depth: ").append(spec.getDepthCm())
+            sb.append("\tType: ").append(spec.getBedType())
+                    .append(",\n\tQuantity: ").append(spec.getQuantity())
+                    .append(",\n\tWidth: ").append(spec.getWidthCm())
+                    .append(",\n\tHeight: ").append(spec.getHeightCm())
+                    .append(",\n\tDepth: ").append(spec.getDepthCm())
                     .append("\n");
         }
         return sb.toString();

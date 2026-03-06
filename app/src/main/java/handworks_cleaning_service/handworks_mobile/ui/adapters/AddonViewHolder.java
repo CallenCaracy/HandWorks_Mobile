@@ -1,5 +1,6 @@
 package handworks_cleaning_service.handworks_mobile.ui.adapters;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -23,13 +24,10 @@ public class AddonViewHolder extends RecyclerView.ViewHolder {
 
     void bind(Addon addon) {
         if (addon.getServiceDetail() != null && addon.getServiceDetail().getDetails() != null) {
-            addonServiceDetails.setText(
-                    EnumHelper.getReadableServiceDetails(addon.getServiceDetail().getDetails())
-            );
+            addonServiceDetails.setText(EnumHelper.getReadableServiceDetails(addon.getServiceDetail().getDetails()));
         } else {
             addonServiceDetails.setText("N/A");
         }
-
         addonServicePrice.setText(String.valueOf(addon.getPrice()));
     }
 }

@@ -146,6 +146,8 @@
     <!--  History Fragment StartRegion  -->
     <string name="no_work_history_yet">No work history yet</string>
     <string name="your_previous_work_will_be_added_and_kept_here">Your previous work will be added and kept here</string>
+    <string name="past_bookings">Past Bookings</string>
+    <string name="check_out_your_history">Check out your history</string>
     <!--  History Fragment EndRegion  -->
 
     <!--  Chat Fragment StartRegion  -->

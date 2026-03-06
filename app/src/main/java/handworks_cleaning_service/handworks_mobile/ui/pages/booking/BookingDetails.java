@@ -1,5 +1,9 @@
 package handworks_cleaning_service.handworks_mobile.ui.pages.booking;
 
+import static android.view.View.GONE;
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -25,6 +29,7 @@ import handworks_cleaning_service.handworks_mobile.databinding.ActivityBookingDe
 import handworks_cleaning_service.handworks_mobile.ui.adapters.AddonAdapter;
 import handworks_cleaning_service.handworks_mobile.ui.adapters.AssetAdapter;
 import handworks_cleaning_service.handworks_mobile.ui.adapters.CleanerAdapter;
+import handworks_cleaning_service.handworks_mobile.ui.pages.index.FullscreenImageView;
 import handworks_cleaning_service.handworks_mobile.utils.DateUtil;
 import handworks_cleaning_service.handworks_mobile.utils.EnumHelper;
 
@@ -81,25 +86,15 @@ public class BookingDetails extends AppCompatActivity {
                     getString(R.string.total_price, booking.getTotalPrice())
             );
 
-            List<String> photoUrls = booking.getBase().getPhotos();
-            if (photoUrls.isEmpty()) {
-                binding.noSiteImages.setVisibility(View.VISIBLE);
-            } else {
-                for (int i = 0; i < photoUrls.size(); i++) {
-                    var imageView = new ImageView(this);
-                    var params = new FlexboxLayout.LayoutParams(200, 200);
-                    params.setMargins(8, 8, 8, 8);
-                    imageView.setLayoutParams(params);
-                    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                    Glide.with(this).load(photoUrls.get(i)).into(imageView);
-                    binding.flexLayout.addView(imageView);
-                }
-            }
+            setupImages(booking.getBase().getPhotos());
 
             binding.mainServiceDetailsText.setText(EnumHelper.getReadableServiceDetails(booking.getMainService().getDetails()));
 
             if (booking.getAddons() != null) {
                 addonAdapter.setAddons(booking.getAddons());
+            } else {
+                binding.addonServiceTitle.setVisibility(GONE);
+                binding.addonRecycler.setVisibility(GONE);
             }
 
             if (booking.getCleaners() != null) {
@@ -135,5 +130,49 @@ public class BookingDetails extends AppCompatActivity {
         resourceAdapter = new AssetAdapter();
         binding.resourceRecycler.setLayoutManager(new LinearLayoutManager(this));
         binding.resourceRecycler.setAdapter(resourceAdapter);
+    }
+
+    private void setupImages(List<String> photoUrls) {
+        if (photoUrls.isEmpty()) {
+            binding.noSiteImages.setVisibility(View.VISIBLE);
+        } else {
+            int parentWidth = getResources().getDisplayMetrics().widthPixels;
+
+            for (int i = 0; i < photoUrls.size(); i++) {
+                int width;
+                int height;
+
+                if (i == 0) {
+                    width = MATCH_PARENT;
+                    height = 600;
+                } else {
+                    width = parentWidth / 3;
+                    height = parentWidth / 3;
+                }
+
+                ImageView imageView = new ImageView(this);
+                FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(width, height);
+                params.setMargins(8, 8, 8, 8);
+
+                imageView.setLayoutParams(params);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                imageView.setBackgroundResource(R.drawable.rounded_image);
+                imageView.setClipToOutline(true);
+
+                Glide.with(this)
+                        .load(photoUrls.get(i))
+                        .error(R.drawable.error_svgrepo_com)
+                        .into(imageView);
+
+                int finalI = i;
+                imageView.setOnClickListener(v -> {
+                    Intent intent = new Intent(this, FullscreenImageView.class);
+                    intent.putExtra("image_url", photoUrls.get(finalI));
+                    startActivity(intent);
+                });
+
+                binding.flexLayout.addView(imageView);
+            }
+        }
     }
 }

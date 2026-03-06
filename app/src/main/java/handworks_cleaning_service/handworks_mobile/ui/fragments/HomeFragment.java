@@ -68,7 +68,6 @@ public class HomeFragment extends Fragment {
             intent.putExtra("booking", booking);
             startActivity(intent);
         });
-        binding.bookingsRecycler.setAdapter(bookingAdapter);
 
         // RecyclerView
         binding.bookingsRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
