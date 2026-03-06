@@ -16,11 +16,22 @@
     <string name="service_post">Post-Construction Cleaning</string>
     <string name="service_unknown">Unknown Service</string>
     <string name="none">None</string>
+    <string name="image">Image</string>
     <!--  General Strings EndRegion  -->
 
     <!--  Booking Details Activity StartRegion  -->
     <string name="booking_details">Booking Details</string>
     <string name="no_cleaning_site_provided">No cleaning site provided</string>
+    <string name="dirty_scale">Dirty Scale: %1$d/5</string>
+    <string name="scheduled_at">Scheduled at: %1$s</string>
+    <string name="time_range">%1$s - %2$s</string>
+    <string name="cleaning_site">Cleaning Site: %1$s</string>
+    <string name="total_price">Total Price: ₱%1$.2f</string>
+    <string name="allocated_resource">Allocated Resource:</string>
+    <string name="allocated_equipments">Allocated Equipments:</string>
+    <string name="assigned_cleaners">Assigned Cleaners:</string>
+    <string name="addons">Addons:</string>
+    <string name="main_service">Main Service:</string>
     <!--  Booking Details Activity EndRegion  -->
 
     <!--  User Profile Activity StartRegion  -->

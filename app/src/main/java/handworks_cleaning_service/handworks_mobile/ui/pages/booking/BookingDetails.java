@@ -23,6 +23,7 @@ import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.Booking;
 import handworks_cleaning_service.handworks_mobile.databinding.ActivityBookingDetailsBinding;
 import handworks_cleaning_service.handworks_mobile.ui.adapters.AddonAdapter;
+import handworks_cleaning_service.handworks_mobile.ui.adapters.AssetAdapter;
 import handworks_cleaning_service.handworks_mobile.ui.adapters.CleanerAdapter;
 import handworks_cleaning_service.handworks_mobile.utils.DateUtil;
 import handworks_cleaning_service.handworks_mobile.utils.EnumHelper;
@@ -31,6 +32,8 @@ public class BookingDetails extends AppCompatActivity {
     private ActivityBookingDetailsBinding binding;
     private AddonAdapter addonAdapter;
     private CleanerAdapter cleanerAdapter;
+    private AssetAdapter equipmentAdapter;
+    private AssetAdapter resourceAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +58,9 @@ public class BookingDetails extends AppCompatActivity {
             String customerFullName = booking.getBase().getCustomerFirstName() + ' ' + booking.getBase().getCustomerLastName();
             binding.customerNameText.setText(customerFullName);
 
-            binding.dirtyScaleText.setText("Dirty Scale: " + booking.getBase().getDirtyScale() + "/5");
+            binding.dirtyScaleText.setText(
+                    getString(R.string.dirty_scale, booking.getBase().getDirtyScale())
+            );
 
             String isoDate = booking.getBase().getStartSched();
             String startTime = DateUtil.extractTimeFromISO8601TimeStamps(isoDate);
@@ -63,11 +68,18 @@ public class BookingDetails extends AppCompatActivity {
                     booking.getBase().getEndSched()
             );
 
-            binding.workDateText.setText("Scheduled at:" + DateUtil.extractDateFromISO8601TimeStamps(isoDate));
-            binding.startAndEndTimeText.setText(startTime + " - " + endTime);
-
-            binding.addressText.setText("Cleaning Site: " + booking.getBase().getAddress().getAddressHuman());
-            binding.totalPriceText.setText("Total Price: " + booking.getTotalPrice());
+            binding.workDateText.setText(
+                    getString(R.string.scheduled_at, DateUtil.extractDateFromISO8601TimeStamps(isoDate))
+            );
+            binding.startAndEndTimeText.setText(
+                    getString(R.string.time_range, startTime, endTime)
+            );
+            binding.addressText.setText(
+                    getString(R.string.cleaning_site, booking.getBase().getAddress().getAddressHuman())
+            );
+            binding.totalPriceText.setText(
+                    getString(R.string.total_price, booking.getTotalPrice())
+            );
 
             List<String> photoUrls = booking.getBase().getPhotos();
             if (photoUrls.isEmpty()) {
@@ -94,13 +106,17 @@ public class BookingDetails extends AppCompatActivity {
                 cleanerAdapter.setCleaners(booking.getCleaners());
             }
 
-            binding.equipmentAllocatedName.setText(booking.getEquipments().get(0).getName());
-            binding.equipmentAllocatedName.setText(booking.getResources().get(0).getName());
+            if (booking.getEquipments() != null) {
+                equipmentAdapter.setAsset(booking.getEquipments());
+            }
+
+            if (booking.getEquipments() != null) {
+                resourceAdapter.setAsset(booking.getResources());
+            }
         }
     }
 
     public void setUpRecyclerAdapters() {
-
         addonAdapter = new AddonAdapter();
         binding.addonRecycler.setLayoutManager(new LinearLayoutManager(this));
         binding.addonRecycler.setAdapter(addonAdapter);
@@ -111,5 +127,13 @@ public class BookingDetails extends AppCompatActivity {
         cleanerAdapter = new CleanerAdapter();
         binding.cleanerRecycler.setLayoutManager(flexboxLayoutManager);
         binding.cleanerRecycler.setAdapter(cleanerAdapter);
+
+        equipmentAdapter = new AssetAdapter();
+        binding.equipmentRecycler.setLayoutManager(new LinearLayoutManager(this));
+        binding.equipmentRecycler.setAdapter(equipmentAdapter);
+
+        resourceAdapter = new AssetAdapter();
+        binding.resourceRecycler.setLayoutManager(new LinearLayoutManager(this));
+        binding.resourceRecycler.setAdapter(resourceAdapter);
     }
 }

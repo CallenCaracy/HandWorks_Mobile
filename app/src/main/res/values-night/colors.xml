@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Brand -->
     <color name="colorPrimary">#16618b</color>
     <color name="colorSecondary">#65cad6</color>
     <color name="colorTertiary">#296997</color>
+
+    <!-- Background -->
     <color name="background">#121212</color>
     <color name="backgroundLightTransition">#333333</color>
+
+    <!-- Text -->
     <color name="textPrimary">#FFFFFF</color>
     <color name="textSecondary">#000000</color>
     <color name="textTertiary">#65cad6</color>
+
+    <!-- Static -->
     <color name="whiten">#FFFFFF</color>
     <color name="darken">#000000</color>
-    <color name="inputPrimary">#000000</color>
     <color name="gray">#6B7280</color>
+
+    <!-- Status -->
+    <color name="success">#22C55E</color>
+    <color name="warning">#F59E0B</color>
+    <color name="error">#EF4444</color>
+
+    <!-- UI -->
+    <color name="divider">#E5E7EB</color>
+    <color name="inputPrimary">#000000</color>
 </resources>
