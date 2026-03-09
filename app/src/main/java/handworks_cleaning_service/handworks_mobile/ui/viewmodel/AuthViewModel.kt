@@ -11,8 +11,8 @@ import com.clerk.api.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import handworks_cleaning_service.handworks_mobile.data.dto.auth.LoginRequest
 import handworks_cleaning_service.handworks_mobile.data.repository.AuthRepository
-import handworks_cleaning_service.handworks_mobile.utils.Result
-import handworks_cleaning_service.handworks_mobile.utils.SessionManager
+import handworks_cleaning_service.handworks_mobile.data.repository.config.Result
+import handworks_cleaning_service.handworks_mobile.data.repository.config.SessionManager
 import handworks_cleaning_service.handworks_mobile.utils.uistate.AuthUiState
 import handworks_cleaning_service.handworks_mobile.utils.uistate.ResetPasswordUiState
 import handworks_cleaning_service.handworks_mobile.utils.uistate.SessionUiState

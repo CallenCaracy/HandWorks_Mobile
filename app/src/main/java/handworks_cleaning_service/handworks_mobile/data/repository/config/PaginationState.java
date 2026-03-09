@@ -1,4 +1,4 @@
-package handworks_cleaning_service.handworks_mobile.utils;
+package handworks_cleaning_service.handworks_mobile.data.repository.config;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

@@ -12,7 +12,7 @@ import handworks_cleaning_service.handworks_mobile.data.dto.book.BooksByEmployee
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.Booking;
 import handworks_cleaning_service.handworks_mobile.data.models.wrappers.BookingWrapper;
 import handworks_cleaning_service.handworks_mobile.data.remote.BookApi;
-import handworks_cleaning_service.handworks_mobile.utils.PaginationState;
+import handworks_cleaning_service.handworks_mobile.data.repository.config.PaginationState;
 import retrofit2.Callback;
 
 public class BookRepository {

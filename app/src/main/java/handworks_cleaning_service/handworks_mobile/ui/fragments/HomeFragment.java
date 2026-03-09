@@ -29,6 +29,7 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
+import handworks_cleaning_service.handworks_mobile.data.repository.config.FetchStrategy;
 import handworks_cleaning_service.handworks_mobile.databinding.FragmentHomeBinding;
 import handworks_cleaning_service.handworks_mobile.ui.adapters.BookingAdapter;
 import handworks_cleaning_service.handworks_mobile.ui.pages.booking.BookingDetails;
@@ -92,7 +93,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void observeEmployee() {
-        userViewModel.loadEmployee(prefs.getString("EMP_ID", null));
+        userViewModel.loadEmployee(prefs.getString("EMP_ID", null), FetchStrategy.CACHE_FIRST);
         userViewModel.getEmployee().observe(getViewLifecycleOwner(), employee -> {
             if (employee != null) {
                 employeeId = employee.getId();
@@ -114,16 +115,13 @@ public class HomeFragment extends Fragment {
         bookViewModel.getBookings().observe(getViewLifecycleOwner(), bookings -> {
             boolean hasBooks = bookings != null && !bookings.isEmpty();
 
-            binding.summaryTaskNumberDisplay.setText(String.valueOf(bookings != null ? bookViewModel.getTotalBookings() : 0));
-
             updateUI(hasBooks, bookViewModel.getIsLoading().getValue() != null && bookViewModel.getIsLoading().getValue());
 
             bookingAdapter.submitList(bookings);
         });
 
         bookViewModel.getIsLoading().observe(getViewLifecycleOwner(), loading -> {
-            boolean hasBooks = bookViewModel.getBookings().getValue() != null &&
-                    !bookViewModel.getBookings().getValue().isEmpty();
+            boolean hasBooks = bookViewModel.getBookings().getValue() != null && !bookViewModel.getBookings().getValue().isEmpty();
             updateUI(hasBooks, loading != null && loading);
         });
     }
@@ -180,7 +178,8 @@ public class HomeFragment extends Fragment {
                 int totalItemCount = lm.getItemCount();
                 int lastVisibleItem = lm.findLastVisibleItemPosition();
 
-                if (totalItemCount <= lastVisibleItem + 5) {
+                int visibleThreshold = 2; // fetch when 2 items from the end
+                if (totalItemCount > 0 && totalItemCount <= lastVisibleItem + visibleThreshold) {
                     bookViewModel.loadNextPage(employeeId, today.minusMonths(3).toString(), today.plusMonths(3).toString());
                 }
             }
@@ -192,6 +191,7 @@ public class HomeFragment extends Fragment {
 
         binding.bookingsRecycler.setVisibility(!loading && hasBooks ? View.VISIBLE : GONE);
         binding.bookingsRecycler.setAlpha(loading ? 0.5f : 1f);
+        binding.summaryTaskNumberDisplay.setText(String.valueOf(hasBooks ? bookViewModel.getTotalBookings() : 0));
 
         binding.noJobAssignedYet.getRoot().setVisibility(!loading && !hasBooks ? VISIBLE : GONE);
     }

@@ -38,6 +38,7 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
+import handworks_cleaning_service.handworks_mobile.data.repository.config.FetchStrategy;
 import handworks_cleaning_service.handworks_mobile.databinding.ActivityUserProfileBinding;
 import handworks_cleaning_service.handworks_mobile.ui.adapters.ProfileSettingsAdapter;
 import handworks_cleaning_service.handworks_mobile.ui.models.ProfileItem;
@@ -80,8 +81,9 @@ public class UserProfile extends AppCompatActivity {
         UserViewModel userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         signOutUserConfirmation();
 
+        String employeeId = prefs.getString("EMP_ID", null);
         User cachedUser = authViewModel.getCachedUser();
-        if (cachedUser != null && cachedUser.getCreatedAt() != null) {
+        if (cachedUser != null) {
             binding.cleanerFirstNameDisplay.setText(cachedUser.getFirstName());
             binding.cleanerLastNameDisplay.setText(cachedUser.getLastName());
 
@@ -99,6 +101,8 @@ public class UserProfile extends AppCompatActivity {
             });
 
             userViewModel.getEmployee().observe(this, employee -> {
+                binding.swipeRefresh.setRefreshing(false);
+
                 if (employee != null) {
                     String formattedDate = DateUtil.formatStringDate(employee.getHire_date());
                     long longDate = DateUtil.convertStringToLong(employee.getHire_date());
@@ -123,6 +127,8 @@ public class UserProfile extends AppCompatActivity {
             });
 
             userViewModel.getError().observe(this, error -> {
+                binding.swipeRefresh.setRefreshing(false);
+
                 Toast.makeText(this, "Error fetching user info.", Toast.LENGTH_LONG).show();
                 binding.ratingBar.setRating(0.0f);
                 binding.joinedValue.setText(R.string._0_months_ago);
@@ -133,10 +139,13 @@ public class UserProfile extends AppCompatActivity {
                 binding.employeePositionValue.setText(R.string.error);
                 binding.employeeStatus.setText(R.string.error);
             });
-            userViewModel.loadEmployee(cachedUser.getId());
+            userViewModel.loadEmployee(employeeId, FetchStrategy.CACHE_FIRST);
         }
 
-        binding.btnExitProfile.setOnClickListener(v -> finish());
+        binding.profileHeader.titlePageTxt.setText(getString(R.string.profile));
+        binding.profileHeader.btnExit.setOnClickListener(v -> finish());
+
+        binding.swipeRefresh.setOnRefreshListener(() -> userViewModel.loadEmployee(employeeId, FetchStrategy.NETWORK_ONLY));
     }
 
     private void signOutUserConfirmation() {

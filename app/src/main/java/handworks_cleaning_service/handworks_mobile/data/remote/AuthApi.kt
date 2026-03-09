@@ -5,7 +5,7 @@ import com.clerk.api.session.Session
 import com.clerk.api.signin.SignIn
 import com.clerk.api.user.User
 import handworks_cleaning_service.handworks_mobile.data.dto.auth.LoginRequest
-import handworks_cleaning_service.handworks_mobile.utils.Result
+import handworks_cleaning_service.handworks_mobile.data.repository.config.Result
 
 interface AuthApi {
 

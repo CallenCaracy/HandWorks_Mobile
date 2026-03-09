@@ -79,5 +79,6 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.google.flexbox)
     implementation(libs.glide.v4151)
+    implementation(libs.swiperefreshlayout)
     ksp(libs.hilt.android.compiler)
 }

@@ -1,4 +1,4 @@
-package handworks_cleaning_service.handworks_mobile.utils;
+package handworks_cleaning_service.handworks_mobile.data.repository.config;
 
 import handworks_cleaning_service.handworks_mobile.data.repository.AuthRepository;
 import handworks_cleaning_service.handworks_mobile.data.repository.BookRepository;

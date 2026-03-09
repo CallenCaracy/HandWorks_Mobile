@@ -56,7 +56,8 @@ public class BookingDetails extends AppCompatActivity {
 
         setUpRecyclerAdapters();
 
-        binding.btnExitBookingDetails.setOnClickListener(v -> finish());
+        binding.bookingDetailsHeader.titlePageTxt.setText(getString(R.string.booking_details));
+        binding.bookingDetailsHeader.btnExit.setOnClickListener(v -> finish());
 
         Booking booking = (Booking) getIntent().getSerializableExtra("booking");
         if (booking != null){

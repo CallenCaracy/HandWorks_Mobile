@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.data.models.users.Employee;
+import handworks_cleaning_service.handworks_mobile.data.repository.config.FetchStrategy;
 import handworks_cleaning_service.handworks_mobile.databinding.ActivityAppEntryScreenSplashBinding;
 import handworks_cleaning_service.handworks_mobile.ui.pages.auth.Login;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
@@ -92,7 +93,7 @@ public class AppEntryScreenSplash extends AppCompatActivity {
         }
         prefs.edit().putString("EMP_ID", empId).apply();
 
-        userViewModel.loadEmployee(empId);
+        userViewModel.loadEmployee(empId, FetchStrategy.NETWORK_ONLY);
 
         userViewModel.getEmployee().observe(this, new Observer<>() {
             @Override
@@ -131,7 +132,7 @@ public class AppEntryScreenSplash extends AppCompatActivity {
         binding.progressBarLoading.setVisibility(View.VISIBLE);
         binding.tvRetryMessage.setVisibility(View.GONE);
         binding.btnRetry.setVisibility(View.GONE);
-        userViewModel.loadEmployee(empId);
+        userViewModel.loadEmployee(empId, FetchStrategy.NETWORK_ONLY);
     }
 
     private void forceLogout() {

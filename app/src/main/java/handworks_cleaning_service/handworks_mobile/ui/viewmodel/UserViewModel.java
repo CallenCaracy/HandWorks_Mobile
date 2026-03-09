@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import handworks_cleaning_service.handworks_mobile.data.models.users.Employee;
 import handworks_cleaning_service.handworks_mobile.data.models.wrappers.UserWrapper;
+import handworks_cleaning_service.handworks_mobile.data.repository.config.FetchStrategy;
 import handworks_cleaning_service.handworks_mobile.data.repository.UserRepository;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,19 +35,12 @@ public class UserViewModel extends ViewModel {
         return errorLiveData;
     }
 
-    public void loadEmployee(String id) {
-        Employee cached = userRepository.getCachedEmployee();
-        if (cached != null) {
-            employeeLiveData.setValue(cached);
-            return;
-        }
-
-        userRepository.fetchEmployee(id, new Callback<>() {
+    public void loadEmployee(String id, FetchStrategy strategy) {
+        userRepository.fetchEmployee(id, strategy, new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<UserWrapper<Employee>> call, @NonNull Response<UserWrapper<Employee>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    Employee employee = response.body().unwrap();
-                    employeeLiveData.postValue(employee);
+                    employeeLiveData.postValue(response.body().unwrap());
                 }
             }
 

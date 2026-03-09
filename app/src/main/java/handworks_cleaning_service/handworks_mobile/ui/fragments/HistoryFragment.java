@@ -32,13 +32,11 @@ import handworks_cleaning_service.handworks_mobile.databinding.FragmentHistoryBi
 import handworks_cleaning_service.handworks_mobile.ui.adapters.BookingAdapter;
 import handworks_cleaning_service.handworks_mobile.ui.pages.booking.BookingDetails;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.BookViewModel;
-import handworks_cleaning_service.handworks_mobile.ui.viewmodel.UserViewModel;
 
 @AndroidEntryPoint
 public class HistoryFragment extends Fragment {
     private FragmentHistoryBinding binding;
     private BookViewModel bookViewModel;
-    private UserViewModel userViewModel;
     private String employeeId = null;
     private LocalDate startDate;
     private LocalDate endDate = LocalDate.now();
@@ -61,7 +59,6 @@ public class HistoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentHistoryBinding.inflate(inflater, container, false);
 
-        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         bookViewModel = new ViewModelProvider(requireActivity()).get(BookViewModel.class);
         bookingAdapter = new BookingAdapter(new ArrayList<>(), booking -> {
             Intent intent = new Intent(requireContext(), BookingDetails.class);
@@ -88,17 +85,12 @@ public class HistoryFragment extends Fragment {
     }
 
     private void observeEmployee() {
-        userViewModel.loadEmployee(prefs.getString("EMP_ID", null));
-        userViewModel.getEmployee().observe(getViewLifecycleOwner(), employee -> {
-            if (employee != null) {
-                employeeId = employee.getId();
+        employeeId = prefs.getString("EMP_ID", null);
 
-                if (endDate == null) endDate = LocalDate.now();
-                if (startDate == null) startDate = endDate.minusDays(7);
+        if (endDate == null) endDate = LocalDate.now();
+        if (startDate == null) startDate = endDate.minusDays(7);
 
-                bookViewModel.restoreCachedOrLoad(employeeId, startDate.toString(), endDate.toString());
-            }
-        });
+        bookViewModel.restoreCachedOrLoad(employeeId, startDate.toString(), endDate.toString());
     }
 
     private void observeBookings() {

@@ -1,4 +1,4 @@
-package handworks_cleaning_service.handworks_mobile.utils
+package handworks_cleaning_service.handworks_mobile.data.repository.config
 
 sealed class Result<out T> {
     data class Success<T>(val data: T) : Result<T>()
