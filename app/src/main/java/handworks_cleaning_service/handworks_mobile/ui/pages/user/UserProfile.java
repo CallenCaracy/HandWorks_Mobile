@@ -57,7 +57,6 @@ public class UserProfile extends AppCompatActivity {
     @Inject
     SharedPreferences prefs;
     private AuthViewModel authViewModel;
-    private UserViewModel userViewModel;
     private ActivityUserProfileBinding binding;
 
     @Override
@@ -78,7 +77,7 @@ public class UserProfile extends AppCompatActivity {
         setUpRecyclerView();
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        UserViewModel userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         signOutUserConfirmation();
 
         User cachedUser = authViewModel.getCachedUser();
@@ -248,7 +247,7 @@ public class UserProfile extends AppCompatActivity {
     }
 
     private void logoutCompletely() {
-        authViewModel.logoutCompletely();
-        userViewModel.clearCache();
+        authViewModel.signOut();
+        authViewModel.clearCache();
     }
 }

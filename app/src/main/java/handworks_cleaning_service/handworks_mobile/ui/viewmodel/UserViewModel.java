@@ -26,10 +26,6 @@ public class UserViewModel extends ViewModel {
     @Inject
     public UserViewModel(UserRepository userRepository) { this.userRepository = userRepository; }
 
-    public void clearCache() {
-        userRepository.clearCache();
-    }
-
     public LiveData<Employee> getEmployee() {
         return employeeLiveData;
     }

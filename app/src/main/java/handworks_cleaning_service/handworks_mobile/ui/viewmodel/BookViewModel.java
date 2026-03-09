@@ -19,6 +19,7 @@ import handworks_cleaning_service.handworks_mobile.data.dto.book.BooksByEmployee
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.Booking;
 import handworks_cleaning_service.handworks_mobile.data.models.wrappers.BookingWrapper;
 import handworks_cleaning_service.handworks_mobile.data.repository.BookRepository;
+import handworks_cleaning_service.handworks_mobile.utils.PaginationState;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,9 +29,6 @@ public class BookViewModel extends ViewModel {
     private final MutableLiveData<List<Booking>> bookingsLiveData = new MutableLiveData<>();
     private final MutableLiveData<String> errorLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoadingLive = new MutableLiveData<>(false);
-    private final List<Booking> accumulatedList = new ArrayList<>();
-    private int currentPage = 0;
-    private boolean isLastPage = false;
     private boolean isLoading = false;
     private int totalBookings;
 
@@ -51,17 +49,38 @@ public class BookViewModel extends ViewModel {
         return errorLiveData;
     }
 
-    public void resetPagination() {
-        currentPage = 0;
-        isLastPage = false;
-        isLoading = false;
-        accumulatedList.clear();
-        bookingsLiveData.setValue(accumulatedList);
+    public void resetPagination(String employeeId, String startDate, String endDate) {
+        PaginationState state = bookRepository.getPaginationState(employeeId, startDate, endDate);
+        state.resetPage();
+        state.setIsLastPage(false);
+
+        bookingsLiveData.setValue(new ArrayList<>());
+    }
+
+    public void restoreCachedOrLoad(String employeeId, String startDate, String endDate) {
+        PaginationState state = bookRepository.getPaginationState(employeeId, startDate, endDate);
+
+        if (!state.getAccumulated().isEmpty()) {
+            totalBookings = state.getTotalBookings();
+            bookingsLiveData.setValue(new ArrayList<>(state.getAccumulated()));
+        } else {
+            resetPagination(employeeId, startDate, endDate);
+            loadNextPage(employeeId, startDate, endDate);
+        }
     }
 
     public void loadNextPage(String employeeId, String startDate, String endDate) {
 
-        if (isLoading || isLastPage) return;
+        PaginationState state = bookRepository.getPaginationState(employeeId, startDate, endDate);
+
+        if (isLoading || state.isLastPage()) return;
+
+        List<Booking> cached = bookRepository.getCachedPage(employeeId, startDate, endDate, state.getCurrentPage());
+        if (cached != null) {
+            bookingsLiveData.setValue(new ArrayList<>(cached));
+            state.incrementPage();
+            return;
+        }
 
         isLoading = true;
         isLoadingLive.setValue(true);
@@ -70,34 +89,35 @@ public class BookViewModel extends ViewModel {
                 employeeId,
                 startDate,
                 endDate,
-                currentPage,
+                state.getCurrentPage(),
                 PAGE_LIMIT
         );
 
         bookRepository.fetchBookingsByEmployeeId(request, new Callback<>() {
-
             @Override
             public void onResponse(@NonNull Call<BookingWrapper> call, @NonNull Response<BookingWrapper> response) {
                 isLoading = false;
                 isLoadingLive.setValue(false);
 
                 if (response.isSuccessful() && response.body() != null) {
-
                     List<Booking> newBookings = response.body().getData().getBookings();
 
                     if (newBookings == null || newBookings.isEmpty()) {
-                        isLastPage = true;
+                        state.setIsLastPage(true);
                         return;
                     }
 
-                    accumulatedList.addAll(newBookings);
-                    bookingsLiveData.postValue(new ArrayList<>(accumulatedList));
+                    if (newBookings.size() < PAGE_LIMIT) {
+                        state.setIsLastPage(true);
+                    }
+
+                    bookRepository.cachePage(employeeId, startDate, endDate, state.getCurrentPage(), newBookings);
+                    state.setTotalBookings(response.body().getData().getTotalBookings());
+                    state.appendToAccumulated(newBookings);
+                    bookingsLiveData.setValue(new ArrayList<>(state.getAccumulated()));
 
                     totalBookings = response.body().getData().getTotalBookings();
-                    int totalPages = (int) Math.ceil((double) totalBookings / PAGE_LIMIT);
-
-                    currentPage++;
-                    isLastPage = currentPage >= totalPages;
+                    state.incrementPage();
                 } else {
                     errorLiveData.postValue("Empty or unsuccessful response");
                 }
@@ -108,7 +128,7 @@ public class BookViewModel extends ViewModel {
                 isLoading = false;
                 isLoadingLive.setValue(false);
                 errorLiveData.postValue(t.getMessage());
-                Log.e("HTTPs", "NETWORK FAILURE", t); // DEBUGGING
+                Log.e("HTTPs", "NETWORK FAILURE", t);
             }
         });
     }

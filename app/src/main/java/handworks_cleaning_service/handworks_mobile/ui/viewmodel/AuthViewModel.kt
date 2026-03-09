@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import handworks_cleaning_service.handworks_mobile.data.dto.auth.LoginRequest
 import handworks_cleaning_service.handworks_mobile.data.repository.AuthRepository
 import handworks_cleaning_service.handworks_mobile.utils.Result
+import handworks_cleaning_service.handworks_mobile.utils.SessionManager
 import handworks_cleaning_service.handworks_mobile.utils.uistate.AuthUiState
 import handworks_cleaning_service.handworks_mobile.utils.uistate.ResetPasswordUiState
 import handworks_cleaning_service.handworks_mobile.utils.uistate.SessionUiState
@@ -23,7 +24,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthViewModel @Inject constructor(private val repository: AuthRepository) : ViewModel() {
+class AuthViewModel @Inject constructor(private val repository: AuthRepository, private val sessionManager: SessionManager) : ViewModel() {
 
     private val _authState = MutableLiveData<AuthUiState>(AuthUiState.Idle)
     val authState: LiveData<AuthUiState> get() = _authState
@@ -41,7 +42,7 @@ class AuthViewModel @Inject constructor(private val repository: AuthRepository) 
     }
 
     fun clearCache() {
-        repository.clearCache()
+        sessionManager.clearSession()
     }
 
     private val _resetPasswordUiState = MutableStateFlow<ResetPasswordUiState>(ResetPasswordUiState.Loading)
@@ -91,11 +92,6 @@ class AuthViewModel @Inject constructor(private val repository: AuthRepository) 
                 _authState.value = AuthUiState.Error(e.message ?: "Logout failed")
             }
         }
-    }
-
-    fun logoutCompletely() {
-        signOut()
-        clearCache()
     }
 
     //region Forgot Password/Reset Password

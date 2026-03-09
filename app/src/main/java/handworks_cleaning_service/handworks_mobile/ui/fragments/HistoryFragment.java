@@ -96,8 +96,7 @@ public class HistoryFragment extends Fragment {
                 if (endDate == null) endDate = LocalDate.now();
                 if (startDate == null) startDate = endDate.minusDays(7);
 
-                bookViewModel.resetPagination();
-                bookViewModel.loadNextPage(employeeId, startDate.toString(), endDate.toString());
+                bookViewModel.restoreCachedOrLoad(employeeId, startDate.toString(), endDate.toString());
             }
         });
     }
@@ -149,7 +148,7 @@ public class HistoryFragment extends Fragment {
                 };
 
                 if (employeeId != null) {
-                    bookViewModel.resetPagination();
+                    bookViewModel.resetPagination(employeeId, startDate.toString(), endDate.toString());
                     bookViewModel.loadNextPage(employeeId, startDate.toString(), endDate.toString());
                 }
             }

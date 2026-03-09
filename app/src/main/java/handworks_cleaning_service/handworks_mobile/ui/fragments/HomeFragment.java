@@ -103,8 +103,7 @@ public class HomeFragment extends Fragment {
                 if (today == null) today = LocalDate.now();
                 if (endDate == null) endDate = today.plusDays(7);
 
-                bookViewModel.resetPagination();
-                bookViewModel.loadNextPage(employeeId, today.minusMonths(3).toString(), today.plusMonths(3).toString());
+                bookViewModel.restoreCachedOrLoad(employeeId, today.minusMonths(3).toString(), today.plusMonths(3).toString());
             } else {
                 binding.cleanerNameDisplay.setText(getString(R.string.cleaner_name_display, "Error"));
             }
@@ -160,7 +159,7 @@ public class HomeFragment extends Fragment {
                 };
 
                 if (employeeId != null) {
-                    bookViewModel.resetPagination();
+                    bookViewModel.resetPagination(employeeId, today.toString(), endDate.toString());
                     bookViewModel.loadNextPage(employeeId, today.minusMonths(3).toString(), today.plusMonths(3).toString());
                 }
             }
@@ -174,6 +173,7 @@ public class HomeFragment extends Fragment {
         binding.bookingsRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView rv, int dx, int dy) {
+                if (dy <= 0) return;
                 LinearLayoutManager lm = (LinearLayoutManager) rv.getLayoutManager();
                 if (lm == null || employeeId == null || endDate == null) return;
 

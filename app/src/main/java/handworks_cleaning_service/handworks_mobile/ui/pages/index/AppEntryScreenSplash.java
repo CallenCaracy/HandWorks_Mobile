@@ -135,8 +135,7 @@ public class AppEntryScreenSplash extends AppCompatActivity {
     }
 
     private void forceLogout() {
-        authViewModel.logoutCompletely();
-        userViewModel.clearCache();
+        authViewModel.clearCache();
         NavigationUtil.navigateTo(this, Login.class);
     }
 }
