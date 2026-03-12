@@ -113,7 +113,8 @@ public class HistoryFragment extends Fragment {
         List<String> options = Arrays.asList(
                 "Past Week",
                 "Past 2 Weeks",
-                "Past Month"
+                "Past Month",
+                "Past 6 Months"
         );
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
@@ -136,6 +137,7 @@ public class HistoryFragment extends Fragment {
                 startDate = switch (position) {
                     case 1 -> endDate.minusDays(14);
                     case 2 -> endDate.minusMonths(1);
+                    case 3 -> endDate.minusMonths(6);
                     default -> endDate.minusDays(7);
                 };
 
@@ -154,13 +156,15 @@ public class HistoryFragment extends Fragment {
         binding.bookingsRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView rv, int dx, int dy) {
+                if (dy <= 0) return;
                 LinearLayoutManager lm = (LinearLayoutManager) rv.getLayoutManager();
                 if (lm == null || employeeId == null || endDate == null) return;
 
                 int totalItemCount = lm.getItemCount();
                 int lastVisibleItem = lm.findLastVisibleItemPosition();
 
-                if (totalItemCount <= lastVisibleItem + 5) {
+                int visibleThreshold = 2;
+                if (totalItemCount > 0 && totalItemCount <= lastVisibleItem + visibleThreshold) {
                     bookViewModel.loadNextPage(employeeId, startDate.toString(), endDate.toString());
                 }
             }

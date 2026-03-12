@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,19 +17,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
+import handworks_cleaning_service.handworks_mobile.data.dto.user.TimeInRequest;
+import handworks_cleaning_service.handworks_mobile.data.dto.user.TimeOutRequest;
+import handworks_cleaning_service.handworks_mobile.data.models.users.Employee;
+import handworks_cleaning_service.handworks_mobile.data.models.users.TimeSheet;
 import handworks_cleaning_service.handworks_mobile.data.repository.config.FetchStrategy;
 import handworks_cleaning_service.handworks_mobile.databinding.FragmentHomeBinding;
 import handworks_cleaning_service.handworks_mobile.ui.adapters.BookingAdapter;
@@ -46,7 +49,6 @@ public class HomeFragment extends Fragment {
     private LocalDate today = LocalDate.now();
     private LocalDate endDate;
     private BookingAdapter bookingAdapter;
-    private boolean isFirstSelection = true;
     @Inject
     SharedPreferences prefs;
 
@@ -78,35 +80,39 @@ public class HomeFragment extends Fragment {
         Date date = new Date();
         binding.dateDisplay.setText(getString(R.string.as_of_display, DateUtil.formatDateFromIntToString(date)));
 
-        // Spinner
-        initSpinnerFilter();
-        setupSpinnerListener();
-
         // Observers
         observeEmployee();
         observeBookings();
+        observeTimeSheet();
 
-        // Infinite scroll
+        // Setups
         setupScrollListener();
+        setupTimeSheetBotton();
 
         return binding.getRoot();
     }
 
     private void observeEmployee() {
-        userViewModel.loadEmployee(prefs.getString("EMP_ID", null), FetchStrategy.CACHE_FIRST);
-        userViewModel.getEmployee().observe(getViewLifecycleOwner(), employee -> {
-            if (employee != null) {
-                employeeId = employee.getId();
-                binding.cleanerNameDisplay.setText(
-                        getString(R.string.cleaner_name_display, employee.getAccount().getFirst_name())
-                );
+        userViewModel.loadEmployee(prefs.getString("EMP_ID", null), FetchStrategy.CACHE_ONLY);
+        userViewModel.getEmployee().observe(getViewLifecycleOwner(), state -> {
+            switch (state.getStatus()) {
+                case LOADING:
+                    binding.cleanerNameDisplay.setText(R.string.loading);
+                    break;
+                case SUCCESS:
+                    Employee employee = state.getData();
+                    employeeId = employee.getId();
+                    binding.cleanerNameDisplay.setText(getString(R.string.cleaner_name_display, employee.getAccount().getFirst_name()));
 
-                if (today == null) today = LocalDate.now();
-                if (endDate == null) endDate = today.plusDays(7);
+                    if (today == null) today = LocalDate.now();
+                    if (endDate == null) endDate = today.plusDays(7);
 
-                bookViewModel.restoreCachedOrLoad(employeeId, today.minusMonths(3).toString(), today.plusMonths(3).toString());
-            } else {
-                binding.cleanerNameDisplay.setText(getString(R.string.cleaner_name_display, "Error"));
+                    bookViewModel.restoreCachedOrLoad(employeeId, today.toString(), endDate.toString());
+                    break;
+                case ERROR:
+                    binding.cleanerNameDisplay.setText(getString(R.string.cleaner_name_display, "Error"));
+                    Toast.makeText(getContext(), "Error: " + state.getMessage(), Toast.LENGTH_SHORT).show();
+                    break;
             }
         });
     }
@@ -126,44 +132,34 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void initSpinnerFilter() {
-        List<String> options = Arrays.asList(
-                "This Week",
-                "Next 2 Weeks",
-                "This Month"
-        );
+    private void observeTimeSheet() {
+        userViewModel.getTimeSheetState().observe(getViewLifecycleOwner(), state -> {
+            switch (state.getStatus()) {
+                case LOADING:
+                    binding.btnTimeIn.setEnabled(false);
+                    binding.btnTimeOut.setEnabled(false);
+                    break;
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                requireContext(),
-                R.layout.item_spinner_book_filter,
-                options
-        );
+                case SUCCESS:
+                    binding.btnTimeIn.setEnabled(true);
+                    binding.btnTimeOut.setEnabled(true);
 
-        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-        binding.spinnerDateFilter.setAdapter(adapter);
-    }
+                    TimeSheet sheet = state.getData();
+                    if (sheet.getTimeOut() == null) {
+                        binding.btnTimeIn.setVisibility(View.GONE);
+                        binding.btnTimeOut.setVisibility(View.VISIBLE);
+                    } else {
+                        binding.btnTimeIn.setVisibility(View.VISIBLE);
+                        binding.btnTimeOut.setVisibility(View.GONE);
+                    }
+                    break;
 
-    private void setupSpinnerListener() {
-        binding.spinnerDateFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (isFirstSelection) { isFirstSelection = false; return; }
-
-                today = LocalDate.now();
-                endDate = switch (position) {
-                    case 1 -> today.plusDays(14);
-                    case 2 -> today.plusMonths(1);
-                    default -> today.plusDays(7);
-                };
-
-                if (employeeId != null) {
-                    bookViewModel.resetPagination(employeeId, today.toString(), endDate.toString());
-                    bookViewModel.loadNextPage(employeeId, today.minusMonths(3).toString(), today.plusMonths(3).toString());
-                }
+                case ERROR:
+                    binding.btnTimeIn.setEnabled(true);
+                    binding.btnTimeOut.setEnabled(true);
+                    Toast.makeText(requireContext(), "Error: " + state.getMessage(), Toast.LENGTH_SHORT).show();
+                    break;
             }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
 
@@ -178,12 +174,31 @@ public class HomeFragment extends Fragment {
                 int totalItemCount = lm.getItemCount();
                 int lastVisibleItem = lm.findLastVisibleItemPosition();
 
-                int visibleThreshold = 2; // fetch when 2 items from the end
+                int visibleThreshold = 2;
                 if (totalItemCount > 0 && totalItemCount <= lastVisibleItem + visibleThreshold) {
-                    bookViewModel.loadNextPage(employeeId, today.minusMonths(3).toString(), today.plusMonths(3).toString());
+                    bookViewModel.loadNextPage(employeeId, today.toString(), today.toString());
                 }
             }
         });
+    }
+
+    private void setupTimeSheetBotton() {
+        binding.btnTimeIn.setOnClickListener(v -> {
+            String timeNow = LocalTime.now().toString();
+            TimeInRequest request = new TimeInRequest(employeeId, timeNow);
+            userViewModel.timeIn(request);
+        });
+
+        binding.btnTimeOut.setOnClickListener(v -> new AlertDialog.Builder(requireContext())
+                .setTitle("Time out")
+                .setMessage("Are you sure you want to time out?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    String timeNow = LocalTime.now().toString();
+                    TimeOutRequest request = new TimeOutRequest(employeeId, timeNow);
+                    userViewModel.timeOut(request);
+                })
+                .setNegativeButton("No", null)
+                .show());
     }
 
     private void updateUI(boolean hasBooks, boolean loading) {

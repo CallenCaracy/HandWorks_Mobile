@@ -20,7 +20,7 @@ import handworks_cleaning_service.handworks_mobile.databinding.ActivityLoginBind
 import handworks_cleaning_service.handworks_mobile.ui.pages.index.AppEntryScreenSplash;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
-import handworks_cleaning_service.handworks_mobile.utils.uistate.AuthUiState;
+import handworks_cleaning_service.handworks_mobile.utils.uistate.AuthUIState;
 
 @AndroidEntryPoint
 public class Login extends AppCompatActivity {
@@ -73,7 +73,7 @@ public class Login extends AppCompatActivity {
 
     private void observeAuthState() {
         authViewModel.getAuthState().observe(this, uiState -> {
-            if (uiState instanceof AuthUiState.Loading) {
+            if (uiState instanceof AuthUIState.Loading) {
                 binding.progressBar.setVisibility(View.VISIBLE);
                 binding.btnSignIn.setEnabled(false);
                 return;
@@ -82,10 +82,10 @@ public class Login extends AppCompatActivity {
             binding.progressBar.setVisibility(View.GONE);
             binding.btnSignIn.setEnabled(true);
 
-            if (uiState instanceof AuthUiState.Success) {
+            if (uiState instanceof AuthUIState.Success) {
                 NavigationUtil.navigateTo(this, AppEntryScreenSplash.class);
-            } else if (uiState instanceof AuthUiState.Error) {
-                String error = ((AuthUiState.Error) uiState).getMessage();
+            } else if (uiState instanceof AuthUIState.Error) {
+                String error = ((AuthUIState.Error) uiState).getMessage();
                 Toast.makeText(this, "Login failed: " + error, Toast.LENGTH_LONG).show();
             }
         });

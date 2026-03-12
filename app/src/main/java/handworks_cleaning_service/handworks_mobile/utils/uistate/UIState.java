@@ -1,0 +1,36 @@
+package handworks_cleaning_service.handworks_mobile.utils.uistate;
+
+public class UIState<T> {
+
+    public enum Status {
+        LOADING,
+        SUCCESS,
+        ERROR
+    }
+
+    private final Status status;
+    private final T data;
+    private final String message;
+
+    private UIState(Status status, T data, String message) {
+        this.status = status;
+        this.data = data;
+        this.message = message;
+    }
+
+    public static <T> UIState<T> loading() {
+        return new UIState<>(Status.LOADING, null, null);
+    }
+
+    public static <T> UIState<T> success(T data) {
+        return new UIState<>(Status.SUCCESS, data, null);
+    }
+
+    public static <T> UIState<T> error(String message) {
+        return new UIState<>(Status.ERROR, null, message);
+    }
+
+    public Status getStatus() { return status; }
+    public T getData() { return data; }
+    public String getMessage() { return message; }
+}

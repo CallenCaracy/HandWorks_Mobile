@@ -38,6 +38,7 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
+import handworks_cleaning_service.handworks_mobile.data.models.users.Employee;
 import handworks_cleaning_service.handworks_mobile.data.repository.config.FetchStrategy;
 import handworks_cleaning_service.handworks_mobile.databinding.ActivityUserProfileBinding;
 import handworks_cleaning_service.handworks_mobile.ui.adapters.ProfileSettingsAdapter;
@@ -51,7 +52,7 @@ import handworks_cleaning_service.handworks_mobile.utils.Constant;
 import handworks_cleaning_service.handworks_mobile.utils.DateUtil;
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
 import handworks_cleaning_service.handworks_mobile.utils.ThemeUtil;
-import handworks_cleaning_service.handworks_mobile.utils.uistate.AuthUiState;
+import handworks_cleaning_service.handworks_mobile.utils.uistate.AuthUIState;
 
 @AndroidEntryPoint
 public class UserProfile extends AppCompatActivity {
@@ -84,9 +85,6 @@ public class UserProfile extends AppCompatActivity {
         String employeeId = prefs.getString("EMP_ID", null);
         User cachedUser = authViewModel.getCachedUser();
         if (cachedUser != null) {
-            binding.cleanerFirstNameDisplay.setText(cachedUser.getFirstName());
-            binding.cleanerLastNameDisplay.setText(cachedUser.getLastName());
-
             Glide.with(this)
                     .load(cachedUser.getImageUrl())
                     .placeholder(R.drawable.pfp_placeholder)
@@ -100,46 +98,64 @@ public class UserProfile extends AppCompatActivity {
                 startActivity(intent);
             });
 
-            userViewModel.getEmployee().observe(this, employee -> {
+            userViewModel.loadEmployee(employeeId, FetchStrategy.CACHE_FIRST);
+            userViewModel.getEmployee().observe(this, state -> {
                 binding.swipeRefresh.setRefreshing(false);
 
-                if (employee != null) {
-                    String formattedDate = DateUtil.formatStringDate(employee.getHire_date());
-                    long longDate = DateUtil.convertStringToLong(employee.getHire_date());
+                switch (state.getStatus()) {
+                    case LOADING:
+                        binding.joinedValue.setText("-");
+                        binding.ratingBar.setRating(0);
+                        binding.ratingValue.setText("-");
+                        binding.ratingNumber.setText("-");
+                        binding.employeeEmailValue.setText("-");
+                        binding.employeeHireDateValue.setText("-");
+                        binding.employeePositionValue.setText("-");
+                        binding.employeeStatus.setText("-");
+                        break;
 
-                    binding.joinedValue.setText(DateUtil.getTimeAgo(longDate));
-                    binding.ratingBar.setRating((float) employee.getPerformance_score());
-                    binding.ratingValue.setText(String.valueOf((int) employee.getPerformance_score()));
-                    binding.ratingNumber.setText(
-                            getResources().getQuantityString(
-                                    R.plurals.reviews_count,
-                                    employee.getNum_ratings(),
-                                    employee.getNum_ratings()
-                            )
-                    );
-                    binding.employeeEmailValue.setText(employee.getAccount().getEmail());
-                    binding.employeeHireDateValue.setText(formattedDate);
-                    binding.employeePositionValue.setText(employee.getPosition());
-                    binding.employeeStatus.setText(
-                            getString(R.string.status_colon, employee.getStatus())
-                    );
+                    case SUCCESS:
+                        Employee employee = state.getData();
+                        if (employee != null) {
+                            binding.cleanerFirstNameDisplay.setText(employee.getAccount().getFirst_name());
+                            binding.cleanerLastNameDisplay.setText(employee.getAccount().getLast_name());
+
+                            String formattedDate = DateUtil.formatStringDate(employee.getHire_date());
+                            long longDate = DateUtil.convertStringToLong(employee.getHire_date());
+                            binding.joinedValue.setText(DateUtil.getTimeAgo(longDate));
+
+                            binding.ratingBar.setRating((float) employee.getPerformance_score());
+                            binding.ratingValue.setText(String.valueOf((int) employee.getPerformance_score()));
+                            binding.ratingNumber.setText(
+                                    getResources().getQuantityString(
+                                            R.plurals.reviews_count,
+                                            employee.getNum_ratings(),
+                                            employee.getNum_ratings()
+                                    )
+                            );
+
+                            binding.employeeEmailValue.setText(employee.getAccount().getEmail());
+                            binding.employeeHireDateValue.setText(formattedDate);
+                            binding.employeePositionValue.setText(employee.getPosition());
+                            binding.employeeStatus.setText(
+                                    getString(R.string.status_colon, employee.getStatus())
+                            );
+                        }
+                        break;
+
+                    case ERROR:
+                        Toast.makeText(this, "Error fetching user info.", Toast.LENGTH_LONG).show();
+                        binding.ratingBar.setRating(0.0f);
+                        binding.joinedValue.setText(R.string._0_months_ago);
+                        binding.ratingValue.setText("0.0");
+                        binding.ratingNumber.setVisibility(GONE);
+                        binding.employeeEmailValue.setText(R.string.error);
+                        binding.employeeHireDateValue.setText(R.string.error);
+                        binding.employeePositionValue.setText(R.string.error);
+                        binding.employeeStatus.setText(R.string.error);
+                        break;
                 }
             });
-
-            userViewModel.getError().observe(this, error -> {
-                binding.swipeRefresh.setRefreshing(false);
-
-                Toast.makeText(this, "Error fetching user info.", Toast.LENGTH_LONG).show();
-                binding.ratingBar.setRating(0.0f);
-                binding.joinedValue.setText(R.string._0_months_ago);
-                binding.ratingValue.setText("0.0");
-                binding.ratingNumber.setVisibility(GONE);
-                binding.employeeEmailValue.setText(R.string.error);
-                binding.employeeHireDateValue.setText(R.string.error);
-                binding.employeePositionValue.setText(R.string.error);
-                binding.employeeStatus.setText(R.string.error);
-            });
-            userViewModel.loadEmployee(employeeId, FetchStrategy.CACHE_FIRST);
         }
 
         binding.profileHeader.titlePageTxt.setText(getString(R.string.profile));
@@ -157,10 +173,10 @@ public class UserProfile extends AppCompatActivity {
                 .show());
 
         authViewModel.getAuthState().observe(this, state -> {
-            if (state instanceof AuthUiState.SignedOut) {
+            if (state instanceof AuthUIState.SignedOut) {
                 NavigationUtil.navigateTo(this, Login.class);
-            } else if (state instanceof AuthUiState.Error) {
-                Toast.makeText(this, ((AuthUiState.Error) state).getMessage(), Toast.LENGTH_SHORT).show();
+            } else if (state instanceof AuthUIState.Error) {
+                Toast.makeText(this, ((AuthUIState.Error) state).getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

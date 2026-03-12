@@ -1,7 +1,11 @@
 package handworks_cleaning_service.handworks_mobile.ui.pages.index;
 
+import static handworks_cleaning_service.handworks_mobile.utils.Constant.MAX_RETRIES;
+
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Toast;
 
@@ -10,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import javax.inject.Inject;
@@ -24,7 +27,7 @@ import handworks_cleaning_service.handworks_mobile.ui.pages.auth.Login;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.UserViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
-import handworks_cleaning_service.handworks_mobile.utils.uistate.SessionUiState;
+import handworks_cleaning_service.handworks_mobile.utils.uistate.SessionUIState;
 import kotlinx.serialization.json.JsonElement;
 import kotlinx.serialization.json.JsonObject;
 
@@ -34,6 +37,7 @@ public class AppEntryScreenSplash extends AppCompatActivity {
     private AuthViewModel authViewModel;
     private UserViewModel userViewModel;
     private String empId;
+    private int retryCount = 0;
     @Inject
     SharedPreferences prefs;
 
@@ -59,18 +63,18 @@ public class AppEntryScreenSplash extends AppCompatActivity {
         binding.btnRetry.setOnClickListener(v -> authViewModel.checkSession());
     }
 
-    private void render(SessionUiState state) {
+    private void render(SessionUIState state) {
         binding.progressBarLoading.setVisibility(View.GONE);
         binding.tvRetryMessage.setVisibility(View.GONE);
         binding.btnRetry.setVisibility(View.GONE);
 
-        if (state instanceof SessionUiState.Loading || state instanceof SessionUiState.Idle) {
+        if (state instanceof SessionUIState.Loading || state instanceof SessionUIState.Idle) {
             binding.progressBarLoading.setVisibility(View.VISIBLE);
-        } else if (state instanceof SessionUiState.Authenticated) {
+        } else if (state instanceof SessionUIState.Authenticated) {
             checkPoint();
-        } else if (state instanceof SessionUiState.Unauthenticated) {
+        } else if (state instanceof SessionUIState.Unauthenticated) {
             NavigationUtil.navigateTo(this, Login.class);
-        } else if (state instanceof SessionUiState.Error) {
+        } else if (state instanceof SessionUIState.Error) {
             binding.tvRetryMessage.setVisibility(View.VISIBLE);
             binding.btnRetry.setVisibility(View.VISIBLE);
         }
@@ -94,35 +98,52 @@ public class AppEntryScreenSplash extends AppCompatActivity {
         prefs.edit().putString("EMP_ID", empId).apply();
 
         userViewModel.loadEmployee(empId, FetchStrategy.NETWORK_ONLY);
+        userViewModel.getEmployee().observe(this, state -> {
+            binding.progressBarLoading.setVisibility(View.GONE);
 
-        userViewModel.getEmployee().observe(this, new Observer<>() {
-            @Override
-            public void onChanged(Employee employee) {
-                userViewModel.getEmployee().removeObserver(this);
+            switch (state.getStatus()) {
+                case LOADING:
+                    binding.progressBarLoading.setVisibility(View.VISIBLE);
+                    binding.handworksLogo.setVisibility(View.VISIBLE);
+                    binding.errorUI.getRoot().setVisibility(View.GONE);
+                    break;
 
-                if (employee != null && "employee".equals(employee.getAccount().getRole())) {
-                    Toast.makeText(AppEntryScreenSplash.this, "Welcome back!", Toast.LENGTH_LONG).show();
-                    NavigationUtil.navigateTo(AppEntryScreenSplash.this, Dashboard.class);
-                } else {
-                    Toast.makeText(AppEntryScreenSplash.this, "Unauthorized account", Toast.LENGTH_LONG).show();
-                    forceLogout();
-                    NavigationUtil.navigateTo(AppEntryScreenSplash.this, Login.class);
-                }
-            }
-        });
+                case SUCCESS:
+                    Employee employee = state.getData();
+                    if (employee != null && "employee".equals(employee.getAccount().getRole())) {
+                        Toast.makeText(AppEntryScreenSplash.this, "Welcome back!", Toast.LENGTH_LONG).show();
+                        NavigationUtil.navigateTo(AppEntryScreenSplash.this, Dashboard.class);
+                    } else {
+                        Toast.makeText(AppEntryScreenSplash.this, "Unauthorized account", Toast.LENGTH_LONG).show();
+                        forceLogout();
+                        NavigationUtil.navigateTo(AppEntryScreenSplash.this, Login.class);
+                    }
+                    break;
 
-        userViewModel.getError().observe(this, error -> {
-            if (error != null) {
-                Toast.makeText(this, error + ": Taking longer than usual.", Toast.LENGTH_LONG).show();
-                if (!error.equals("timeout")) {
+                case ERROR:
+                    String errorMessage = state.getMessage() != null ? state.getMessage() : "Unknown error";
+                    Toast.makeText(this, errorMessage + ": Taking longer than usual.", Toast.LENGTH_LONG).show();
+
                     binding.progressBarLoading.setVisibility(View.GONE);
-                    binding.handworksLogo.setVisibility(View.GONE);
-                    binding.errorUI.getRoot().setVisibility(View.VISIBLE);
-                    binding.errorUI.errorBtntnRetry.setOnClickListener(v -> showRetryUI());
-                } else {
-                    binding.progressBarLoading.setVisibility(View.GONE);
-                    showRetryUI();
-                }
+                    if ("timeout".equalsIgnoreCase(errorMessage)) {
+                        if (retryCount < MAX_RETRIES) {
+                            retryCount++;
+                            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                                binding.progressBarLoading.setVisibility(View.VISIBLE);
+                                userViewModel.loadEmployee(empId, FetchStrategy.NETWORK_ONLY);
+                            }, 1000);
+                        } else {
+                            showRetryUI();
+                        }
+                    } else {
+                        binding.handworksLogo.setVisibility(View.GONE);
+                        binding.errorUI.getRoot().setVisibility(View.VISIBLE);
+                        binding.errorUI.errorBtntnRetry.setOnClickListener(v -> {
+                            retryCount = 0;
+                            showRetryUI();
+                        });
+                    }
+                    break;
             }
         });
     }

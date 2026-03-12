@@ -81,14 +81,34 @@
                         android:textSize="11sp" />
                 </LinearLayout>
 
-                <Spinner
-                    android:id="@+id/spinnerDateFilter"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="4dp"
-                    android:paddingVertical="10dp"
-                    app:layout_constraintTop_toBottomOf="@+id/summaryCard" />
+                    android:orientation="horizontal">
 
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnTimeIn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/backgroundLightTransition"
+                        android:text="@string/time_in"
+                        android:textAllCaps="false"
+                        android:textColor="@color/textTertiary"
+                        android:layout_marginBottom="4dp"
+                        app:cornerRadius="8dp"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnTimeOut"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/backgroundLightTransition"
+                        android:text="@string/time_out"
+                        android:visibility="gone"
+                        android:textAllCaps="false"
+                        android:textColor="@color/textTertiary"
+                        android:layout_marginBottom="4dp"
+                        app:cornerRadius="8dp"/>
+                </LinearLayout>
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>

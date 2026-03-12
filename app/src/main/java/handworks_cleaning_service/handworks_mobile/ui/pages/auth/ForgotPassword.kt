@@ -19,7 +19,7 @@ import handworks_cleaning_service.handworks_mobile.databinding.ActivityForgotPas
 import handworks_cleaning_service.handworks_mobile.ui.pages.index.AppEntryScreenSplash
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.AuthViewModel
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil
-import handworks_cleaning_service.handworks_mobile.utils.uistate.ResetPasswordUiState
+import handworks_cleaning_service.handworks_mobile.utils.uistate.ResetPasswordUIState
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -45,10 +45,10 @@ class ForgotPassword : ComponentActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 authViewModel.resetPasswordUiState.collect { state ->
                     when (state) {
-                        ResetPasswordUiState.NeedsFirstFactor -> showCodeStep()
-                        ResetPasswordUiState.NeedsSecondFactor -> showNewPasswordStep()
-                        ResetPasswordUiState.NeedsNewPassword -> showNewPasswordStep()
-                        ResetPasswordUiState.Complete -> {
+                        ResetPasswordUIState.NeedsFirstFactor -> showCodeStep()
+                        ResetPasswordUIState.NeedsSecondFactor -> showNewPasswordStep()
+                        ResetPasswordUIState.NeedsNewPassword -> showNewPasswordStep()
+                        ResetPasswordUIState.Complete -> {
                             Toast.makeText(this@ForgotPassword, "Password updated!", Toast.LENGTH_SHORT).show()
                             NavigationUtil.navigateTo(this@ForgotPassword, AppEntryScreenSplash::class.java)
                             finish()
