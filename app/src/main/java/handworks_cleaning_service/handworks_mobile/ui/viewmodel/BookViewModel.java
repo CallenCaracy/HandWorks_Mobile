@@ -29,7 +29,6 @@ public class BookViewModel extends ViewModel {
     private final MutableLiveData<List<Booking>> bookingsLiveData = new MutableLiveData<>();
     private final MutableLiveData<String> errorLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoadingLive = new MutableLiveData<>(false);
-    private boolean isLoading = false;
     private int totalBookings;
 
     public LiveData<Boolean> getIsLoading() {
@@ -51,8 +50,7 @@ public class BookViewModel extends ViewModel {
 
     public void resetPagination(String employeeId, String startDate, String endDate) {
         PaginationState state = bookRepository.getPaginationState(employeeId, startDate, endDate);
-        state.resetPage();
-        state.setIsLastPage(false);
+        state.reset();
 
         bookingsLiveData.setValue(new ArrayList<>());
     }
@@ -73,17 +71,16 @@ public class BookViewModel extends ViewModel {
 
         PaginationState state = bookRepository.getPaginationState(employeeId, startDate, endDate);
 
-        if (isLoading || state.isLastPage()) return;
+        if (!state.canLoadMore()) return;
+        state.setLoading(true);
 
         List<Booking> cached = bookRepository.getCachedPage(employeeId, startDate, endDate, state.getCurrentPage());
         if (cached != null) {
-            bookingsLiveData.setValue(new ArrayList<>(cached));
-            state.incrementPage();
+            state.setLoading(false);
+            state.nextPage();
+            bookingsLiveData.setValue(state.getAccumulated());
             return;
         }
-
-        isLoading = true;
-        isLoadingLive.setValue(true);
 
         BooksByEmployeeIdRequest request = new BooksByEmployeeIdRequest(
                 employeeId,
@@ -96,7 +93,7 @@ public class BookViewModel extends ViewModel {
         bookRepository.fetchBookingsByEmployeeId(request, new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<BookingWrapper> call, @NonNull Response<BookingWrapper> response) {
-                isLoading = false;
+                state.setLoading(false);
                 isLoadingLive.setValue(false);
 
                 if (response.isSuccessful() && response.body() != null) {
@@ -104,6 +101,7 @@ public class BookViewModel extends ViewModel {
 
                     if (newBookings == null || newBookings.isEmpty()) {
                         state.setIsLastPage(true);
+                        bookingsLiveData.setValue(state.getAccumulated());
                         return;
                     }
 
@@ -112,12 +110,11 @@ public class BookViewModel extends ViewModel {
                     }
 
                     bookRepository.cachePage(employeeId, startDate, endDate, state.getCurrentPage(), newBookings);
-                    state.setTotalBookings(response.body().getData().getTotalBookings());
-                    state.appendToAccumulated(newBookings);
-                    bookingsLiveData.setValue(new ArrayList<>(state.getAccumulated()));
+                    state.updateTotal(response.body().getData().getTotalBookings());
+                    bookingsLiveData.setValue(state.getAccumulated());
 
                     totalBookings = response.body().getData().getTotalBookings();
-                    state.incrementPage();
+                    state.nextPage();
                 } else {
                     errorLiveData.postValue("Empty or unsuccessful response");
                 }
@@ -125,7 +122,7 @@ public class BookViewModel extends ViewModel {
 
             @Override
             public void onFailure(@NonNull Call<BookingWrapper> call, @NonNull Throwable t) {
-                isLoading = false;
+                state.setLoading(false);
                 isLoadingLive.setValue(false);
                 errorLiveData.postValue(t.getMessage());
                 Log.e("HTTPs", "NETWORK FAILURE", t);

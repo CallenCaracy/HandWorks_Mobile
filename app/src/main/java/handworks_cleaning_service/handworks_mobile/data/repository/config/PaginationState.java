@@ -1,6 +1,5 @@
 package handworks_cleaning_service.handworks_mobile.data.repository.config;
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -11,25 +10,33 @@ public class PaginationState {
     private int currentPage = 0;
     private boolean isLastPage = false;
     private int totalBookings = 0;
+    private boolean loading = false;
     private final Set<Booking> accumulated = new LinkedHashSet<>();
 
-    public List<Booking> getAccumulated() {
-        return new ArrayList<>(accumulated);
+    public List<Booking> getAccumulated() { return List.copyOf(accumulated); }
+    public void append(List<Booking> bookings) { accumulated.addAll(bookings); }
+    public void nextPage() {
+        currentPage++;
     }
-    public void appendToAccumulated(List<Booking> accumulated) { this.accumulated.addAll(accumulated); }
-    public void resetAccumulated() { this.accumulated.clear(); }
+    public void updateTotal(int totalBookings) {
+        this.totalBookings = totalBookings;
+        this.isLastPage = accumulated.size() >= totalBookings;
+    }
+    public void setLoading(boolean loading) {
+        this.loading = loading; }
+    public void reset() {
+        accumulated.clear();
+        currentPage = 0;
+        totalBookings = 0;
+        isLastPage = false;
+        loading = false;
+    }
     public int getCurrentPage() { return currentPage; }
-    public void incrementPage() { currentPage++; }
-    public void resetPage() { currentPage = 0; }
-
     public int getTotalBookings() {
         return totalBookings;
     }
-
-    public void setTotalBookings(int totalBookings) {
-        this.totalBookings = totalBookings;
+    public boolean canLoadMore() {
+        return !loading && !isLastPage;
     }
-
-    public boolean isLastPage() { return isLastPage; }
     public void setIsLastPage(boolean isLastPage) { this.isLastPage = isLastPage; }
 }

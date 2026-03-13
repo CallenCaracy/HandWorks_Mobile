@@ -26,7 +26,7 @@ android {
             buildConfigField(
                 type = "String",
                 name = "BASE_URL",
-//                value = "\"http://192.168.1.4:8080/api/\"",
+//                value = "\"http://10.14.35.240:8080/api/\"",
                 value = "\"https://qa-handworks-api.onrender.com/api/\"",
             )
         }

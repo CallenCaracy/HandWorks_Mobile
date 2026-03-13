@@ -26,15 +26,19 @@ public class BookRepository {
 
     public void cachePage(String employeeId, String startDate, String endDate, int page, List<Booking> bookings) {
         PaginationState state = getPaginationState(employeeId, startDate, endDate);
-        state.getAccumulated().addAll(bookings);
+        state.append(bookings);
     }
 
     public List<Booking> getCachedPage(String employeeId, String startDate, String endDate, int page) {
         PaginationState state = getPaginationState(employeeId, startDate, endDate);
+        List<Booking> data = state.getAccumulated();
+
         int from = page * PAGE_LIMIT;
-        int to = Math.min(from + PAGE_LIMIT, state.getAccumulated().size());
-        if (from >= state.getAccumulated().size()) return null;
-        return state.getAccumulated().subList(from, to);
+        int to = Math.min(from + PAGE_LIMIT, data.size());
+
+        if (from >= data.size()) return null;
+
+        return data.subList(from, to);
     }
 
     public PaginationState getPaginationState(String employeeId, String startDate, String endDate) {
@@ -57,6 +61,6 @@ public class BookRepository {
     }
 
     private String buildKey(String employeeId, String startDate, String endDate) {
-        return employeeId + "_" + startDate + "_" + endDate;
+        return employeeId + "|" + startDate + "|" + endDate;
     }
 }
