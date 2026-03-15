@@ -37,30 +37,30 @@ public class EnumHelper {
         if (details == null) return "";
 
         if (details instanceof GeneralCleaningDetails general) {
-            return "General: \n\t" +
+            return "General: " +
                     general.getHomeType() +
-                    ",\n\t Size: " + general.getSqm() + " sqm" +
-                    ",\n\t Hours: " + general.getHours();
+                    "\n\tSize: " + general.getSqm() + " sqm" +
+                    ",\n\tHours: " + general.getHours();
         } else if (details instanceof CarCleaningDetails car) {
-            return "Car: \n\t" +
-                    "Child Seats: " + car.getChildSeats() +
+            return "Car:" +
+                    "\n\tChild Seats: " + car.getChildSeats() +
                     buildCarSpecsSummary(car.getCleaningSpecs());
         } else if (details instanceof CouchCleaningDetails couch) {
-            return "Couch: \n" +
-                    "\tBed Pillows: " + couch.getBedPillows() +
+            return "Couch:" +
+                    "\n\tBed Pillows: " + couch.getBedPillows() +
                     buildCouchSpecsSummary(couch.getCleaningSpecs());
         } else if (details instanceof MattressCleaningDetails mattress) {
             return "Mattress: \n" +
                     buildMattressSpecsSummary(mattress.getCleaningSpecs());
         } else if (details instanceof PostConstructionDetails post) {
-            return "Post Construction: \n" +
+            return "Post Construction: \n\t" +
                     post.getSqm() + " sqm";
         }
         return "";
     }
 
     private static String buildCarSpecsSummary(List<? extends CarCleaningSpecification> specs) {
-        if (specs == null || specs.isEmpty()) return "No specs";
+        if (specs == null || specs.isEmpty()) return "\nNo specs";
 
         StringBuilder sb = new StringBuilder();
         for (CarCleaningSpecification spec : specs) {
@@ -72,7 +72,7 @@ public class EnumHelper {
     }
 
     private static String buildCouchSpecsSummary(List<? extends CouchCleaningSpecification> specs) {
-        if (specs == null || specs.isEmpty()) return "No specs";
+        if (specs == null || specs.isEmpty()) return "\nNo specs";
 
         StringBuilder sb = new StringBuilder();
         for (CouchCleaningSpecification spec : specs) {
@@ -87,7 +87,7 @@ public class EnumHelper {
     }
 
     private static String buildMattressSpecsSummary(List<? extends MattressCleaningSpecification> specs) {
-        if (specs == null || specs.isEmpty()) return "No specs";
+        if (specs == null || specs.isEmpty()) return "\nNo specs";
 
         StringBuilder sb = new StringBuilder();
         for (MattressCleaningSpecification spec : specs) {

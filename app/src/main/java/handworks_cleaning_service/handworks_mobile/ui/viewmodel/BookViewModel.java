@@ -19,66 +19,83 @@ import handworks_cleaning_service.handworks_mobile.data.dto.book.BooksByEmployee
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.Booking;
 import handworks_cleaning_service.handworks_mobile.data.models.wrappers.BookingWrapper;
 import handworks_cleaning_service.handworks_mobile.data.repository.BookRepository;
+import handworks_cleaning_service.handworks_mobile.data.repository.config.FetchStrategy;
 import handworks_cleaning_service.handworks_mobile.data.repository.config.PaginationState;
+import handworks_cleaning_service.handworks_mobile.utils.uistate.UIState;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 @HiltViewModel
 public class BookViewModel extends ViewModel {
     private final BookRepository bookRepository;
-    private final MutableLiveData<List<Booking>> bookingsLiveData = new MutableLiveData<>();
-    private final MutableLiveData<String> errorLiveData = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> isLoadingLive = new MutableLiveData<>(false);
+    private final MutableLiveData<UIState<List<Booking>>> bookingsState = new MutableLiveData<>();
     private int totalBookings;
-
-    public LiveData<Boolean> getIsLoading() {
-        return isLoadingLive;
-    }
 
     @Inject
     public BookViewModel(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
 
-    public LiveData<List<Booking>> getBookings() {
-        return bookingsLiveData;
-    }
-
-    public LiveData<String> getError() {
-        return errorLiveData;
+    public LiveData<UIState<List<Booking>>> getBookingsState() {
+        return bookingsState;
     }
 
     public void resetPagination(String employeeId, String startDate, String endDate) {
         PaginationState state = bookRepository.getPaginationState(employeeId, startDate, endDate);
         state.reset();
 
-        bookingsLiveData.setValue(new ArrayList<>());
+        bookingsState.setValue(UIState.success(new ArrayList<>()));
     }
 
     public void restoreCachedOrLoad(String employeeId, String startDate, String endDate) {
         PaginationState state = bookRepository.getPaginationState(employeeId, startDate, endDate);
+//
+//        if (!state.getAccumulated().isEmpty()) {
+//            totalBookings = state.getTotalBookings();
+//            bookingsState.setValue(UIState.success(new ArrayList<>(state.getAccumulated())));
+//        } else {
+//            resetPagination(employeeId, startDate, endDate);
+//            loadNextPage(employeeId, startDate, endDate, FetchStrategy.NETWORK_ONLY);
+//        }
 
-        if (!state.getAccumulated().isEmpty()) {
-            totalBookings = state.getTotalBookings();
-            bookingsLiveData.setValue(new ArrayList<>(state.getAccumulated()));
+        List<Booking> cached = bookRepository.getCachedPage(employeeId, startDate, endDate, 0);
+
+        if (cached != null && !cached.isEmpty()) {
+            state.append(cached);
+            state.nextPage();
+            bookingsState.setValue(UIState.success(state.getAccumulated()));
         } else {
             resetPagination(employeeId, startDate, endDate);
-            loadNextPage(employeeId, startDate, endDate);
+            loadNextPage(employeeId, startDate, endDate, FetchStrategy.NETWORK_ONLY);
         }
     }
 
-    public void loadNextPage(String employeeId, String startDate, String endDate) {
+    public void loadNextPage(String employeeId, String startDate, String endDate, FetchStrategy strategy) {
 
         PaginationState state = bookRepository.getPaginationState(employeeId, startDate, endDate);
 
         if (!state.canLoadMore()) return;
         state.setLoading(true);
+        bookingsState.setValue(UIState.loading());
 
         List<Booking> cached = bookRepository.getCachedPage(employeeId, startDate, endDate, state.getCurrentPage());
-        if (cached != null) {
+        if (strategy == FetchStrategy.CACHE_ONLY) {
             state.setLoading(false);
+
+            if (cached != null) {
+                bookingsState.setValue(UIState.success(state.getAccumulated()));
+            } else {
+                bookingsState.setValue(UIState.error("No cached data"));
+            }
+
+            return;
+        }
+
+        if (strategy == FetchStrategy.CACHE_FIRST && cached != null) {
+            state.setLoading(false);
+            state.append(cached);
             state.nextPage();
-            bookingsLiveData.setValue(state.getAccumulated());
+            bookingsState.setValue(UIState.success(state.getAccumulated()));
             return;
         }
 
@@ -90,18 +107,17 @@ public class BookViewModel extends ViewModel {
                 PAGE_LIMIT
         );
 
-        bookRepository.fetchBookingsByEmployeeId(request, new Callback<>() {
+        bookRepository.fetchBookingsByEmployeeId(request, strategy, new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<BookingWrapper> call, @NonNull Response<BookingWrapper> response) {
                 state.setLoading(false);
-                isLoadingLive.setValue(false);
 
                 if (response.isSuccessful() && response.body() != null) {
                     List<Booking> newBookings = response.body().getData().getBookings();
 
                     if (newBookings == null || newBookings.isEmpty()) {
                         state.setIsLastPage(true);
-                        bookingsLiveData.setValue(state.getAccumulated());
+                        bookingsState.setValue(UIState.success(state.getAccumulated()));
                         return;
                     }
 
@@ -109,22 +125,20 @@ public class BookViewModel extends ViewModel {
                         state.setIsLastPage(true);
                     }
 
+                    totalBookings = response.body().getData().getTotalBookings();
                     bookRepository.cachePage(employeeId, startDate, endDate, state.getCurrentPage(), newBookings);
                     state.updateTotal(response.body().getData().getTotalBookings());
-                    bookingsLiveData.setValue(state.getAccumulated());
-
-                    totalBookings = response.body().getData().getTotalBookings();
+                    bookingsState.setValue(UIState.success(state.getAccumulated()));
                     state.nextPage();
                 } else {
-                    errorLiveData.postValue("Empty or unsuccessful response");
+                    bookingsState.postValue(UIState.error("Empty or unsuccessful response"));
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<BookingWrapper> call, @NonNull Throwable t) {
                 state.setLoading(false);
-                isLoadingLive.setValue(false);
-                errorLiveData.postValue(t.getMessage());
+                bookingsState.postValue(UIState.error(t.getMessage()));
                 Log.e("HTTPs", "NETWORK FAILURE", t);
             }
         });

@@ -122,10 +122,11 @@ public class AppEntryScreenSplash extends AppCompatActivity {
 
                 case ERROR:
                     String errorMessage = state.getMessage() != null ? state.getMessage() : "Unknown error";
-                    Toast.makeText(this, errorMessage + ": Taking longer than usual.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
 
                     binding.progressBarLoading.setVisibility(View.GONE);
                     if ("timeout".equalsIgnoreCase(errorMessage)) {
+                        Toast.makeText(this, errorMessage + ": Taking longer than usual.", Toast.LENGTH_LONG).show();
                         if (retryCount < MAX_RETRIES) {
                             retryCount++;
                             new Handler(Looper.getMainLooper()).postDelayed(() -> {
@@ -133,7 +134,7 @@ public class AppEntryScreenSplash extends AppCompatActivity {
                                 userViewModel.loadEmployee(empId, FetchStrategy.NETWORK_ONLY);
                             }, 1000);
                         } else {
-                            showRetryUI();
+                            showErrorUI();
                         }
                     } else {
                         binding.handworksLogo.setVisibility(View.GONE);
@@ -154,6 +155,22 @@ public class AppEntryScreenSplash extends AppCompatActivity {
         binding.tvRetryMessage.setVisibility(View.GONE);
         binding.btnRetry.setVisibility(View.GONE);
         userViewModel.loadEmployee(empId, FetchStrategy.NETWORK_ONLY);
+    }
+
+    private void showErrorUI() {
+        binding.handworksLogo.setVisibility(View.GONE);
+        binding.progressBarLoading.setVisibility(View.GONE);
+        binding.tvRetryMessage.setVisibility(View.GONE);
+        binding.btnRetry.setVisibility(View.GONE);
+
+        binding.errorUI.imgError.setVisibility(View.VISIBLE);
+        binding.errorUI.txtTitle.setVisibility(View.VISIBLE);
+        binding.errorUI.errorBtntnRetry.setOnClickListener(v -> {
+            binding.errorUI.imgError.setVisibility(View.GONE);
+            binding.errorUI.txtTitle.setVisibility(View.GONE);
+            binding.errorUI.errorBtntnRetry.setVisibility(View.GONE);
+            showRetryUI();
+        });
     }
 
     private void forceLogout() {

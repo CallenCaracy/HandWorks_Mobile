@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -30,6 +32,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.data.dto.user.TimeInRequest;
 import handworks_cleaning_service.handworks_mobile.data.dto.user.TimeOutRequest;
+import handworks_cleaning_service.handworks_mobile.data.models.bookings.Booking;
 import handworks_cleaning_service.handworks_mobile.data.models.users.Employee;
 import handworks_cleaning_service.handworks_mobile.data.models.users.TimeSheet;
 import handworks_cleaning_service.handworks_mobile.data.repository.config.FetchStrategy;
@@ -64,6 +67,8 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
 
+        employeeId = prefs.getString("EMP_ID", null);
+
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         bookViewModel = new ViewModelProvider(requireActivity()).get(BookViewModel.class);
         bookingAdapter = new BookingAdapter(new ArrayList<>(), booking -> {
@@ -89,17 +94,26 @@ public class HomeFragment extends Fragment {
         setupScrollListener();
         setupTimeSheetBotton();
 
+        binding.swipeRefresh.setOnRefreshListener(() -> {
+            Log.d("HTTPs", "refresh swiped");
+            userViewModel.loadEmployee(employeeId, FetchStrategy.NETWORK_ONLY);
+            userViewModel.loadTodayTimeSheet(employeeId, FetchStrategy.NETWORK_ONLY);
+            bookViewModel.loadNextPage(employeeId, today.toString(), today.toString(), FetchStrategy.NETWORK_ONLY);
+        });
+
         return binding.getRoot();
     }
 
     private void observeEmployee() {
-        userViewModel.loadEmployee(prefs.getString("EMP_ID", null), FetchStrategy.CACHE_ONLY);
+        userViewModel.loadEmployee(employeeId, FetchStrategy.CACHE_ONLY);
         userViewModel.getEmployee().observe(getViewLifecycleOwner(), state -> {
             switch (state.getStatus()) {
                 case LOADING:
                     binding.cleanerNameDisplay.setText(R.string.loading);
                     break;
                 case SUCCESS:
+                    binding.swipeRefresh.setRefreshing(false);
+
                     Employee employee = state.getData();
                     employeeId = employee.getId();
                     binding.cleanerNameDisplay.setText(getString(R.string.cleaner_name_display, employee.getAccount().getFirst_name()));
@@ -110,6 +124,8 @@ public class HomeFragment extends Fragment {
                     bookViewModel.restoreCachedOrLoad(employeeId, today.toString(), endDate.toString());
                     break;
                 case ERROR:
+                    binding.swipeRefresh.setRefreshing(false);
+
                     binding.cleanerNameDisplay.setText(getString(R.string.cleaner_name_display, "Error"));
                     Toast.makeText(getContext(), "Error: " + state.getMessage(), Toast.LENGTH_SHORT).show();
                     break;
@@ -118,21 +134,36 @@ public class HomeFragment extends Fragment {
     }
 
     private void observeBookings() {
-        bookViewModel.getBookings().observe(getViewLifecycleOwner(), bookings -> {
-            boolean hasBooks = bookings != null && !bookings.isEmpty();
+        bookViewModel.getBookingsState().observe(getViewLifecycleOwner(), state -> {
+            switch (state.getStatus()) {
 
-            updateUI(hasBooks, bookViewModel.getIsLoading().getValue() != null && bookViewModel.getIsLoading().getValue());
+                case LOADING:
+                    updateUI(false, true);
+                    break;
 
-            bookingAdapter.submitList(bookings);
-        });
+                case SUCCESS:
+                    binding.swipeRefresh.setRefreshing(false);
 
-        bookViewModel.getIsLoading().observe(getViewLifecycleOwner(), loading -> {
-            boolean hasBooks = bookViewModel.getBookings().getValue() != null && !bookViewModel.getBookings().getValue().isEmpty();
-            updateUI(hasBooks, loading != null && loading);
+                    List<Booking> bookings = state.getData();
+                    boolean hasBooks = bookings != null && !bookings.isEmpty();
+
+                    bookingAdapter.submitList(bookings);
+
+                    updateUI(hasBooks, false);
+                    break;
+
+                case ERROR:
+                    binding.swipeRefresh.setRefreshing(false);
+
+                    updateUI(false, false);
+                    Toast.makeText(requireContext(), state.getMessage(), Toast.LENGTH_LONG).show();
+                    break;
+            }
         });
     }
 
     private void observeTimeSheet() {
+        userViewModel.loadTodayTimeSheet(employeeId, FetchStrategy.CACHE_FIRST);
         userViewModel.getTimeSheetState().observe(getViewLifecycleOwner(), state -> {
             switch (state.getStatus()) {
                 case LOADING:
@@ -141,8 +172,15 @@ public class HomeFragment extends Fragment {
                     break;
 
                 case SUCCESS:
+                    binding.swipeRefresh.setRefreshing(false);
+
                     binding.btnTimeIn.setEnabled(true);
                     binding.btnTimeOut.setEnabled(true);
+
+                    var todayTimeSheet = state.getData();
+                    binding.clockInAtValue.setText(todayTimeSheet.getTimeIn());
+                    binding.clockOutAtValue.setText(todayTimeSheet.getTimeOut());
+                    binding.timeSheetStatus.setText(todayTimeSheet.getStatus());
 
                     TimeSheet sheet = state.getData();
                     if (sheet.getTimeOut() == null) {
@@ -155,6 +193,8 @@ public class HomeFragment extends Fragment {
                     break;
 
                 case ERROR:
+                    binding.swipeRefresh.setRefreshing(false);
+
                     binding.btnTimeIn.setEnabled(true);
                     binding.btnTimeOut.setEnabled(true);
                     Toast.makeText(requireContext(), "Error: " + state.getMessage(), Toast.LENGTH_SHORT).show();
@@ -176,7 +216,7 @@ public class HomeFragment extends Fragment {
 
                 int visibleThreshold = 2;
                 if (totalItemCount > 0 && totalItemCount <= lastVisibleItem + visibleThreshold) {
-                    bookViewModel.loadNextPage(employeeId, today.toString(), today.toString());
+                    bookViewModel.loadNextPage(employeeId, today.toString(), today.toString(), FetchStrategy.CACHE_FIRST);
                 }
             }
         });

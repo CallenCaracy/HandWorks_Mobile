@@ -205,6 +205,8 @@
 
     <!--  New Strings StartRegion  -->
     <string name="placeholder">Placeholder</string>
+    <string name="clocked_in_at">In:</string>
+    <string name="clocked_out_at">Out:</string>
     <!--  New Strings EndRegion  -->
 
 </resources>

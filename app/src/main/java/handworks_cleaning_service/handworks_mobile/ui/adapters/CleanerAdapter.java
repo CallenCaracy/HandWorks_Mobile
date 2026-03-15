@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import handworks_cleaning_service.handworks_mobile.R;
@@ -16,7 +17,12 @@ public class CleanerAdapter extends RecyclerView.Adapter<CleanerViewHolder> {
     private List<Cleaner> cleaners;
 
     public void setCleaners(List<Cleaner> cleaners) {
-        this.cleaners = cleaners;
+        if (cleaners == null || cleaners.isEmpty()) {
+            this.cleaners = new ArrayList<>();
+            this.cleaners.add(new Cleaner("0", "N/A", "N/A", null));
+        } else {
+            this.cleaners = cleaners;
+        }
         notifyDataSetChanged();
     }
 

@@ -7,6 +7,12 @@ public class Addon implements Serializable {
     private double price;
     private ServiceDetail serviceDetail;
 
+    public Addon(String id, double price, ServiceDetail serviceDetail) {
+        this.id = id;
+        this.price = price;
+        this.serviceDetail = serviceDetail;
+    }
+
     public String getId() { return id; }
     public double getPrice() { return price; }
     public ServiceDetail getServiceDetail() { return serviceDetail; }

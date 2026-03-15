@@ -63,6 +63,7 @@ public class BookingDetails extends AppCompatActivity {
         if (booking != null){
             String customerFullName = booking.getBase().getCustomerFirstName() + ' ' + booking.getBase().getCustomerLastName();
             binding.customerNameText.setText(customerFullName);
+            binding.progressStatus.setText(booking.getBase().getStatus());
 
             binding.dirtyScaleText.setText(
                     getString(R.string.dirty_scale, booking.getBase().getDirtyScale())

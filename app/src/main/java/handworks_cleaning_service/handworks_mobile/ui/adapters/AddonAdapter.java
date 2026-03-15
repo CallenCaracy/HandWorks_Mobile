@@ -7,16 +7,23 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import handworks_cleaning_service.handworks_mobile.R;
+import handworks_cleaning_service.handworks_mobile.data.models.bookings.infos.Asset;
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.services.Addon;
 
 public class AddonAdapter extends RecyclerView.Adapter<AddonViewHolder> {
     private List<Addon> addons;
 
     public void setAddons(List<Addon> addons) {
-        this.addons = addons;
+        if (addons == null || addons.isEmpty()) {
+            this.addons = new ArrayList<>();
+            this.addons.add(new Addon("0", 0.00, null));
+        } else {
+            this.addons = addons;
+        }
         notifyDataSetChanged();
     }
 

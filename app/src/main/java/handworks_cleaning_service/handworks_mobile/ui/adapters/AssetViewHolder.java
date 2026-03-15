@@ -1,5 +1,6 @@
 package handworks_cleaning_service.handworks_mobile.ui.adapters;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,19 +27,15 @@ public class AssetViewHolder extends RecyclerView.ViewHolder {
     }
 
     void bind(Asset asset) {
-        if (asset != null) {
-            Glide.with(itemView.getContext())
-                    .load(asset.getPhotoUrl())
-                    .placeholder(R.drawable.theme)
-                    .error(R.drawable.error_svgrepo_com)
-                    .circleCrop()
-                    .into(assetImage);
+        Glide.with(itemView.getContext())
+                .load(asset.getPhotoUrl())
+                .placeholder(R.drawable.theme)
+                .error(R.drawable.error_svgrepo_com)
+                .circleCrop()
+                .into(assetImage);
 
-            assetName.setText(asset.getName());
-            assetType.setText(asset.getType());
-        } else {
-            assetName.setText("N/A");
-            assetType.setText("N/A");
-        }
+        assetName.setText((asset.getName().isEmpty() ? "N/A" : asset.getName()));
+        assetType.setText(asset.getType().isEmpty() ? "N/A" : asset.getType());
+        Log.d("HTTPs", asset.getName());
     }
 }

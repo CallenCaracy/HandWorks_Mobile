@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import handworks_cleaning_service.handworks_mobile.R;
@@ -16,7 +17,12 @@ public class AssetAdapter extends RecyclerView.Adapter<AssetViewHolder>{
     private List<Asset> assets;
 
     public void setAsset(List<Asset> assets) {
-        this.assets = assets;
+        if (assets == null || assets.isEmpty()) {
+            this.assets = new ArrayList<>();
+            this.assets.add(new Asset("0", "N/A", "N/A", null));
+        } else {
+            this.assets = assets;
+        }
         notifyDataSetChanged();
     }
 
@@ -35,6 +41,5 @@ public class AssetAdapter extends RecyclerView.Adapter<AssetViewHolder>{
     }
 
     @Override
-
     public int getItemCount() { return (assets == null) ? 0 : assets.size(); }
 }

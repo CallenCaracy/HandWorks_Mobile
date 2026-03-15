@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -28,6 +29,8 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
+import handworks_cleaning_service.handworks_mobile.data.models.bookings.Booking;
+import handworks_cleaning_service.handworks_mobile.data.repository.config.FetchStrategy;
 import handworks_cleaning_service.handworks_mobile.databinding.FragmentHistoryBinding;
 import handworks_cleaning_service.handworks_mobile.ui.adapters.BookingAdapter;
 import handworks_cleaning_service.handworks_mobile.ui.pages.booking.BookingDetails;
@@ -44,6 +47,7 @@ public class HistoryFragment extends Fragment {
     private boolean isFirstSelection = true;
     @Inject
     SharedPreferences prefs;
+    private static final String PREF_HISTORY_FILTER = "history_filter_position";
 
     public HistoryFragment() {
         // Required empty public constructor
@@ -87,25 +91,36 @@ public class HistoryFragment extends Fragment {
     private void observeEmployee() {
         employeeId = prefs.getString("EMP_ID", null);
 
+        int savedPosition = prefs.getInt(PREF_HISTORY_FILTER, 0);
+
         if (endDate == null) endDate = LocalDate.now();
-        if (startDate == null) startDate = endDate.minusDays(7);
+        startDate = dayDistance(savedPosition, endDate);
 
         bookViewModel.restoreCachedOrLoad(employeeId, startDate.toString(), endDate.toString());
     }
 
     private void observeBookings() {
-        bookViewModel.getBookings().observe(getViewLifecycleOwner(), bookings -> {
-            boolean hasBooks = bookings != null && !bookings.isEmpty();
+        bookViewModel.getBookingsState().observe(getViewLifecycleOwner(), state -> {
+            switch (state.getStatus()) {
 
-            updateUI(hasBooks, bookViewModel.getIsLoading().getValue() != null && bookViewModel.getIsLoading().getValue());
+                case LOADING:
+                    updateUI(false, true);
+                    break;
 
-            bookingAdapter.submitList(bookings);
-        });
+                case SUCCESS:
+                    List<Booking> bookings = state.getData();
+                    boolean hasBooks = bookings != null && !bookings.isEmpty();
 
-        bookViewModel.getIsLoading().observe(getViewLifecycleOwner(), loading -> {
-            boolean hasBooks = bookViewModel.getBookings().getValue() != null &&
-                    !bookViewModel.getBookings().getValue().isEmpty();
-            updateUI(hasBooks, loading != null && loading);
+                    bookingAdapter.submitList(bookings);
+
+                    updateUI(hasBooks, false);
+                    break;
+
+                case ERROR:
+                    updateUI(false, false);
+                    Toast.makeText(requireContext(), state.getMessage(), Toast.LENGTH_LONG).show();
+                    break;
+            }
         });
     }
 
@@ -125,6 +140,9 @@ public class HistoryFragment extends Fragment {
 
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         binding.spinnerDateFilter.setAdapter(adapter);
+
+        int savedPosition = prefs.getInt(PREF_HISTORY_FILTER, 0);
+        binding.spinnerDateFilter.setSelection(savedPosition);
     }
 
     private void setupSpinnerListener() {
@@ -133,17 +151,14 @@ public class HistoryFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (isFirstSelection) { isFirstSelection = false; return; }
 
+                prefs.edit().putInt(PREF_HISTORY_FILTER, position).apply();
+
                 endDate = LocalDate.now();
-                startDate = switch (position) {
-                    case 1 -> endDate.minusDays(14);
-                    case 2 -> endDate.minusMonths(1);
-                    case 3 -> endDate.minusMonths(6);
-                    default -> endDate.minusDays(7);
-                };
+                startDate = dayDistance(position, endDate);
 
                 if (employeeId != null) {
                     bookViewModel.resetPagination(employeeId, startDate.toString(), endDate.toString());
-                    bookViewModel.loadNextPage(employeeId, startDate.toString(), endDate.toString());
+                    bookViewModel.loadNextPage(employeeId, startDate.toString(), endDate.toString(), FetchStrategy.CACHE_FIRST);
                 }
             }
 
@@ -165,7 +180,7 @@ public class HistoryFragment extends Fragment {
 
                 int visibleThreshold = 2;
                 if (totalItemCount > 0 && totalItemCount <= lastVisibleItem + visibleThreshold) {
-                    bookViewModel.loadNextPage(employeeId, startDate.toString(), endDate.toString());
+                    bookViewModel.loadNextPage(employeeId, startDate.toString(), endDate.toString(), FetchStrategy.CACHE_FIRST);
                 }
             }
         });
@@ -178,6 +193,15 @@ public class HistoryFragment extends Fragment {
         binding.bookingsRecycler.setAlpha(loading ? 0.5f : 1f);
 
         binding.noHistoryYet.getRoot().setVisibility(!loading && !hasBooks ? VISIBLE : GONE);
+    }
+
+    private LocalDate dayDistance(int distance, LocalDate starter) {
+        return switch (distance) {
+            case 1 -> starter.minusDays(14);
+            case 2 -> starter.minusMonths(1);
+            case 3 -> starter.minusMonths(6);
+            default -> starter.minusDays(7);
+        };
     }
 
     @Override

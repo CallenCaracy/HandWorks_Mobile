@@ -6,86 +6,158 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragments.HomeFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/summaryCard"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="-10dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginHorizontal="4dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/summaryCard"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingHorizontal="8dp"
-                android:paddingTop="16dp">
+                android:layout_marginTop="-10dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginHorizontal="4dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:id="@+id/welcome"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/welcome"
-                    android:layout_marginTop="6dp"
-                    android:textColor="@color/textPrimary"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/cleanerNameDisplay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/cleaner_name"
-                    android:textColor="@color/textPrimary"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <!-- Tasks -->
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cardInfoContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="vertical"
+                    android:paddingHorizontal="8dp"
+                    android:paddingTop="16dp">
 
                     <TextView
+                        android:id="@+id/welcome"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/welcome"
+                        android:textColor="@color/textPrimary"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/cleanerNameDisplay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cleaner_name"
+                        android:textColor="@color/textPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/welcome" />
+
+                    <TextView
+                        android:id="@+id/textView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/total_ongoing_work"
                         android:textColor="@color/textPrimary"
-                        android:layout_marginEnd="4dp"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/cleanerNameDisplay" />
 
                     <TextView
                         android:id="@+id/summaryTaskNumberDisplay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/_4"
-                        android:layout_marginEnd="4dp"
                         android:textColor="@color/textPrimary"
                         android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:layout_marginStart="2dp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/textView"
+                        app:layout_constraintStart_toEndOf="@+id/textView"
+                        app:layout_constraintTop_toTopOf="@+id/textView" />
 
                     <TextView
                         android:id="@+id/dateDisplay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
                         android:text="@string/as_of_march_8_2026"
                         android:textColor="@color/textPrimary"
-                        android:textSize="11sp" />
-                </LinearLayout>
+                        android:textSize="11sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/summaryTaskNumberDisplay"
+                        app:layout_constraintStart_toEndOf="@+id/summaryTaskNumberDisplay"
+                        app:layout_constraintTop_toTopOf="@+id/summaryTaskNumberDisplay" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/clockInAtText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/clocked_in_at"
+                        android:textColor="@color/textPrimary"
+                        android:textSize="12sp"
+                        android:paddingVertical="4dp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
+                    <TextView
+                        android:id="@+id/clockInAtValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="3dp"
+                        android:paddingVertical="4dp"
+                        android:textColor="@color/textPrimary"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/clockInAtText"
+                        app:layout_constraintTop_toTopOf="@+id/clockInAtText" />
+
+                    <TextView
+                        android:id="@+id/clockOutAtText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="4dp"
+                        android:text="@string/clocked_out_at"
+                        android:textColor="@color/textPrimary"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/clockInAtValue"
+                        app:layout_constraintStart_toEndOf="@+id/clockInAtValue"
+                        app:layout_constraintTop_toTopOf="@+id/clockInAtValue" />
+
+                    <TextView
+                        android:id="@+id/clockOutAtValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="3dp"
+                        android:paddingVertical="4dp"
+                        android:textColor="@color/textPrimary"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/clockOutAtText"
+                        app:layout_constraintStart_toEndOf="@+id/clockOutAtText"
+                        app:layout_constraintTop_toTopOf="@+id/clockOutAtText" />
+
+                    <TextView
+                        android:id="@+id/timeSheetStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="4dp"
+                        android:textColor="@color/textPrimary"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toTopOf="@+id/btnTimeIn"
+                        app:layout_constraintEnd_toEndOf="@+id/btnTimeIn"
+                        app:layout_constraintStart_toStartOf="@+id/btnTimeIn" />
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnTimeIn"
                         android:layout_width="wrap_content"
@@ -94,8 +166,10 @@
                         android:text="@string/time_in"
                         android:textAllCaps="false"
                         android:textColor="@color/textTertiary"
+                        app:cornerRadius="8dp"
                         android:layout_marginBottom="4dp"
-                        app:cornerRadius="8dp"/>
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnTimeOut"
@@ -107,43 +181,42 @@
                         android:textAllCaps="false"
                         android:textColor="@color/textTertiary"
                         android:layout_marginBottom="4dp"
-                        app:cornerRadius="8dp"/>
-                </LinearLayout>
-            </LinearLayout>
+                        app:cornerRadius="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
 
-        </androidx.cardview.widget.CardView>
+            <include
+                android:id="@+id/noJobAssignedYet"
+                layout="@layout/no_job_assigned_yet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/summaryCard" />
 
-        <include
-            android:id="@+id/noJobAssignedYet"
-            layout="@layout/no_job_assigned_yet"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/summaryCard" />
+            <ProgressBar
+                android:id="@+id/loadingProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/summaryCard" />
 
-        <ProgressBar
-            android:id="@+id/loadingProgress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/summaryCard" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/bookingsRecycler"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_margin="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/summaryCard"
-            tools:layout_editor_absoluteX="16dp" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/bookingsRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_margin="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/summaryCard"
+                tools:layout_editor_absoluteX="16dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </FrameLayout>

@@ -25,18 +25,16 @@ public class CleanerViewHolder extends RecyclerView.ViewHolder {
     }
 
     void bind(Cleaner cleaner) {
-        if (cleaner != null) {
-            Glide.with(itemView.getContext())
-                    .load(cleaner.getPfpUrl())
-                    .placeholder(R.drawable.pfp_placeholder)
-                    .error(R.drawable.pfp_placeholder)
-                    .circleCrop()
-                    .into(cleanerProfilePicture);
+        Glide.with(itemView.getContext())
+                .load(cleaner.getPfpUrl())
+                .placeholder(R.drawable.pfp_placeholder)
+                .error(R.drawable.pfp_placeholder)
+                .circleCrop()
+                .into(cleanerProfilePicture);
 
-            String fullName = cleaner.getCleanerLastName() + ", \n" + cleaner.getCleanerFirstName();
-            cleanerFullName.setText(fullName);
-        } else {
-            cleanerFullName.setText("N/A");
-        }
+        String lName = cleaner.getCleanerLastName().isEmpty() ? "N/A" : cleaner.getCleanerLastName();
+        String fName = cleaner.getCleanerFirstName().isEmpty() ? "N/A" : cleaner.getCleanerFirstName();
+        String fullName = lName + ", \n" + fName;
+        cleanerFullName.setText(fullName);
     }
 }

@@ -2,6 +2,7 @@
 clerk = "0.1.10"
 agp = "8.13.1"
 flexbox = "3.0.0"
+githubPhotoview = "2.1.4"
 glide = "5.0.5"
 glideVersion = "4.15.1"
 hiltAndroid = "2.57.1"
@@ -16,9 +17,11 @@ material = "1.12.0"
 activity = "1.10.1"
 constraintlayout = "2.2.1"
 materialVersion = "1.11.0"
+photoview = "2.3.0"
 retrofit = "2.9.0"
 coreKtx = "1.17.0"
 kotlin = "2.2.0"
+subsamplingScaleImageView = "3.10.0"
 swiperefreshlayout = "1.2.0"
 viewpager2 = "1.1.0"
 
@@ -43,8 +46,11 @@ material = { group = "com.google.android.material", name = "material", version.r
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 material-v1110 = { module = "com.google.android.material:material", version.ref = "materialVersion" }
+photoview = { module = "com.github.chrisbanes:PhotoView", version.ref = "photoview" }
+photoview-v214 = { module = "com.github.chrisbanes:PhotoView", version.ref = "githubPhotoview" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+subsampling-scale-image-view = { module = "com.davemorrissey.labs:subsampling-scale-image-view", version.ref = "subsamplingScaleImageView" }
 swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
 viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
 

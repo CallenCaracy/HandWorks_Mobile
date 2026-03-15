@@ -12,6 +12,7 @@ import handworks_cleaning_service.handworks_mobile.data.dto.book.BooksByEmployee
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.Booking;
 import handworks_cleaning_service.handworks_mobile.data.models.wrappers.BookingWrapper;
 import handworks_cleaning_service.handworks_mobile.data.remote.BookApi;
+import handworks_cleaning_service.handworks_mobile.data.repository.config.FetchStrategy;
 import handworks_cleaning_service.handworks_mobile.data.repository.config.PaginationState;
 import retrofit2.Callback;
 
@@ -50,14 +51,30 @@ public class BookRepository {
         cachedBookings.clear();
     }
 
-    public void fetchBookingsByEmployeeId(BooksByEmployeeIdRequest request, Callback<BookingWrapper> callback) {
-        bookApi.getEmployeeBookings(
-                request.employeeId,
-                request.startDate,
-                request.endDate,
-                request.pageNumber,
-                request.limit
-        ).enqueue(callback);
+    public void fetchBookingsByEmployeeId(BooksByEmployeeIdRequest request, FetchStrategy strategy, Callback<BookingWrapper> callback) {
+        if (strategy == FetchStrategy.CACHE_ONLY) return;
+
+        if (strategy == FetchStrategy.CACHE_FIRST) {
+            // network will only happen if ViewModel decides cache empty
+            bookApi.getEmployeeBookings(
+                    request.employeeId,
+                    request.startDate,
+                    request.endDate,
+                    request.pageNumber,
+                    request.limit
+            ).enqueue(callback);
+            return;
+        }
+
+        if (strategy == FetchStrategy.NETWORK_ONLY) {
+            bookApi.getEmployeeBookings(
+                    request.employeeId,
+                    request.startDate,
+                    request.endDate,
+                    request.pageNumber,
+                    request.limit
+            ).enqueue(callback);
+        }
     }
 
     private String buildKey(String employeeId, String startDate, String endDate) {

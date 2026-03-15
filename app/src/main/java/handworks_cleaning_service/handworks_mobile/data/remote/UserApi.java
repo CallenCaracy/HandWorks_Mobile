@@ -21,6 +21,6 @@ public interface UserApi {
     @POST("account/employee/timesheet/timeout")
     Call<TimeSheet> employeeTimeOut(@Body TimeOutRequest request);
 
-    @POST("account/employee/timesheet/timeout")
+    @GET("account/employee/timesheet/today")
     Call<TimeSheet> getTodayTimeSheet(@Query("id") String userId);
 }

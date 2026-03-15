@@ -8,14 +8,18 @@ public class Base implements Serializable {
     private String custId;
     private String customerFirstName;
     private String customerLastName;
+    private String customerPhoneNo;
     private int dirtyScale;
-    private String paymentStatus;
+    private String status;
     private String reviewStatus;
     private String quoteId;
     private String startSched;
     private String endSched;
     private String createdAt;
     private String updatedAt;
+    private String orderId;
+    private int extraHours;
+    private double extraHourCost;
 
     private Address address;
     private List<String> photos;
@@ -60,12 +64,12 @@ public class Base implements Serializable {
         this.dirtyScale = dirtyScale;
     }
 
-    public String getPaymentStatus() {
-        return paymentStatus;
+    public String getStatus() {
+        return status;
     }
 
-    public void setPaymentStatus(String paymentStatus) {
-        this.paymentStatus = paymentStatus;
+    public void setStatus(String paymentStatus) {
+        this.status = status;
     }
 
     public String getReviewStatus() {
@@ -130,5 +134,37 @@ public class Base implements Serializable {
 
     public void setPhotos(List<String> photos) {
         this.photos = photos;
+    }
+
+    public String getCustomerPhoneNo() {
+        return customerPhoneNo;
+    }
+
+    public void setCustomerPhoneNo(String customerPhoneNo) {
+        this.customerPhoneNo = customerPhoneNo;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public int getExtraHours() {
+        return extraHours;
+    }
+
+    public void setExtraHours(int extraHours) {
+        this.extraHours = extraHours;
+    }
+
+    public double getExtraHourCost() {
+        return extraHourCost;
+    }
+
+    public void setExtraHourCost(double extraHourCost) {
+        this.extraHourCost = extraHourCost;
     }
 }

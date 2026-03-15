@@ -8,6 +8,13 @@ public class Asset implements Serializable {
     private String photoUrl;
     private String type;
 
+    public Asset(String id, String name, String photoUrl, String type) {
+        this.id = id;
+        this.name = name;
+        this.photoUrl = photoUrl;
+        this.type = type;
+    }
+
     public String getId() { return id; }
     public String getName() { return name; }
     public String getPhotoUrl() { return photoUrl; }
