@@ -15,10 +15,24 @@
     <string name="service_car">Car Interior Cleaning</string>
     <string name="service_post">Post-Construction Cleaning</string>
     <string name="service_unknown">Unknown Service</string>
+    <string name="none">None</string>
+    <string name="image">Image</string>
+    <string name="loading">Loading…</string>
     <!--  General Strings EndRegion  -->
 
     <!--  Booking Details Activity StartRegion  -->
     <string name="booking_details">Booking Details</string>
+    <string name="no_cleaning_site_provided">No cleaning site provided</string>
+    <string name="dirty_scale">Dirty Scale: %1$d/5</string>
+    <string name="scheduled_at">Scheduled at: %1$s</string>
+    <string name="time_range">%1$s - %2$s</string>
+    <string name="cleaning_site">Cleaning Site: %1$s</string>
+    <string name="total_price">Total Price: ₱%1$.2f</string>
+    <string name="allocated_resource">Allocated Resource:</string>
+    <string name="allocated_equipments">Allocated Equipments:</string>
+    <string name="assigned_cleaners">Assigned Cleaners:</string>
+    <string name="addons">Addons:</string>
+    <string name="main_service">Main Service:</string>
     <!--  Booking Details Activity EndRegion  -->
 
     <!--  User Profile Activity StartRegion  -->
@@ -100,14 +114,16 @@
     <string name="as_of_display">As of %1$s</string>
     <string name="no_work_for_now">No work for now</string>
     <string name="set_down_and_relax_enjoy_a_drink_or_two">Set down and relax, enjoy a drink or two!</string>
-    <string name="total_ongoing_work">Total ongoing work</string>
+    <string name="total_ongoing_work">Total ongoing work:</string>
     <string name="as_of_march_8_2026">As of March 8, 2026</string>
-    <string name="_4">4</string>
+    <string name="_4">4,</string>
     <string name="cleaner_name">Cleaner Name</string>
     <string name="welcome">Welcome</string>
     <string name="today">Today</string>
     <string name="past">Past</string>
     <string name="upcoming">Upcoming</string>
+    <string name="time_in">Time In</string>
+    <string name="time_out">Time Out</string>
     <!--  Home Fragment EndRegion  -->
 
     <!--  Calendar Components Activity StartRegion  -->
@@ -133,6 +149,8 @@
     <!--  History Fragment StartRegion  -->
     <string name="no_work_history_yet">No work history yet</string>
     <string name="your_previous_work_will_be_added_and_kept_here">Your previous work will be added and kept here</string>
+    <string name="past_bookings">Past Bookings</string>
+    <string name="check_out_your_history">Check out your history</string>
     <!--  History Fragment EndRegion  -->
 
     <!--  Chat Fragment StartRegion  -->
@@ -187,6 +205,8 @@
 
     <!--  New Strings StartRegion  -->
     <string name="placeholder">Placeholder</string>
+    <string name="clocked_in_at">In:</string>
+    <string name="clocked_out_at">Out:</string>
     <!--  New Strings EndRegion  -->
 
 </resources>

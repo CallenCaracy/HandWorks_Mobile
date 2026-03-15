@@ -1,6 +1,11 @@
 package handworks_cleaning_service.handworks_mobile.ui.pages.booking;
 
+import static android.view.View.GONE;
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
@@ -8,20 +13,32 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
+import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayout;
+import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.flexbox.JustifyContent;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import handworks_cleaning_service.handworks_mobile.R;
-import handworks_cleaning_service.handworks_mobile.data.models.bookings.Addon;
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.Booking;
 import handworks_cleaning_service.handworks_mobile.databinding.ActivityBookingDetailsBinding;
+import handworks_cleaning_service.handworks_mobile.ui.adapters.AddonAdapter;
+import handworks_cleaning_service.handworks_mobile.ui.adapters.AssetAdapter;
+import handworks_cleaning_service.handworks_mobile.ui.adapters.CleanerAdapter;
+import handworks_cleaning_service.handworks_mobile.ui.pages.index.FullscreenImageView;
+import handworks_cleaning_service.handworks_mobile.utils.DateUtil;
+import handworks_cleaning_service.handworks_mobile.utils.EnumHelper;
 
 public class BookingDetails extends AppCompatActivity {
     private ActivityBookingDetailsBinding binding;
+    private AddonAdapter addonAdapter;
+    private CleanerAdapter cleanerAdapter;
+    private AssetAdapter equipmentAdapter;
+    private AssetAdapter resourceAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,42 +54,127 @@ public class BookingDetails extends AppCompatActivity {
         binding = ActivityBookingDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.btnExitBookingDetails.setOnClickListener(v -> finish());
+        setUpRecyclerAdapters();
+
+        binding.bookingDetailsHeader.titlePageTxt.setText(getString(R.string.booking_details));
+        binding.bookingDetailsHeader.btnExit.setOnClickListener(v -> finish());
 
         Booking booking = (Booking) getIntent().getSerializableExtra("booking");
         if (booking != null){
             String customerFullName = booking.getBase().getCustomerFirstName() + ' ' + booking.getBase().getCustomerLastName();
-            List<String> photoUrls = booking.getBase().getPhotos();
+            binding.customerNameText.setText(customerFullName);
+            binding.progressStatus.setText(booking.getBase().getStatus());
+
+            binding.dirtyScaleText.setText(
+                    getString(R.string.dirty_scale, booking.getBase().getDirtyScale())
+            );
+
+            String isoDate = booking.getBase().getStartSched();
+            String startTime = DateUtil.extractTimeFromISO8601TimeStamps(isoDate);
+            String endTime = DateUtil.extractTimeFromISO8601TimeStamps(
+                    booking.getBase().getEndSched()
+            );
+
+            binding.workDateText.setText(
+                    getString(R.string.scheduled_at, DateUtil.extractDateFromISO8601TimeStamps(isoDate))
+            );
+            binding.startAndEndTimeText.setText(
+                    getString(R.string.time_range, startTime, endTime)
+            );
+            binding.addressText.setText(
+                    getString(R.string.cleaning_site, booking.getBase().getAddress().getAddressHuman())
+            );
+            binding.totalPriceText.setText(
+                    getString(R.string.total_price, booking.getTotalPrice())
+            );
+
+            setupImages(booking.getBase().getPhotos());
+
+            binding.mainServiceDetailsText.setText(EnumHelper.getReadableServiceDetails(booking.getMainService().getDetails()));
+
+            if (booking.getAddons() != null) {
+                addonAdapter.setAddons(booking.getAddons());
+            } else {
+                binding.addonServiceTitle.setVisibility(GONE);
+                binding.addonRecycler.setVisibility(GONE);
+            }
+
+            if (booking.getCleaners() != null) {
+                cleanerAdapter.setCleaners(booking.getCleaners());
+            }
+
+            if (booking.getEquipments() != null) {
+                equipmentAdapter.setAsset(booking.getEquipments());
+            }
+
+            if (booking.getEquipments() != null) {
+                resourceAdapter.setAsset(booking.getResources());
+            }
+        }
+    }
+
+    public void setUpRecyclerAdapters() {
+        addonAdapter = new AddonAdapter();
+        binding.addonRecycler.setLayoutManager(new LinearLayoutManager(this));
+        binding.addonRecycler.setAdapter(addonAdapter);
+
+        FlexboxLayoutManager flexboxLayoutManager = new FlexboxLayoutManager(this);
+        flexboxLayoutManager.setFlexDirection(FlexDirection.ROW);
+        flexboxLayoutManager.setJustifyContent(JustifyContent.SPACE_EVENLY);
+        cleanerAdapter = new CleanerAdapter();
+        binding.cleanerRecycler.setLayoutManager(flexboxLayoutManager);
+        binding.cleanerRecycler.setAdapter(cleanerAdapter);
+
+        equipmentAdapter = new AssetAdapter();
+        binding.equipmentRecycler.setLayoutManager(new LinearLayoutManager(this));
+        binding.equipmentRecycler.setAdapter(equipmentAdapter);
+
+        resourceAdapter = new AssetAdapter();
+        binding.resourceRecycler.setLayoutManager(new LinearLayoutManager(this));
+        binding.resourceRecycler.setAdapter(resourceAdapter);
+    }
+
+    private void setupImages(List<String> photoUrls) {
+        if (photoUrls.isEmpty()) {
+            binding.noSiteImages.setVisibility(View.VISIBLE);
+        } else {
+            int parentWidth = getResources().getDisplayMetrics().widthPixels;
 
             for (int i = 0; i < photoUrls.size(); i++) {
-                var imageView = new ImageView(this);
-                var params = new FlexboxLayout.LayoutParams(200, 200);
+                int width;
+                int height;
+
+                if (i == 0) {
+                    width = MATCH_PARENT;
+                    height = 600;
+                } else {
+                    width = parentWidth / 3;
+                    height = parentWidth / 3;
+                }
+
+                ImageView imageView = new ImageView(this);
+                FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(width, height);
                 params.setMargins(8, 8, 8, 8);
+
                 imageView.setLayoutParams(params);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                Glide.with(this).load(photoUrls.get(i)).into(imageView);
+                imageView.setBackgroundResource(R.drawable.rounded_image);
+                imageView.setClipToOutline(true);
+
+                Glide.with(this)
+                        .load(photoUrls.get(i))
+                        .error(R.drawable.error_svgrepo_com)
+                        .into(imageView);
+
+                int finalI = i;
+                imageView.setOnClickListener(v -> {
+                    Intent intent = new Intent(this, FullscreenImageView.class);
+                    intent.putExtra("image_url", photoUrls.get(finalI));
+                    startActivity(intent);
+                });
+
                 binding.flexLayout.addView(imageView);
             }
-
-            binding.customerNameText.setText(customerFullName);
-            binding.addressText.setText(booking.getBase().getAddress().getAddressHuman());
-            binding.mainServiceDetailsText.setText(booking.getMainService().getServiceType());
-            binding.startDateText.setText(booking.getBase().getStartSched());
-            binding.endDateText.setText(booking.getBase().getEndSched());
-            binding.dirtyScaleText.setText(String.valueOf(booking.getBase().getDirtyScale()));
-            binding.totalPriceText.setText(String.valueOf(booking.getTotalPrice()));
-            if (booking.getAddons() != null && !booking.getAddons().isEmpty()) {
-                List<String> addonNames = new ArrayList<>();
-                for (Addon addon : booking.getAddons()) {
-                    if (addon.getServiceDetail() != null) {
-                        addonNames.add(addon.getServiceDetail().getServiceType());
-                    }
-                }
-                binding.addonServiceDetails.setText("Addons: " + String.join(", ", addonNames));
-            } else {
-                binding.addonServiceDetails.setText("Addons: None");
-            }
-            binding.cleanersAssignedFullName.setText(booking.getCleaners().get(0).getCleanerFirstName().toString());
         }
     }
 }

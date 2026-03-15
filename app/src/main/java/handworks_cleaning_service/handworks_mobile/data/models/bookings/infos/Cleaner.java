@@ -1,4 +1,4 @@
-package handworks_cleaning_service.handworks_mobile.data.models.bookings;
+package handworks_cleaning_service.handworks_mobile.data.models.bookings.infos;
 
 import java.io.Serializable;
 
@@ -7,6 +7,13 @@ public class Cleaner implements Serializable {
     private String cleanerFirstName;
     private String cleanerLastName;
     private String pfpUrl;
+
+    public Cleaner(String id, String cleanerFirstName, String cleanerLastName, String pfpUrl) {
+        this.id = id;
+        this.cleanerFirstName = cleanerFirstName;
+        this.cleanerLastName = cleanerLastName;
+        this.pfpUrl = pfpUrl;
+    }
 
     public String getId() { return id; }
     public String getCleanerFirstName() { return cleanerFirstName; }

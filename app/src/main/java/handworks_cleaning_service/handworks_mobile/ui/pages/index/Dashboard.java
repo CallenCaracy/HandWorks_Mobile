@@ -1,6 +1,7 @@
 package handworks_cleaning_service.handworks_mobile.ui.pages.index;
 
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -65,21 +66,29 @@ public class Dashboard extends AppCompatActivity {
         binding.header.userPfp.setOnClickListener(v -> NavigationUtil.navigateNoFinishTo(this, UserProfile.class));
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
-
-            if (id == R.id.homeIcon) {
-                replaceFrameFragment(new HomeFragment());
-            } else if (id == R.id.calendarIcon) {
-                replaceFrameFragment(new WeekViewFragment());
-            } else if (id == R.id.historyIcon) {
-                replaceFrameFragment(new HistoryFragment());
-            } else if (id == R.id.chatIcon) {
-                replaceFrameFragment(new ChatFragment());
-            } else if (id == R.id.notificationIcon) {
-                replaceFrameFragment(new NotificationFragment());
-            }
-            return true;
+            if (binding.bottomNavigationView.getVisibility() != View.VISIBLE) return false;
+            return handleNavigation(item.getItemId());
         });
+
+        binding.navigationRail.setOnItemSelectedListener(item -> {
+            if (binding.navigationRail.getVisibility() != View.VISIBLE) return false;
+            return handleNavigation(item.getItemId());
+        });
+    }
+
+    private boolean handleNavigation(int id) {
+        if (id == R.id.homeIcon) {
+            replaceFrameFragment(new HomeFragment());
+        } else if (id == R.id.calendarIcon) {
+            replaceFrameFragment(new WeekViewFragment());
+        } else if (id == R.id.historyIcon) {
+            replaceFrameFragment(new HistoryFragment());
+        } else if (id == R.id.chatIcon) {
+            replaceFrameFragment(new ChatFragment());
+        } else if (id == R.id.notificationIcon) {
+            replaceFrameFragment(new NotificationFragment());
+        }
+        return true;
     }
 
     private void replaceFrameFragment(Fragment fragment){

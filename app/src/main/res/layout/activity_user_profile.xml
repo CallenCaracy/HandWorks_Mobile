@@ -8,269 +8,256 @@
     android:layout_height="match_parent"
     tools:context=".ui.pages.user.UserProfile">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/profileHeader"
+    <include
+        android:id="@id/profileHeader"
+        layout="@layout/title_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/profileHeader">
 
-        <ImageView
-            android:id="@+id/btnExitProfile"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="4dp"
-            android:clickable="true"
-            android:contentDescription="@string/back"
-            android:focusable="true"
-            android:padding="4dp"
-            android:src="@drawable/outline_chevron_left"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            app:tint="@color/textPrimary" />
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/profile"
-            android:textSize="20sp"
-            android:textStyle="bold"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/contentHolder"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.5" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toTopOf="@+id/swipeRefresh">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewPfp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="70dp"
-        app:cardCornerRadius="100dp"
-        app:cardElevation="4dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profileHeader">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewPfp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="70dp"
+                app:cardCornerRadius="100dp"
+                app:cardElevation="4dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/contentHolder">
 
-        <ImageView
-            android:id="@+id/userPfp"
-            android:layout_width="130dp"
-            android:layout_height="132dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/pfp_placeholder"
-            android:contentDescription="@string/user_pfp" />
-    </androidx.cardview.widget.CardView>
+                <ImageView
+                    android:id="@+id/userPfp"
+                    android:layout_width="130dp"
+                    android:layout_height="132dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:src="@drawable/pfp_placeholder"
+                    android:contentDescription="@string/user_pfp" />
+            </androidx.cardview.widget.CardView>
 
-    <TextView
-        android:id="@+id/cleanerFirstNameDisplay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/your_firstname"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@id/cardViewPfp"
-        app:layout_constraintTop_toBottomOf="@id/cardViewPfp" />
+            <TextView
+                android:id="@+id/cleanerFirstNameDisplay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/your_firstname"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/cardViewPfp"
+                app:layout_constraintTop_toBottomOf="@id/cardViewPfp" />
 
-    <TextView
-        android:id="@+id/cleanerLastNameDisplay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/your_lastname"
-        app:layout_constraintStart_toStartOf="@id/cardViewPfp"
-        app:layout_constraintTop_toBottomOf="@id/cleanerFirstNameDisplay" />
+            <TextView
+                android:id="@+id/cleanerLastNameDisplay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/your_lastname"
+                app:layout_constraintStart_toStartOf="@id/cardViewPfp"
+                app:layout_constraintTop_toBottomOf="@id/cleanerFirstNameDisplay" />
 
-    <TextView
-        android:id="@+id/joinedLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:text="@string/joined"
-        android:textColor="@color/gray"
-        app:layout_constraintBottom_toTopOf="@+id/joinedValue"
-        app:layout_constraintStart_toEndOf="@id/cardViewPfp" />
+            <TextView
+                android:id="@+id/joinedLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="50dp"
+                android:text="@string/joined"
+                android:textColor="@color/gray"
+                app:layout_constraintBottom_toTopOf="@+id/joinedValue"
+                app:layout_constraintStart_toEndOf="@id/cardViewPfp" />
 
-    <TextView
-        android:id="@+id/joinedValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/_1_year_ago"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/cardViewPfp"
-        app:layout_constraintStart_toStartOf="@id/joinedLabel"
-        app:layout_constraintTop_toTopOf="@+id/cardViewPfp" />
+            <TextView
+                android:id="@+id/joinedValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_1_year_ago"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/cardViewPfp"
+                app:layout_constraintStart_toStartOf="@id/joinedLabel"
+                app:layout_constraintTop_toTopOf="@+id/cardViewPfp" />
 
-    <RatingBar
-        android:id="@+id/ratingBar"
-        style="?android:attr/ratingBarStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:numStars="5"
-        android:stepSize="0.5"
-        android:isIndicator="true"
-        android:layout_marginTop="4dp"
-        app:layout_constraintStart_toStartOf="@id/joinedLabel"
-        app:layout_constraintTop_toBottomOf="@id/joinedValue" />
+            <RatingBar
+                android:id="@+id/ratingBar"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:stepSize="0.5"
+                android:isIndicator="true"
+                android:layout_marginTop="4dp"
+                app:layout_constraintStart_toStartOf="@id/joinedLabel"
+                app:layout_constraintTop_toBottomOf="@id/joinedValue" />
 
-    <TextView
-        android:id="@+id/ratingValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/ratingBar"
-        app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
+            <TextView
+                android:id="@+id/ratingValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/ratingBar"
+                app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
 
-    <TextView
-        android:id="@+id/ratingNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:layout_marginStart="6dp"
-        app:layout_constraintStart_toEndOf="@+id/ratingValue"
-        app:layout_constraintTop_toTopOf="@+id/ratingValue"
-        app:layout_constraintBottom_toBottomOf="@+id/ratingValue"/>
+            <TextView
+                android:id="@+id/ratingNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:layout_marginStart="6dp"
+                app:layout_constraintStart_toEndOf="@+id/ratingValue"
+                app:layout_constraintTop_toTopOf="@+id/ratingValue"
+                app:layout_constraintBottom_toBottomOf="@+id/ratingValue"/>
 
-    <TextView
-        android:id="@+id/profileHeaderText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingBottom="8dp"
-        android:layout_margin="16dp"
-        android:textColor="@color/textPrimary"
-        android:textStyle="bold"
-        android:text="@string/profile_info"
-        app:layout_constraintTop_toBottomOf="@id/cleanerLastNameDisplay"
-        tools:ignore="RtlSymmetry" />
+            <TextView
+                android:id="@+id/profileHeaderText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingBottom="8dp"
+                android:layout_margin="16dp"
+                android:textColor="@color/textPrimary"
+                android:textStyle="bold"
+                android:text="@string/profile_info"
+                app:layout_constraintTop_toBottomOf="@id/cleanerLastNameDisplay"
+                tools:ignore="RtlSymmetry" />
 
-    <LinearLayout
-        android:id="@+id/profileEmailHolder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginStart="12dp"
-        app:layout_constraintTop_toBottomOf="@id/profileHeaderText">
+            <LinearLayout
+                android:id="@+id/profileEmailHolder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="12dp"
+                app:layout_constraintTop_toBottomOf="@id/profileHeaderText">
 
-        <TextView
-            android:id="@+id/employeeEmailText"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:text="@string/email_colon"
-            android:paddingTop="4dp"
-            android:paddingStart="16dp"
-            android:paddingBottom="8dp"
-            android:layout_marginStart="16dp"
-            android:textColor="@color/textPrimary"
-            tools:ignore="RtlSymmetry"/>
+                <TextView
+                    android:id="@+id/employeeEmailText"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/email_colon"
+                    android:paddingTop="4dp"
+                    android:paddingStart="16dp"
+                    android:paddingBottom="8dp"
+                    android:layout_marginStart="16dp"
+                    android:textColor="@color/textPrimary"
+                    tools:ignore="RtlSymmetry"/>
 
-        <TextView
-            android:id="@+id/employeeEmailValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/textPrimary"
-            tools:ignore="RtlSymmetry"/>
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/employeeEmailValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textPrimary"
+                    tools:ignore="RtlSymmetry"/>
+            </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/profilePositionHolder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginStart="12dp"
-        app:layout_constraintTop_toBottomOf="@id/profileEmailHolder">
+            <LinearLayout
+                android:id="@+id/profilePositionHolder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="12dp"
+                app:layout_constraintTop_toBottomOf="@id/profileEmailHolder">
 
-        <TextView
-            android:id="@+id/employeePositionText"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:text="@string/position_colon"
-            android:paddingTop="4dp"
-            android:paddingStart="16dp"
-            android:paddingBottom="8dp"
-            android:layout_marginStart="16dp"
-            android:textColor="@color/textPrimary"
-            tools:ignore="RtlSymmetry"/>
+                <TextView
+                    android:id="@+id/employeePositionText"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/position_colon"
+                    android:paddingTop="4dp"
+                    android:paddingStart="16dp"
+                    android:paddingBottom="8dp"
+                    android:layout_marginStart="16dp"
+                    android:textColor="@color/textPrimary"
+                    tools:ignore="RtlSymmetry"/>
 
-        <TextView
-            android:id="@+id/employeePositionValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/textPrimary"
-            tools:ignore="RtlSymmetry"/>
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/employeePositionValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textPrimary"
+                    tools:ignore="RtlSymmetry"/>
+            </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/profileHiredDateHolder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginStart="12dp"
-        app:layout_constraintTop_toBottomOf="@id/profilePositionHolder">
+            <LinearLayout
+                android:id="@+id/profileHiredDateHolder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="12dp"
+                app:layout_constraintTop_toBottomOf="@id/profilePositionHolder">
 
-        <TextView
-            android:id="@+id/employeeHireDateText"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:text="@string/hired_date_colon"
-            android:paddingTop="4dp"
-            android:paddingStart="16dp"
-            android:paddingBottom="8dp"
-            android:layout_marginStart="16dp"
-            android:textColor="@color/textPrimary"
-            tools:ignore="RtlSymmetry"/>
+                <TextView
+                    android:id="@+id/employeeHireDateText"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hired_date_colon"
+                    android:paddingTop="4dp"
+                    android:paddingStart="16dp"
+                    android:paddingBottom="8dp"
+                    android:layout_marginStart="16dp"
+                    android:textColor="@color/textPrimary"
+                    tools:ignore="RtlSymmetry"/>
 
-        <TextView
-            android:id="@+id/employeeHireDateValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/textPrimary"
-            tools:ignore="RtlSymmetry"/>
+                <TextView
+                    android:id="@+id/employeeHireDateValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textPrimary"
+                    tools:ignore="RtlSymmetry"/>
 
-    </LinearLayout>
+            </LinearLayout>
 
-    <TextView
-        android:id="@+id/employeeStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/status_badge_bg"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="10dp"
-        android:textColor="@color/colorSecondary"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/cleanerLastNameDisplay"
-        app:layout_constraintEnd_toEndOf="@+id/ratingBar"
-        app:layout_constraintStart_toStartOf="@+id/ratingBar"
-        app:layout_constraintTop_toTopOf="@+id/cleanerFirstNameDisplay"
-        tools:ignore="RtlSymmetry" />
+            <TextView
+                android:id="@+id/employeeStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/status_badge_bg"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="10dp"
+                android:textColor="@color/colorSecondary"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/cleanerLastNameDisplay"
+                app:layout_constraintEnd_toEndOf="@+id/ratingBar"
+                app:layout_constraintStart_toStartOf="@+id/ratingBar"
+                app:layout_constraintTop_toTopOf="@+id/cleanerFirstNameDisplay"
+                tools:ignore="RtlSymmetry" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/profileRecycler"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintTop_toBottomOf="@id/profileHiredDateHolder"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/profileRecycler"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintTop_toBottomOf="@id/profileHiredDateHolder"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:backgroundTint="@color/backgroundLightTransition"
-        android:text="@string/sign_out"
-        android:textAllCaps="false"
-        android:textColor="@color/textTertiary"
-        app:cornerRadius="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileRecycler" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:backgroundTint="@color/backgroundLightTransition"
+                android:text="@string/sign_out"
+                android:textAllCaps="false"
+                android:textColor="@color/textTertiary"
+                app:cornerRadius="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/profileRecycler" />
 
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

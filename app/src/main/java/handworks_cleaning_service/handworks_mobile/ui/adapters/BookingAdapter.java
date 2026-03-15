@@ -45,9 +45,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingViewHolder> {
         Booking booking = bookings.get(position);
         holder.bind(booking);
 
-        holder.itemView.setOnClickListener(v -> {
-            listener.onBookingClick(booking);
-        });
+        holder.itemView.setOnClickListener(v -> listener.onBookingClick(booking));
     }
 
     @Override

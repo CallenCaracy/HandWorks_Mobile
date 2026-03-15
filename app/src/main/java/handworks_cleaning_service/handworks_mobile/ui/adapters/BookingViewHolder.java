@@ -14,12 +14,12 @@ import handworks_cleaning_service.handworks_mobile.utils.DateUtil;
 import handworks_cleaning_service.handworks_mobile.utils.EnumHelper;
 
 public class BookingViewHolder extends RecyclerView.ViewHolder {
-    TextView customerName;
-    TextView status;
-    TextView bookingWorkDate;
-    TextView bookingStartDate;
-    TextView bookingEndDate;
-    TextView bookingMainService;
+    private final TextView customerName;
+    private final TextView status;
+    private final TextView bookingWorkDate;
+    private final TextView bookingStartDate;
+    private final TextView bookingEndDate;
+    private final TextView bookingMainService;
 
     public BookingViewHolder(@NonNull View itemView) {
         super(itemView);
