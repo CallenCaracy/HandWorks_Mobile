@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +64,8 @@ public class HistoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentHistoryBinding.inflate(inflater, container, false);
 
+        employeeId = prefs.getString("EMP_ID", null);
+
         bookViewModel = new ViewModelProvider(requireActivity()).get(BookViewModel.class);
         bookingAdapter = new BookingAdapter(new ArrayList<>(), booking -> {
             Intent intent = new Intent(requireContext(), BookingDetails.class);
@@ -79,18 +82,25 @@ public class HistoryFragment extends Fragment {
         setupSpinnerListener();
 
         // Observers
-        observeEmployee();
+        initialFetchBookings();
         observeBookings();
 
         // Infinite scroll
         setupScrollListener();
 
+        binding.swipeRefresh.setOnRefreshListener(() -> {
+            Log.d("HTTPs", "refresh swiped");
+            int savedPosition = prefs.getInt(PREF_HISTORY_FILTER, 0);
+
+            if (endDate == null) endDate = LocalDate.now();
+            startDate = dayDistance(savedPosition, endDate);
+            bookViewModel.loadNextPage(employeeId, startDate.toString(), endDate.toString(), FetchStrategy.NETWORK_ONLY);
+        });
+
         return binding.getRoot();
     }
 
-    private void observeEmployee() {
-        employeeId = prefs.getString("EMP_ID", null);
-
+    private void initialFetchBookings() {
         int savedPosition = prefs.getInt(PREF_HISTORY_FILTER, 0);
 
         if (endDate == null) endDate = LocalDate.now();
@@ -108,6 +118,8 @@ public class HistoryFragment extends Fragment {
                     break;
 
                 case SUCCESS:
+                    binding.swipeRefresh.setRefreshing(false);
+
                     List<Booking> bookings = state.getData();
                     boolean hasBooks = bookings != null && !bookings.isEmpty();
 
@@ -117,6 +129,8 @@ public class HistoryFragment extends Fragment {
                     break;
 
                 case ERROR:
+                    binding.swipeRefresh.setRefreshing(false);
+
                     updateUI(false, false);
                     Toast.makeText(requireContext(), state.getMessage(), Toast.LENGTH_LONG).show();
                     break;

@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import handworks_cleaning_service.handworks_mobile.data.dto.user.TimeInRequest;
 import handworks_cleaning_service.handworks_mobile.data.dto.user.TimeOutRequest;
+import handworks_cleaning_service.handworks_mobile.data.dto.user.UpdateEmployeeRequest;
 import handworks_cleaning_service.handworks_mobile.data.models.users.Employee;
 import handworks_cleaning_service.handworks_mobile.data.models.users.TimeSheet;
 import handworks_cleaning_service.handworks_mobile.data.models.wrappers.UserWrapper;
@@ -111,6 +112,24 @@ public class UserViewModel extends ViewModel {
             @Override
             public void onFailure(@NonNull Call<TimeSheet> call, @NonNull Throwable t) {
                 timeSheetState.postValue(UIState.error(t.getMessage()));
+            }
+        });
+    }
+
+    public void updateEmployeeInfo(String id, UpdateEmployeeRequest request) {
+        userRepository.updateEmployee(id, request, new Callback<Employee>() {
+            @Override
+            public void onResponse(@NonNull Call<Employee> call, @NonNull Response<Employee> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    employeeState.postValue(UIState.success(response.body()));
+                } else {
+                    employeeState.postValue(UIState.error("Failed to update account information."));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Employee> call, @NonNull Throwable t) {
+                employeeState.postValue(UIState.error(t.getMessage()));
             }
         });
     }

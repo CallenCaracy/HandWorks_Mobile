@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -98,7 +99,7 @@ public class HomeFragment extends Fragment {
             Log.d("HTTPs", "refresh swiped");
             userViewModel.loadEmployee(employeeId, FetchStrategy.NETWORK_ONLY);
             userViewModel.loadTodayTimeSheet(employeeId, FetchStrategy.NETWORK_ONLY);
-            bookViewModel.loadNextPage(employeeId, today.toString(), today.toString(), FetchStrategy.NETWORK_ONLY);
+            bookViewModel.loadNextPage(employeeId, today.toString(), endDate.toString(), FetchStrategy.NETWORK_ONLY);
         });
 
         return binding.getRoot();
@@ -224,8 +225,8 @@ public class HomeFragment extends Fragment {
 
     private void setupTimeSheetBotton() {
         binding.btnTimeIn.setOnClickListener(v -> {
-            String timeNow = LocalTime.now().toString();
-            TimeInRequest request = new TimeInRequest(employeeId, timeNow);
+            String timestamp = Instant.now().toString();
+            TimeInRequest request = new TimeInRequest(employeeId, timestamp);
             userViewModel.timeIn(request);
         });
 
@@ -233,8 +234,8 @@ public class HomeFragment extends Fragment {
                 .setTitle("Time out")
                 .setMessage("Are you sure you want to time out?")
                 .setPositiveButton("Yes", (dialog, which) -> {
-                    String timeNow = LocalTime.now().toString();
-                    TimeOutRequest request = new TimeOutRequest(employeeId, timeNow);
+                    String timestamp = Instant.now().toString();
+                    TimeOutRequest request = new TimeOutRequest(employeeId, timestamp);
                     userViewModel.timeOut(request);
                 })
                 .setNegativeButton("No", null)

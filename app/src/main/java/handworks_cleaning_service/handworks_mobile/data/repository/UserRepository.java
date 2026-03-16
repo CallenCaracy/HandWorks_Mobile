@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import handworks_cleaning_service.handworks_mobile.data.dto.user.TimeInRequest;
 import handworks_cleaning_service.handworks_mobile.data.dto.user.TimeOutRequest;
+import handworks_cleaning_service.handworks_mobile.data.dto.user.UpdateEmployeeRequest;
 import handworks_cleaning_service.handworks_mobile.data.models.users.TimeSheet;
 import handworks_cleaning_service.handworks_mobile.data.models.users.Employee;
 import handworks_cleaning_service.handworks_mobile.data.models.wrappers.UserWrapper;
@@ -102,6 +103,21 @@ public class UserRepository {
 
             @Override
             public void onFailure(@NonNull Call<TimeSheet> call, @NonNull Throwable t) {
+                callback.onFailure(call, t);
+            }
+        });
+    }
+
+    public void updateEmployee(String empId, UpdateEmployeeRequest request, Callback<Employee> callback) {
+        userApi.updateEmployee(empId, request).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<Employee> call, @NonNull Response<Employee> response) {
+                if (response.isSuccessful()) cachedEmployee = response.body();
+                callback.onResponse(call, response);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Employee> call, @NonNull Throwable t) {
                 callback.onFailure(call, t);
             }
         });
