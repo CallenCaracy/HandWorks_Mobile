@@ -29,6 +29,7 @@ import retrofit2.Response;
 public class BookViewModel extends ViewModel {
     private final BookRepository bookRepository;
     private final MutableLiveData<UIState<List<Booking>>> bookingsState = new MutableLiveData<>();
+    private final MutableLiveData<UIState<Booking>> bookingByIdState = new MutableLiveData<>();
     private int totalBookings;
 
     @Inject
@@ -38,6 +39,9 @@ public class BookViewModel extends ViewModel {
 
     public LiveData<UIState<List<Booking>>> getBookingsState() {
         return bookingsState;
+    }
+    public LiveData<UIState<Booking>> getBookingByIdState() {
+        return bookingByIdState;
     }
 
     public void resetPagination(String employeeId, String startDate, String endDate) {
@@ -140,6 +144,26 @@ public class BookViewModel extends ViewModel {
                 state.setLoading(false);
                 bookingsState.postValue(UIState.error(t.getMessage()));
                 Log.e("HTTPs", "NETWORK FAILURE", t);
+            }
+        });
+    }
+
+    public void loadBookingById(String bookingId, FetchStrategy strategy) {
+        bookingByIdState.postValue(UIState.loading());
+
+        bookRepository.fetchBookingById(bookingId, strategy, new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<Booking> call, @NonNull Response<Booking> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    bookingByIdState.postValue(UIState.success(response.body()));
+                } else {
+                    bookingByIdState.postValue(UIState.error("Failed to fetch booking with id"));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Booking> call, @NonNull Throwable t) {
+                bookingByIdState.postValue(UIState.error(t.getMessage()));
             }
         });
     }

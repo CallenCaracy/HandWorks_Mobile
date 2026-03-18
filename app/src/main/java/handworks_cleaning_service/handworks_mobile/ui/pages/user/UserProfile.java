@@ -1,7 +1,5 @@
 package handworks_cleaning_service.handworks_mobile.ui.pages.user;
 
-import static android.view.View.GONE;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.clerk.api.user.User;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +38,7 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
+import handworks_cleaning_service.handworks_mobile.data.dto.user.UpdateEmployeeRequest;
 import handworks_cleaning_service.handworks_mobile.data.models.users.Employee;
 import handworks_cleaning_service.handworks_mobile.data.repository.config.FetchStrategy;
 import handworks_cleaning_service.handworks_mobile.databinding.ActivityUserProfileBinding;
@@ -59,6 +60,7 @@ public class UserProfile extends AppCompatActivity {
     @Inject
     SharedPreferences prefs;
     private AuthViewModel authViewModel;
+    private UserViewModel userViewModel;
     private ActivityUserProfileBinding binding;
 
     @Override
@@ -79,7 +81,7 @@ public class UserProfile extends AppCompatActivity {
         setUpRecyclerView();
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-        UserViewModel userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         signOutUserConfirmation();
 
         String employeeId = prefs.getString("EMP_ID", null);
@@ -98,7 +100,7 @@ public class UserProfile extends AppCompatActivity {
                 startActivity(intent);
             });
 
-            userViewModel.loadEmployee(employeeId, FetchStrategy.CACHE_FIRST);
+            userViewModel.loadEmployee(employeeId, FetchStrategy.CACHE_ONLY);
             userViewModel.getEmployee().observe(this, state -> {
                 binding.swipeRefresh.setRefreshing(false);
 
@@ -148,7 +150,13 @@ public class UserProfile extends AppCompatActivity {
                         binding.ratingBar.setRating(0.0f);
                         binding.joinedValue.setText(R.string._0_months_ago);
                         binding.ratingValue.setText("0.0");
-                        binding.ratingNumber.setVisibility(GONE);
+                        binding.ratingNumber.setText(
+                                getResources().getQuantityString(
+                                        R.plurals.reviews_count,
+                                        0,
+                                        0
+                                )
+                        );
                         binding.employeeEmailValue.setText(R.string.error);
                         binding.employeeHireDateValue.setText(R.string.error);
                         binding.employeePositionValue.setText(R.string.error);
@@ -187,11 +195,15 @@ public class UserProfile extends AppCompatActivity {
         List<ProfileItem> items = new ArrayList<>();
 
         items.add(new ProfileItem(Constant.TYPE_HEADER, "Settings", 0));
-        items.add(new ProfileItem(Constant.TYPE_SWITCH, "Notifications", R.drawable.bell_svgrepo_com));
+        items.add(new ProfileItem(Constant.TYPE_ITEM, "Update Name", R.drawable.account_icon));
+        items.add(new ProfileItem(Constant.TYPE_SWITCH, "Notifications", R.drawable.bell_icon));
         items.add(new ProfileItem(Constant.TYPE_ITEM, "Theme", R.drawable.theme));
 
         ProfileSettingsAdapter adapter = new ProfileSettingsAdapter(items, item -> {
             switch (item.title) {
+                case "Update Name":
+                    showUpdateNameModal();
+                    break;
                 case "Notifications":
                     SwitchCompat switchView = findViewById(R.id.switchView);
 
@@ -209,9 +221,9 @@ public class UserProfile extends AppCompatActivity {
 
     private void showThemeModal() {
         ThemeOption[] themes = {
-                new ThemeOption("System", R.drawable.system_settings_backup_svgrepo_com),
-                new ThemeOption("Light", R.drawable.sun_fog_svgrepo_com),
-                new ThemeOption("Dark", R.drawable.moon_fog_svgrepo_com)
+                new ThemeOption("System", R.drawable.system_icon),
+                new ThemeOption("Light", R.drawable.sun_icon),
+                new ThemeOption("Dark", R.drawable.moon_icon)
         };
 
         int currentTheme = ThemeUtil.getTheme(this);
@@ -238,7 +250,7 @@ public class UserProfile extends AppCompatActivity {
                 Drawable icon = AppCompatResources.getDrawable(context, theme.iconRes);
                 if (icon != null) {
                     float scale = context.getResources().getDisplayMetrics().density;
-                    int sizeInPx = (int) (24 * scale + 0.5f);
+                    int sizeInPx = (int) (30 * scale + 0.5f);
                     icon.setBounds(0, 0, sizeInPx, sizeInPx);
 
                     textAndIcon.setCompoundDrawables(icon, null, null, null);
@@ -266,6 +278,51 @@ public class UserProfile extends AppCompatActivity {
                         case 2 -> ThemeUtil.setTheme(this, Constant.THEME_DARK);
                     }
                     dialog.dismiss();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void showUpdateNameModal() {
+        Employee employee = userViewModel.getEmployee().getValue().getData();
+        if (employee == null){
+            Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_update_name, null);
+        EditText firstNameInput = dialogView.findViewById(R.id.firstNameInput);
+        EditText lastNameInput = dialogView.findViewById(R.id.lastNameInput);
+
+        firstNameInput.setText(employee.getAccount().getFirst_name());
+        lastNameInput.setText(employee.getAccount().getLast_name());
+
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("Update Name")
+                .setView(dialogView)
+                .setPositiveButton("Save", (dialog, which) -> {
+                    String newFirst = firstNameInput.getText().toString().trim();
+                    String newLast = lastNameInput.getText().toString().trim();
+
+                    if (newFirst.isEmpty() || newLast.isEmpty()) {
+                        Toast.makeText(this, "Please enter both first and last name", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    if (newFirst.equals(employee.getAccount().getFirst_name()) && newLast.equals(employee.getAccount().getLast_name())) {
+                        Toast.makeText(this, "Please enter a new first or last name", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    UpdateEmployeeRequest request = new UpdateEmployeeRequest(
+                            employee.getAccount().getEmail(),
+                            employee.getId(),
+                            newFirst,
+                            employee.getAccount().getId(),
+                            newLast
+                    );
+                    userViewModel.updateEmployeeInfo(employee.getId(), request);
+
                 })
                 .setNegativeButton("Cancel", null)
                 .show();

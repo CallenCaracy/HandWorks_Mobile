@@ -14,6 +14,9 @@ public class PaginationState {
     private final Set<Booking> accumulated = new LinkedHashSet<>();
 
     public List<Booking> getAccumulated() { return List.copyOf(accumulated); }
+    public Set<Booking> getAccumulatedSet() {
+        return accumulated;
+    }
     public void append(List<Booking> bookings) { accumulated.addAll(bookings); }
     public void nextPage() {
         currentPage++;

@@ -2,9 +2,12 @@ package handworks_cleaning_service.handworks_mobile.data.repository;
 
 import static handworks_cleaning_service.handworks_mobile.utils.Constant.PAGE_LIMIT;
 
+import androidx.annotation.NonNull;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -14,7 +17,9 @@ import handworks_cleaning_service.handworks_mobile.data.models.wrappers.BookingW
 import handworks_cleaning_service.handworks_mobile.data.remote.BookApi;
 import handworks_cleaning_service.handworks_mobile.data.repository.config.FetchStrategy;
 import handworks_cleaning_service.handworks_mobile.data.repository.config.PaginationState;
+import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 public class BookRepository {
     private final BookApi bookApi;
@@ -40,6 +45,10 @@ public class BookRepository {
         if (from >= data.size()) return null;
 
         return data.subList(from, to);
+    }
+
+    private String buildKey(String employeeId, String startDate, String endDate) {
+        return employeeId + "|" + startDate + "|" + endDate;
     }
 
     public PaginationState getPaginationState(String employeeId, String startDate, String endDate) {
@@ -77,7 +86,49 @@ public class BookRepository {
         }
     }
 
-    private String buildKey(String employeeId, String startDate, String endDate) {
-        return employeeId + "|" + startDate + "|" + endDate;
+    public void fetchBookingById(String bookingId, FetchStrategy strategy, Callback<Booking> callback) {
+        if (strategy == FetchStrategy.CACHE_ONLY || strategy == FetchStrategy.CACHE_FIRST) {
+            Booking cached = findInCache(bookingId);
+            if (cached != null) {
+                callback.onResponse(null, Response.success(cached));
+
+                if (strategy == FetchStrategy.CACHE_ONLY) return;
+            }
+        }
+
+        bookApi.getBookingById(bookingId).enqueue(new Callback<Booking>() {
+            @Override
+            public void onResponse(@NonNull Call<Booking> call, @NonNull Response<Booking> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    updateCache(response.body());
+                }
+                callback.onResponse(call, response);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Booking> call, @NonNull Throwable t) {
+                callback.onFailure(call, t);
+            }
+        });
+    }
+
+    private Booking findInCache(String bookingId) {
+        for (PaginationState state : cachedBookings.values()) {
+            for (Booking booking : state.getAccumulatedSet()) {
+                if (booking.getId().equals(bookingId)) {
+                    return booking;
+                }
+            }
+        }
+        return null;
+    }
+
+    private void updateCache(Booking updatedBooking) {
+        for (PaginationState state : cachedBookings.values()) {
+            Set<Booking> accumulated = state.getAccumulatedSet();
+            accumulated.removeIf(b -> b.getId().equals(updatedBooking.getId()));
+            accumulated.add(updatedBooking);
+            return;
+        }
     }
 }

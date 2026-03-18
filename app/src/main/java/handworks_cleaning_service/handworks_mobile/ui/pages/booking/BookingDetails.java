@@ -2,17 +2,21 @@ package handworks_cleaning_service.handworks_mobile.ui.pages.booking;
 
 import static android.view.View.GONE;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.widget.Toast.LENGTH_SHORT;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
@@ -22,17 +26,23 @@ import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 
 import java.util.List;
+import java.util.Locale;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.Booking;
+import handworks_cleaning_service.handworks_mobile.data.repository.config.FetchStrategy;
 import handworks_cleaning_service.handworks_mobile.databinding.ActivityBookingDetailsBinding;
 import handworks_cleaning_service.handworks_mobile.ui.adapters.AddonAdapter;
 import handworks_cleaning_service.handworks_mobile.ui.adapters.AssetAdapter;
 import handworks_cleaning_service.handworks_mobile.ui.adapters.CleanerAdapter;
+import handworks_cleaning_service.handworks_mobile.ui.models.BookingStatus;
 import handworks_cleaning_service.handworks_mobile.ui.pages.index.FullscreenImageView;
+import handworks_cleaning_service.handworks_mobile.ui.viewmodel.BookViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.DateUtil;
 import handworks_cleaning_service.handworks_mobile.utils.EnumHelper;
 
+@AndroidEntryPoint
 public class BookingDetails extends AppCompatActivity {
     private ActivityBookingDetailsBinding binding;
     private AddonAdapter addonAdapter;
@@ -51,6 +61,8 @@ public class BookingDetails extends AppCompatActivity {
             return insets;
         });
 
+        BookViewModel bookViewModel = new ViewModelProvider(this).get(BookViewModel.class);
+
         binding = ActivityBookingDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -59,11 +71,43 @@ public class BookingDetails extends AppCompatActivity {
         binding.bookingDetailsHeader.titlePageTxt.setText(getString(R.string.booking_details));
         binding.bookingDetailsHeader.btnExit.setOnClickListener(v -> finish());
 
-        Booking booking = (Booking) getIntent().getSerializableExtra("booking");
+        Booking bookingFromIntent = (Booking) getIntent().getSerializableExtra("booking");
+        if (bookingFromIntent != null) {
+            bindBooking(bookingFromIntent);
+        }
+
+        binding.swipeRefresh.setOnRefreshListener(() -> {
+            if (bookingFromIntent != null) {
+                bookViewModel.loadBookingById(bookingFromIntent.getId(), FetchStrategy.NETWORK_ONLY);
+            }
+        });
+
+        bookViewModel.getBookingByIdState().observe(this, state -> {
+            binding.swipeRefresh.setRefreshing(false);
+
+            switch (state.getStatus()) {
+                case LOADING:
+                    break;
+                case SUCCESS:
+                    bindBooking(state.getData());
+                    break;
+                case ERROR:
+                    Toast.makeText(this, state.getMessage(), LENGTH_SHORT).show();
+                    break;
+            }
+        });
+    }
+
+    private void bindBooking(Booking booking) {
         if (booking != null){
             String customerFullName = booking.getBase().getCustomerFirstName() + ' ' + booking.getBase().getCustomerLastName();
             binding.customerNameText.setText(customerFullName);
-            binding.progressStatus.setText(booking.getBase().getStatus());
+
+            BookingStatus status = BookingStatus.fromBackend(booking.getBase().getStatus());
+            binding.progressStatus.setText(status.label);
+            binding.progressStatus.setBackgroundTintList(
+                    ContextCompat.getColorStateList(this, status.colorRes)
+            );
 
             binding.dirtyScaleText.setText(
                     getString(R.string.dirty_scale, booking.getBase().getDirtyScale())
@@ -71,21 +115,38 @@ public class BookingDetails extends AppCompatActivity {
 
             String isoDate = booking.getBase().getStartSched();
             String startTime = DateUtil.extractTimeFromISO8601TimeStamps(isoDate);
-            String endTime = DateUtil.extractTimeFromISO8601TimeStamps(
-                    booking.getBase().getEndSched()
-            );
+            String endTime = DateUtil.extractTimeFromISO8601TimeStamps(booking.getBase().getEndSched());
+            int extraHours = booking.getBase().getExtraHours();
+
+            if (extraHours > 0) {
+                endTime = DateUtil.addExtraHours(endTime, extraHours);
+
+                String extraText = String.format(Locale.getDefault(), " (Extra %d hours)", extraHours);
+
+                binding.startAndEndTimeText.setText(
+                        getString(R.string.time_range, startTime, endTime, extraText)
+                );
+
+                binding.extraHourCostText.setText(
+                        getString(R.string.extra_hours_cost_value, booking.getBase().getExtraHourCost())
+                );
+            } else {
+                binding.startAndEndTimeText.setText(
+                        getString(R.string.time_range, startTime, endTime, "")
+                );
+                binding.extraHourCostContainer.setVisibility(GONE);
+            }
+
+            binding.customerPhoneText.setText(booking.getBase().getCustomerPhoneNo().isEmpty() ? "Phone Number: N/A" : getString(R.string.customer_number, booking.getBase().getCustomerPhoneNo()));
 
             binding.workDateText.setText(
                     getString(R.string.scheduled_at, DateUtil.extractDateFromISO8601TimeStamps(isoDate))
-            );
-            binding.startAndEndTimeText.setText(
-                    getString(R.string.time_range, startTime, endTime)
             );
             binding.addressText.setText(
                     getString(R.string.cleaning_site, booking.getBase().getAddress().getAddressHuman())
             );
             binding.totalPriceText.setText(
-                    getString(R.string.total_price, booking.getTotalPrice())
+                    getString(R.string.total_price_value, booking.getTotalPrice())
             );
 
             setupImages(booking.getBase().getPhotos());
@@ -113,7 +174,7 @@ public class BookingDetails extends AppCompatActivity {
         }
     }
 
-    public void setUpRecyclerAdapters() {
+    private void setUpRecyclerAdapters() {
         addonAdapter = new AddonAdapter();
         binding.addonRecycler.setLayoutManager(new LinearLayoutManager(this));
         binding.addonRecycler.setAdapter(addonAdapter);
@@ -135,46 +196,50 @@ public class BookingDetails extends AppCompatActivity {
     }
 
     private void setupImages(List<String> photoUrls) {
-        if (photoUrls.isEmpty()) {
+        binding.flexLayout.removeAllViews();
+        binding.noSiteImages.setVisibility(View.GONE);
+
+        if (photoUrls == null || photoUrls.isEmpty()) {
             binding.noSiteImages.setVisibility(View.VISIBLE);
-        } else {
-            int parentWidth = getResources().getDisplayMetrics().widthPixels;
+            return;
+        }
 
-            for (int i = 0; i < photoUrls.size(); i++) {
-                int width;
-                int height;
+        int parentWidth = getResources().getDisplayMetrics().widthPixels;
 
-                if (i == 0) {
-                    width = MATCH_PARENT;
-                    height = 600;
-                } else {
-                    width = parentWidth / 3;
-                    height = parentWidth / 3;
-                }
+        for (int i = 0; i < photoUrls.size(); i++) {
+            int width;
+            int height;
 
-                ImageView imageView = new ImageView(this);
-                FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(width, height);
-                params.setMargins(8, 8, 8, 8);
-
-                imageView.setLayoutParams(params);
-                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                imageView.setBackgroundResource(R.drawable.rounded_image);
-                imageView.setClipToOutline(true);
-
-                Glide.with(this)
-                        .load(photoUrls.get(i))
-                        .error(R.drawable.error_svgrepo_com)
-                        .into(imageView);
-
-                int finalI = i;
-                imageView.setOnClickListener(v -> {
-                    Intent intent = new Intent(this, FullscreenImageView.class);
-                    intent.putExtra("image_url", photoUrls.get(finalI));
-                    startActivity(intent);
-                });
-
-                binding.flexLayout.addView(imageView);
+            if (i == 0) {
+                width = MATCH_PARENT;
+                height = 600;
+            } else {
+                width = parentWidth / 3;
+                height = parentWidth / 3;
             }
+
+            ImageView imageView = new ImageView(this);
+            FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(width, height);
+            params.setMargins(8, 8, 8, 8);
+
+            imageView.setLayoutParams(params);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setBackgroundResource(R.drawable.rounded_image);
+            imageView.setClipToOutline(true);
+
+            Glide.with(this)
+                    .load(photoUrls.get(i))
+                    .error(R.drawable.error_svgrepo_com)
+                    .into(imageView);
+
+            int finalI = i;
+            imageView.setOnClickListener(v -> {
+                Intent intent = new Intent(this, FullscreenImageView.class);
+                intent.putExtra("image_url", photoUrls.get(finalI));
+                startActivity(intent);
+            });
+
+            binding.flexLayout.addView(imageView);
         }
     }
 }

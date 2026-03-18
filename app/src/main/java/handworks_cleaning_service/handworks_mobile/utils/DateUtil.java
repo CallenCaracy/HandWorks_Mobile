@@ -1,10 +1,15 @@
 package handworks_cleaning_service.handworks_mobile.utils;
 
+import android.util.Log;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 public class DateUtil {
     public static String formatDateFromIntToString(Date date) {
@@ -57,5 +62,18 @@ public class DateUtil {
         OffsetDateTime dateTime = OffsetDateTime.parse(isoDate);
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
         return dateTime.format(timeFormatter);
+    }
+
+    public static String addExtraHours(String endTime, int extraHours) {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        Calendar calendar = Calendar.getInstance();
+        try {
+            calendar.setTime(Objects.requireNonNull(sdf.parse(endTime)));
+        } catch (ParseException e) {
+            Log.d("Error", "Failed to add extra hours to end time.");
+        }
+
+        calendar.add(Calendar.HOUR_OF_DAY, extraHours);
+        return sdf.format(calendar.getTime());
     }
 }

@@ -1,6 +1,5 @@
 package handworks_cleaning_service.handworks_mobile.ui.adapters;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -28,6 +27,6 @@ public class AddonViewHolder extends RecyclerView.ViewHolder {
         } else {
             addonServiceDetails.setText("N/A");
         }
-        addonServicePrice.setText(String.valueOf(addon.getPrice()));
+        addonServicePrice.setText("₱" + addon.getPrice());
     }
 }

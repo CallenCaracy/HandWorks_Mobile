@@ -165,6 +165,9 @@ public class AppEntryScreenSplash extends AppCompatActivity {
 
         binding.errorUI.imgError.setVisibility(View.VISIBLE);
         binding.errorUI.txtTitle.setVisibility(View.VISIBLE);
+
+        binding.errorUI.errorBtntnRetry.setVisibility(View.VISIBLE);
+
         binding.errorUI.errorBtntnRetry.setOnClickListener(v -> {
             binding.errorUI.imgError.setVisibility(View.GONE);
             binding.errorUI.txtTitle.setVisibility(View.GONE);

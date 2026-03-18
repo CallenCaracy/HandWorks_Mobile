@@ -117,6 +117,7 @@
                         android:textColor="@color/textPrimary"
                         android:textSize="12sp"
                         android:textStyle="bold"
+                        android:text="@string/na"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/clockInAtText"
                         app:layout_constraintTop_toTopOf="@+id/clockInAtText" />
@@ -126,6 +127,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingVertical="4dp"
+                        android:layout_marginStart="4dp"
                         android:text="@string/clocked_out_at"
                         android:textColor="@color/textPrimary"
                         android:textSize="12sp"
@@ -142,6 +144,7 @@
                         android:paddingVertical="4dp"
                         android:textColor="@color/textPrimary"
                         android:textSize="12sp"
+                        android:text="@string/na"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@+id/clockOutAtText"
                         app:layout_constraintStart_toEndOf="@+id/clockOutAtText"

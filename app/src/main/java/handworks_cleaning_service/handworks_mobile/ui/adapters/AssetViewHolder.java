@@ -1,6 +1,5 @@
 package handworks_cleaning_service.handworks_mobile.ui.adapters;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,6 +35,5 @@ public class AssetViewHolder extends RecyclerView.ViewHolder {
 
         assetName.setText((asset.getName().isEmpty() ? "N/A" : asset.getName()));
         assetType.setText(asset.getType().isEmpty() ? "N/A" : asset.getType());
-        Log.d("HTTPs", asset.getName());
     }
 }

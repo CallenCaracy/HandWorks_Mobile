@@ -1,5 +1,6 @@
 package handworks_cleaning_service.handworks_mobile.data.remote;
 
+import handworks_cleaning_service.handworks_mobile.data.models.bookings.Booking;
 import handworks_cleaning_service.handworks_mobile.data.models.wrappers.BookingWrapper;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -13,4 +14,7 @@ public interface BookApi {
             @Query("endDate") String endDate,
             @Query("page") Integer page,
             @Query("limit") Integer limit);
+
+    @GET("booking/")
+    Call<Booking> getBookingById(@Query("bookingId") String bookingId);
 }
