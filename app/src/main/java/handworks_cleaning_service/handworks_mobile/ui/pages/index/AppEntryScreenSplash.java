@@ -122,7 +122,6 @@ public class AppEntryScreenSplash extends AppCompatActivity {
 
                 case ERROR:
                     String errorMessage = state.getMessage() != null ? state.getMessage() : "Unknown error";
-                    Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
 
                     binding.progressBarLoading.setVisibility(View.GONE);
                     if ("timeout".equalsIgnoreCase(errorMessage)) {
@@ -137,6 +136,7 @@ public class AppEntryScreenSplash extends AppCompatActivity {
                             showErrorUI();
                         }
                     } else {
+                        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
                         binding.handworksLogo.setVisibility(View.GONE);
                         binding.errorUI.getRoot().setVisibility(View.VISIBLE);
                         binding.errorUI.errorBtntnRetry.setOnClickListener(v -> {

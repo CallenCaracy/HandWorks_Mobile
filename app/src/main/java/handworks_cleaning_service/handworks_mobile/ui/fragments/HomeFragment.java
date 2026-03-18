@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -179,8 +178,8 @@ public class HomeFragment extends Fragment {
                     binding.btnTimeOut.setEnabled(true);
 
                     var todayTimeSheet = state.getData();
-                    binding.clockInAtValue.setText(todayTimeSheet.getTimeIn());
-                    binding.clockOutAtValue.setText(todayTimeSheet.getTimeOut());
+                    binding.clockInAtValue.setText(DateUtil.extractDateFromISO8601TimeStamps(todayTimeSheet.getTimeIn()));
+                    binding.clockOutAtValue.setText(DateUtil.extractDateFromISO8601TimeStamps(todayTimeSheet.getTimeOut()));
                     binding.timeSheetStatus.setText(todayTimeSheet.getStatus());
 
                     TimeSheet sheet = state.getData();

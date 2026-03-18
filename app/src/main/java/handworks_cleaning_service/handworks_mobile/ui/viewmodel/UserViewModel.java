@@ -1,9 +1,13 @@
 package handworks_cleaning_service.handworks_mobile.ui.viewmodel;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -17,6 +21,7 @@ import handworks_cleaning_service.handworks_mobile.data.models.wrappers.UserWrap
 import handworks_cleaning_service.handworks_mobile.data.repository.config.FetchStrategy;
 import handworks_cleaning_service.handworks_mobile.data.repository.UserRepository;
 import handworks_cleaning_service.handworks_mobile.utils.uistate.UIState;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -65,7 +70,18 @@ public class UserViewModel extends ViewModel {
                 if (response.isSuccessful() && response.body() != null) {
                     timeSheetState.postValue(UIState.success(response.body()));
                 } else {
-                    timeSheetState.postValue(UIState.error("Time in failed."));
+                    String msg = "Time in failed.";
+                    try (ResponseBody errorBody = response.errorBody()) {
+                        if (errorBody != null) {
+                            String errorString = errorBody.string();
+                            if (errorString.contains("duplicate key value")) {
+                                msg = "You have already timed in today";
+                            }
+                        }
+                    } catch (IOException e) {
+                        Log.e("TimeInError", "Failed to read error body", e);
+                    }
+                    timeSheetState.postValue(UIState.error(msg));
                 }
             }
 
@@ -117,7 +133,7 @@ public class UserViewModel extends ViewModel {
     }
 
     public void updateEmployeeInfo(String id, UpdateEmployeeRequest request) {
-        userRepository.updateEmployee(id, request, new Callback<Employee>() {
+        userRepository.updateEmployee(id, request, new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<Employee> call, @NonNull Response<Employee> response) {
                 if (response.isSuccessful() && response.body() != null) {
