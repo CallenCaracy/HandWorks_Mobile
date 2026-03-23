@@ -129,6 +129,8 @@
     <string name="upcoming">Upcoming</string>
     <string name="time_in">Time In</string>
     <string name="time_out">Time Out</string>
+    <string name="clocked_in_at">In:</string>
+    <string name="clocked_out_at">Out:</string>
     <!--  Home Fragment EndRegion  -->
 
     <!--  Calendar Components Activity StartRegion  -->
@@ -210,8 +212,6 @@
 
     <!--  New Strings StartRegion  -->
     <string name="placeholder">Placeholder</string>
-    <string name="clocked_in_at">In:</string>
-    <string name="clocked_out_at">Out:</string>
     <!--  New Strings EndRegion  -->
 
 </resources>

@@ -20,7 +20,7 @@
         android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomBill"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bookingDetailsHeader">
@@ -286,4 +286,99 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/bottomBill"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="-12dp"
+        android:layout_marginHorizontal="6dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="6dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/orderNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Extra Hours: $20" />
+
+            <TextView
+                android:id="@+id/paymentStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/status_badge_bg"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="6dp"
+                android:text="Extra Hours: $20" />
+
+            <TextView
+                android:id="@+id/paymentMethod"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Extra Hours: $20" />
+
+            <TextView
+                android:id="@+id/addonTotal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Extra Hours: $20" />
+
+            <TextView
+                android:id="@+id/downpaymentRequired"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Extra Hours: $20" />
+
+            <TextView
+                android:id="@+id/subtotal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Extra Hours: $20" />
+
+            <TextView
+                android:id="@+id/totalAmount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Total: $120"
+                android:textStyle="bold"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/remainingBalance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Extra Hours: $20" />
+
+            <Button
+                android:id="@+id/startCleaningSessionBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Start Session" />
+
+            <Button
+                android:id="@+id/endCleaningSessionBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="End Session" />
+
+            <Button
+                android:id="@+id/payButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="Proceed to payment" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

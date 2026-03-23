@@ -30,10 +30,10 @@ android {
                 value = "\"https://qa-handworks-api.onrender.com/api/\"",
             )
             buildConfigField(
-                "String",
-                "WS_BASE_URL",
-//                "\"ws://10.14.35.240:8080/\""
-                "\"wss://qa-handworks-api.onrender.com/\"")
+                type = "String",
+                name = "WS_BASE_URL",
+//                value = "\"ws://10.14.35.240:8080/\""
+                value = "\"wss://qa-handworks-api.onrender.com/\"")
         }
         release {
             isMinifyEnabled = false
@@ -47,9 +47,9 @@ android {
                 value = "\"https://qa-handworks-api.onrender.com/api/\"",
             )
             buildConfigField(
-                "String",
-                "WS_BASE_URL",
-                "\"wss://qa-handworks-api.onrender.com/\"",
+                type = "String",
+                name ="WS_BASE_URL",
+                value = "\"wss://qa-handworks-api.onrender.com/\"",
             )
         }
     }

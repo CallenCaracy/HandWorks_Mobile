@@ -31,6 +31,7 @@ import java.util.Locale;
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.Booking;
+import handworks_cleaning_service.handworks_mobile.data.models.orders.Order;
 import handworks_cleaning_service.handworks_mobile.data.repository.config.FetchStrategy;
 import handworks_cleaning_service.handworks_mobile.databinding.ActivityBookingDetailsBinding;
 import handworks_cleaning_service.handworks_mobile.ui.adapters.AddonAdapter;
@@ -39,6 +40,7 @@ import handworks_cleaning_service.handworks_mobile.ui.adapters.CleanerAdapter;
 import handworks_cleaning_service.handworks_mobile.ui.models.BookingStatus;
 import handworks_cleaning_service.handworks_mobile.ui.pages.index.FullscreenImageView;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.BookViewModel;
+import handworks_cleaning_service.handworks_mobile.ui.viewmodel.OrderViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.DateUtil;
 import handworks_cleaning_service.handworks_mobile.utils.MapServiceType;
 
@@ -62,6 +64,7 @@ public class BookingDetails extends AppCompatActivity {
         });
 
         BookViewModel bookViewModel = new ViewModelProvider(this).get(BookViewModel.class);
+        OrderViewModel orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
 
         binding = ActivityBookingDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -74,6 +77,8 @@ public class BookingDetails extends AppCompatActivity {
         Booking bookingFromIntent = (Booking) getIntent().getSerializableExtra("booking");
         if (bookingFromIntent != null) {
             bindBooking(bookingFromIntent);
+            String orderId = bookingFromIntent.getBase().getOrderId();
+            orderViewModel.loadOrderById(orderId, FetchStrategy.CACHE_FIRST);
         }
 
         // Passed from calendar
@@ -96,9 +101,33 @@ public class BookingDetails extends AppCompatActivity {
                     break;
                 case SUCCESS:
                     bindBooking(state.getData());
+                    String orderId = state.getData().getBase().getOrderId();
+                    orderViewModel.loadOrderById(orderId, FetchStrategy.NETWORK_ONLY);
                     break;
                 case ERROR:
                     Toast.makeText(this, state.getMessage(), LENGTH_SHORT).show();
+                    break;
+            }
+        });
+
+        orderViewModel.getOrderByIdState().observe(this, state -> {
+            switch (state.getStatus()) {
+                case LOADING:
+                    break;
+                case SUCCESS:
+                    Order order = state.getData();
+                    binding.orderNumber.setText(order.getOrder_number());
+                    binding.paymentStatus.setText(order.getPayment_status());
+                    binding.paymentMethod.setText(order.getPayment_method());
+                    binding.addonTotal.setText(String.valueOf(order.getAddon_total()));
+                    binding.downpaymentRequired.setText(String.valueOf(order.getDownpayment_required()));
+                    binding.subtotal.setText(String.valueOf(order.getSubtotal()));
+                    binding.totalAmount.setText(String.valueOf(order.getTotal_amount()));
+                    binding.remainingBalance.setText(String.valueOf(order.getRemaining_balance()));
+                    break;
+
+                case ERROR:
+                    Toast.makeText(this, state.getMessage(), Toast.LENGTH_SHORT).show();
                     break;
             }
         });

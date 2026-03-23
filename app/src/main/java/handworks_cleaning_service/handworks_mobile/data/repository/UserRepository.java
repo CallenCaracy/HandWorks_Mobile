@@ -100,6 +100,8 @@ public class UserRepository {
                     cachedTimeSheet = response.body().getTimeSheet();
 
                     callback.onSuccess(cachedTimeSheet);
+                } else if (response.body().getTimeSheet() == null) {
+                    callback.onError("Please time in");
                 } else {
                     callback.onError("Invalid response");
                 }

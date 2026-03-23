@@ -15,13 +15,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
@@ -175,6 +173,7 @@ public class HomeFragment extends Fragment {
                     binding.timeSheetStatus.setText(R.string.loading);
                     binding.clockInAtValue.setText("...");
                     binding.clockOutAtValue.setText("...");
+                    binding.timeSheetStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.green));
                     break;
 
                 case SUCCESS:
@@ -192,20 +191,28 @@ public class HomeFragment extends Fragment {
                     }
 
                     String timeOut = todayTimeSheet.getTimeOut();
-                    if (!timeOut.isEmpty()) {
+                    if (timeOut != null && !timeOut.isEmpty()) {
                         binding.btnTimeOut.setEnabled(false);
-                        binding.btnTimeOut.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray));
-                        binding.clockOutAtValue.setText(DateUtil.extractTimeFromISO8601TimeStamps(timeOut));
+                        binding.btnTimeOut.setTextColor(
+                                ContextCompat.getColor(requireContext(), R.color.gray)
+                        );
+                        binding.clockOutAtValue.setText(
+                                DateUtil.extractTimeFromISO8601TimeStamps(timeOut)
+                        );
                     } else {
                         binding.btnTimeOut.setEnabled(true);
                         binding.clockOutAtValue.setText("-");
                     }
 
-                    binding.timeSheetStatus.setText(todayTimeSheet.getStatus());
-                    if (todayTimeSheet.getStatus().equals("LATE")){
-                        binding.timeSheetStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.red));
+                    if (todayTimeSheet.getStatus() != null) {
+                        binding.timeSheetStatus.setText(todayTimeSheet.getStatus());
+                        if (todayTimeSheet.getStatus().equals("LATE")){
+                            binding.timeSheetStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.red));
+                        } else {
+                            binding.timeSheetStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.green));
+                        }
                     } else {
-                        binding.timeSheetStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.green));
+                        binding.timeSheetStatus.setText("...");
                     }
 
                     TimeSheet sheet = state.getData();
@@ -223,6 +230,9 @@ public class HomeFragment extends Fragment {
 
                     binding.btnTimeIn.setEnabled(true);
                     binding.btnTimeOut.setEnabled(true);
+                    binding.clockInAtValue.setText("...");
+                    binding.clockOutAtValue.setText("...");
+                    binding.timeSheetStatus.setText("...");
                     Toast.makeText(requireContext(), "Error: " + state.getMessage(), Toast.LENGTH_SHORT).show();
                     break;
             }
