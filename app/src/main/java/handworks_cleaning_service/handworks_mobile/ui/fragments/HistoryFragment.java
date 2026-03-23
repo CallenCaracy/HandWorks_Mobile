@@ -94,6 +94,7 @@ public class HistoryFragment extends Fragment {
 
             if (endDate == null) endDate = LocalDate.now();
             startDate = dayDistance(savedPosition, endDate);
+            bookViewModel.resetPagination(employeeId, startDate.toString(), endDate.toString());
             bookViewModel.loadNextPage(employeeId, startDate.toString(), endDate.toString(), FetchStrategy.NETWORK_ONLY);
         });
 

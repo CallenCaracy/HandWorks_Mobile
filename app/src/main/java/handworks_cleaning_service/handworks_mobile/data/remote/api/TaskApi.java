@@ -1,4 +1,4 @@
-package handworks_cleaning_service.handworks_mobile.data.remote;
+package handworks_cleaning_service.handworks_mobile.data.remote.api;
 
 import java.time.LocalDate;
 import java.util.List;

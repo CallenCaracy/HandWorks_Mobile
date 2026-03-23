@@ -4,6 +4,8 @@ import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
@@ -75,5 +77,13 @@ public class DateUtil {
 
         calendar.add(Calendar.HOUR_OF_DAY, extraHours);
         return sdf.format(calendar.getTime());
+    }
+
+    public static LocalDate extractLocalDate(String isoDate) {
+        return OffsetDateTime.parse(isoDate).toLocalDate();
+    }
+
+    public static LocalTime extractLocalTime(String isoDate) {
+        return OffsetDateTime.parse(isoDate).toLocalTime();
     }
 }

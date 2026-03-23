@@ -151,19 +151,19 @@ public class BookViewModel extends ViewModel {
     public void loadBookingById(String bookingId, FetchStrategy strategy) {
         bookingByIdState.postValue(UIState.loading());
 
-        bookRepository.fetchBookingById(bookingId, strategy, new Callback<>() {
+        bookRepository.fetchBookingById(bookingId, strategy, new BookRepository.BookingCallback() {
             @Override
-            public void onResponse(@NonNull Call<Booking> call, @NonNull Response<Booking> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    bookingByIdState.postValue(UIState.success(response.body()));
+            public void onSuccess(Booking data) {
+                if (data != null) {
+                    bookingByIdState.postValue(UIState.success(data));
                 } else {
                     bookingByIdState.postValue(UIState.error("Failed to fetch booking with id"));
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<Booking> call, @NonNull Throwable t) {
-                bookingByIdState.postValue(UIState.error(t.getMessage()));
+            public void onError(String message) {
+                bookingByIdState.postValue(UIState.error(message));
             }
         });
     }

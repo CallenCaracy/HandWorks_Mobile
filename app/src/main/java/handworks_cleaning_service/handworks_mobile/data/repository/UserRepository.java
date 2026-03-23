@@ -9,8 +9,9 @@ import handworks_cleaning_service.handworks_mobile.data.dto.user.TimeOutRequest;
 import handworks_cleaning_service.handworks_mobile.data.dto.user.UpdateEmployeeRequest;
 import handworks_cleaning_service.handworks_mobile.data.models.users.TimeSheet;
 import handworks_cleaning_service.handworks_mobile.data.models.users.Employee;
+import handworks_cleaning_service.handworks_mobile.data.models.wrappers.TimeSheetWrapper;
 import handworks_cleaning_service.handworks_mobile.data.models.wrappers.UserWrapper;
-import handworks_cleaning_service.handworks_mobile.data.remote.UserApi;
+import handworks_cleaning_service.handworks_mobile.data.remote.api.UserApi;
 import handworks_cleaning_service.handworks_mobile.data.repository.config.FetchStrategy;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,11 +30,11 @@ public class UserRepository {
         cachedTimeSheet = null;
     }
 
-    public void fetchEmployee(String userId, FetchStrategy strategy, Callback<UserWrapper<Employee>> callback) {
+    public void fetchEmployee(String userId, FetchStrategy strategy, EmployeeCallback callback) {
         if (cachedEmployee != null && (strategy == FetchStrategy.CACHE_FIRST || strategy == FetchStrategy.CACHE_ONLY)) {
             UserWrapper<Employee> wrapper = new UserWrapper<>();
             wrapper.setEmployee(cachedEmployee);
-            callback.onResponse(null, Response.success(wrapper));
+            callback.onSuccess(cachedEmployee);
         }
 
         if (strategy == FetchStrategy.CACHE_ONLY) return;
@@ -43,15 +44,15 @@ public class UserRepository {
             public void onResponse(@NonNull Call<UserWrapper<Employee>> call, @NonNull Response<UserWrapper<Employee>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     cachedEmployee = response.body().unwrap();
-                    callback.onResponse(call, response);
+                    callback.onSuccess(cachedEmployee);
                 } else {
-                    callback.onFailure(call, new Throwable("Invalid response"));
+                    callback.onError("Invalid response");
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<UserWrapper<Employee>> call, @NonNull Throwable t) {
-                callback.onFailure(call, t);
+                callback.onError(t.getMessage());
             }
         });
     }
@@ -86,24 +87,27 @@ public class UserRepository {
         });
     }
 
-    public void fetchTodayTimeSheet(String id, FetchStrategy strategy, Callback<TimeSheet> callback) {
+    public void fetchTodayTimeSheet(String id, FetchStrategy strategy, TimeSheetCallback callback) {
         if (cachedTimeSheet != null && (strategy == FetchStrategy.CACHE_FIRST || strategy == FetchStrategy.CACHE_ONLY)) {
-            TimeSheet timeSheet = cachedTimeSheet;
-            callback.onResponse(null, Response.success(timeSheet));
+            callback.onSuccess(cachedTimeSheet);
+            if (strategy == FetchStrategy.CACHE_ONLY) return;
         }
-
-        if (strategy == FetchStrategy.CACHE_ONLY) return;
 
         userApi.getTodayTimeSheet(id).enqueue(new Callback<>() {
             @Override
-            public void onResponse(@NonNull Call<TimeSheet> call, @NonNull Response<TimeSheet> response) {
-                if (response.isSuccessful()) cachedTimeSheet = response.body();
-                callback.onResponse(call, response);
+            public void onResponse(@NonNull Call<TimeSheetWrapper> call, @NonNull Response<TimeSheetWrapper> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getTimeSheet() != null) {
+                    cachedTimeSheet = response.body().getTimeSheet();
+
+                    callback.onSuccess(cachedTimeSheet);
+                } else {
+                    callback.onError("Invalid response");
+                }
             }
 
             @Override
-            public void onFailure(@NonNull Call<TimeSheet> call, @NonNull Throwable t) {
-                callback.onFailure(call, t);
+            public void onFailure(@NonNull Call<TimeSheetWrapper> call, @NonNull Throwable t) {
+                callback.onError(t.getMessage());
             }
         });
     }
@@ -121,5 +125,15 @@ public class UserRepository {
                 callback.onFailure(call, t);
             }
         });
+    }
+
+    public interface EmployeeCallback {
+        void onSuccess(Employee data);
+        void onError(String message);
+    }
+
+    public interface TimeSheetCallback {
+        void onSuccess(TimeSheet data);
+        void onError(String message);
     }
 }

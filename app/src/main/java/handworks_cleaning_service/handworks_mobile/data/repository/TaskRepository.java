@@ -7,7 +7,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import handworks_cleaning_service.handworks_mobile.data.remote.TaskApi;
+import handworks_cleaning_service.handworks_mobile.data.remote.api.TaskApi;
 import handworks_cleaning_service.handworks_mobile.ui.models.Task;
 
 public class TaskRepository implements TaskApi {

@@ -155,12 +155,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingVertical="4dp"
+                        android:layout_marginStart="10dp"
                         android:textColor="@color/textPrimary"
                         android:textSize="12sp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toTopOf="@+id/btnTimeIn"
-                        app:layout_constraintEnd_toEndOf="@+id/btnTimeIn"
-                        app:layout_constraintStart_toStartOf="@+id/btnTimeIn" />
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/clockOutAtValue"
+                        app:layout_constraintTop_toTopOf="@+id/clockOutAtValue" />
+
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnTimeIn"
                         android:layout_width="wrap_content"

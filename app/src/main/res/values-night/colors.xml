@@ -20,6 +20,7 @@
     <color name="gray">#6B7280</color>
     <color name="orange">#F59E0B</color>
     <color name="green">#10B981</color>
+    <color name="red">#EF4444</color>
 
     <!-- Status -->
     <color name="success">#22C55E</color>

@@ -40,7 +40,7 @@ import handworks_cleaning_service.handworks_mobile.ui.models.BookingStatus;
 import handworks_cleaning_service.handworks_mobile.ui.pages.index.FullscreenImageView;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.BookViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.DateUtil;
-import handworks_cleaning_service.handworks_mobile.utils.EnumHelper;
+import handworks_cleaning_service.handworks_mobile.utils.MapServiceType;
 
 @AndroidEntryPoint
 public class BookingDetails extends AppCompatActivity {
@@ -74,6 +74,12 @@ public class BookingDetails extends AppCompatActivity {
         Booking bookingFromIntent = (Booking) getIntent().getSerializableExtra("booking");
         if (bookingFromIntent != null) {
             bindBooking(bookingFromIntent);
+        }
+
+        // Passed from calendar
+        Booking bookingFromTaskIntent = (Booking) getIntent().getSerializableExtra("booking");
+        if (bookingFromIntent != null) {
+            bindBooking(bookingFromTaskIntent);
         }
 
         binding.swipeRefresh.setOnRefreshListener(() -> {
@@ -151,7 +157,7 @@ public class BookingDetails extends AppCompatActivity {
 
             setupImages(booking.getBase().getPhotos());
 
-            binding.mainServiceDetailsText.setText(EnumHelper.getReadableServiceDetails(booking.getMainService().getDetails()));
+            binding.mainServiceDetailsText.setText(MapServiceType.getReadableServiceDetails(booking.getMainService().getDetails()));
 
             if (booking.getAddons() != null) {
                 addonAdapter.setAddons(booking.getAddons());

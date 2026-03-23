@@ -19,17 +19,21 @@ public class Task {
         return tasks;
     }
 
-    private final UUID id;
+    private final String id;
     private String name;
+    private String type;
     private LocalDate date;
     private LocalTime timeStart, timeEnd;
+    private int extraHours;
 
-    public Task(UUID id, String name, LocalDate date, LocalTime timeStart, LocalTime timeEnd) {
+    public Task(String id, String name, String type, LocalDate date, LocalTime timeStart, LocalTime timeEnd, int extraHours) {
         this.id = id;
         this.name = name;
+        this.type = type;
         this.date = date;
         this.timeStart = timeStart;
         this.timeEnd = timeEnd;
+        this.extraHours = extraHours;
     }
 
     public String getName()
@@ -41,7 +45,7 @@ public class Task {
         this.name = name;
     }
 
-    public UUID getId() { return id; }
+    public String getId() { return id; }
     public LocalDate getDate()
     {
         return date;

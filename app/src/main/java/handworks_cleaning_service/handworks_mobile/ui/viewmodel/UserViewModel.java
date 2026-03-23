@@ -17,7 +17,6 @@ import handworks_cleaning_service.handworks_mobile.data.dto.user.TimeOutRequest;
 import handworks_cleaning_service.handworks_mobile.data.dto.user.UpdateEmployeeRequest;
 import handworks_cleaning_service.handworks_mobile.data.models.users.Employee;
 import handworks_cleaning_service.handworks_mobile.data.models.users.TimeSheet;
-import handworks_cleaning_service.handworks_mobile.data.models.wrappers.UserWrapper;
 import handworks_cleaning_service.handworks_mobile.data.repository.config.FetchStrategy;
 import handworks_cleaning_service.handworks_mobile.data.repository.UserRepository;
 import handworks_cleaning_service.handworks_mobile.utils.uistate.UIState;
@@ -44,19 +43,19 @@ public class UserViewModel extends ViewModel {
     public void loadEmployee(String id, FetchStrategy strategy) {
         employeeState.setValue(UIState.loading());
 
-        userRepository.fetchEmployee(id, strategy, new Callback<>() {
+        userRepository.fetchEmployee(id, strategy, new UserRepository.EmployeeCallback() {
             @Override
-            public void onResponse(@NonNull Call<UserWrapper<Employee>> call, @NonNull Response<UserWrapper<Employee>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    employeeState.postValue(UIState.success(response.body().unwrap()));
+            public void onSuccess(Employee data) {
+                if (data != null) {
+                    employeeState.postValue(UIState.success(data));
                 } else {
                     employeeState.postValue(UIState.error("Failed to fetch employee information."));
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<UserWrapper<Employee>> call, @NonNull Throwable t) {
-                employeeState.postValue(UIState.error(t.getMessage()));
+            public void onError(String message) {
+                employeeState.postValue(UIState.error(message));
             }
         });
     }
@@ -115,19 +114,19 @@ public class UserViewModel extends ViewModel {
     public void loadTodayTimeSheet(String id, FetchStrategy strategy) {
         timeSheetState.setValue(UIState.loading());
 
-        userRepository.fetchTodayTimeSheet(id, strategy, new Callback<>() {
+        userRepository.fetchTodayTimeSheet(id, strategy, new UserRepository.TimeSheetCallback() {
             @Override
-            public void onResponse(@NonNull Call<TimeSheet> call, @NonNull Response<TimeSheet> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    timeSheetState.postValue(UIState.success(response.body()));
+            public void onSuccess(TimeSheet data) {
+                if (data != null) {
+                    timeSheetState.postValue(UIState.success(data));
                 } else {
-                    timeSheetState.postValue(UIState.error("Failed to fetch today's time sheet."));
+                    timeSheetState.postValue(UIState.error("Failed to fetch today's time sheet"));
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<TimeSheet> call, @NonNull Throwable t) {
-                timeSheetState.postValue(UIState.error(t.getMessage()));
+            public void onError(String message) {
+                timeSheetState.postValue(UIState.error(message));
             }
         });
     }

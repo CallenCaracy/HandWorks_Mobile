@@ -15,16 +15,19 @@ public class TimeSheet {
     private final String timeOut;
     @SerializedName("work_date")
     private final String workDate;
+    @SerializedName("created_at")
+    private final String createdAt;
     @SerializedName("updated_at")
     private final String updatedAt;
 
-    public TimeSheet(String id, String employeeId, String status, String timeIn, String timeOut, String workDate, String updatedAt) {
+    public TimeSheet(String id, String employeeId, String status, String timeIn, String timeOut, String workDate, String createdAt, String updatedAt) {
         Id = id;
         this.employeeId = employeeId;
         this.status = status;
         this.timeIn = timeIn;
         this.timeOut = timeOut;
         this.workDate = workDate;
+        this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
@@ -54,5 +57,9 @@ public class TimeSheet {
 
     public String getUpdatedAt() {
         return updatedAt;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
     }
 }

@@ -11,9 +11,9 @@ import dagger.hilt.components.SingletonComponent;
 import javax.inject.Singleton;
 
 import handworks_cleaning_service.handworks_mobile.BuildConfig;
-import handworks_cleaning_service.handworks_mobile.data.remote.BookApi;
-import handworks_cleaning_service.handworks_mobile.data.remote.TaskApi;
-import handworks_cleaning_service.handworks_mobile.data.remote.UserApi;
+import handworks_cleaning_service.handworks_mobile.data.remote.api.BookApi;
+import handworks_cleaning_service.handworks_mobile.data.remote.api.TaskApi;
+import handworks_cleaning_service.handworks_mobile.data.remote.api.UserApi;
 import handworks_cleaning_service.handworks_mobile.data.repository.AuthRepository;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

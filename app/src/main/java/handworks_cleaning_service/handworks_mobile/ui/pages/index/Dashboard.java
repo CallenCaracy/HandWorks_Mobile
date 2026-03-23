@@ -30,6 +30,8 @@ import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
 
 @AndroidEntryPoint
 public class Dashboard extends AppCompatActivity {
+    private long lastClickTime = 0;
+    private Fragment currentFragment = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,8 @@ public class Dashboard extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         if (savedInstanceState == null) {
-            replaceFrameFragment(new HomeFragment());
+            currentFragment = new HomeFragment();
+            replaceFrameFragment(currentFragment);
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNavigationView, (v, insets) -> {
@@ -77,16 +80,31 @@ public class Dashboard extends AppCompatActivity {
     }
 
     private boolean handleNavigation(int id) {
+        long now = System.currentTimeMillis();
+        if (now - lastClickTime < 500) return false;
+        lastClickTime = now;
+
+        Fragment fragment = null;
+
         if (id == R.id.homeIcon) {
-            replaceFrameFragment(new HomeFragment());
+            fragment = new HomeFragment();
         } else if (id == R.id.calendarIcon) {
-            replaceFrameFragment(new WeekViewFragment());
+            fragment = new WeekViewFragment();
         } else if (id == R.id.historyIcon) {
-            replaceFrameFragment(new HistoryFragment());
+            fragment = new HistoryFragment();
         } else if (id == R.id.chatIcon) {
-            replaceFrameFragment(new ChatFragment());
+            fragment = new ChatFragment();
         } else if (id == R.id.notificationIcon) {
-            replaceFrameFragment(new NotificationFragment());
+            fragment = new NotificationFragment();
+        }
+
+        if (fragment != null && currentFragment != null && currentFragment.getClass().equals(fragment.getClass())) {
+            return false;
+        }
+
+        if (fragment != null) {
+            replaceFrameFragment(fragment);
+            currentFragment = fragment;
         }
         return true;
     }

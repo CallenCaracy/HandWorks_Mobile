@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.Booking;
 import handworks_cleaning_service.handworks_mobile.utils.DateUtil;
-import handworks_cleaning_service.handworks_mobile.utils.EnumHelper;
+import handworks_cleaning_service.handworks_mobile.utils.MapServiceType;
 
 public class BookingViewHolder extends RecyclerView.ViewHolder {
     private final TextView customerName;
@@ -57,7 +57,7 @@ public class BookingViewHolder extends RecyclerView.ViewHolder {
         bookingWorkDate.setText(workDateStr);
         bookingStartDate.setText(startTime);
         bookingEndDate.setText(endTime);
-        bookingMainService.setText(EnumHelper.getReadableServiceType(itemView.getContext(), booking.getMainService().getServiceType())
+        bookingMainService.setText(MapServiceType.getReadableServiceType(itemView.getContext(), booking.getMainService().getServiceType())
         );
     }
 }

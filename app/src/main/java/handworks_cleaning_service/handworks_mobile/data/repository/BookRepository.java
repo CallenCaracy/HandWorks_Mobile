@@ -14,7 +14,7 @@ import javax.inject.Inject;
 import handworks_cleaning_service.handworks_mobile.data.dto.book.BooksByEmployeeIdRequest;
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.Booking;
 import handworks_cleaning_service.handworks_mobile.data.models.wrappers.BookingWrapper;
-import handworks_cleaning_service.handworks_mobile.data.remote.BookApi;
+import handworks_cleaning_service.handworks_mobile.data.remote.api.BookApi;
 import handworks_cleaning_service.handworks_mobile.data.repository.config.FetchStrategy;
 import handworks_cleaning_service.handworks_mobile.data.repository.config.PaginationState;
 import retrofit2.Call;
@@ -86,28 +86,28 @@ public class BookRepository {
         }
     }
 
-    public void fetchBookingById(String bookingId, FetchStrategy strategy, Callback<Booking> callback) {
+    public void fetchBookingById(String bookingId, FetchStrategy strategy, BookingCallback callback) {
         if (strategy == FetchStrategy.CACHE_ONLY || strategy == FetchStrategy.CACHE_FIRST) {
             Booking cached = findInCache(bookingId);
             if (cached != null) {
-                callback.onResponse(null, Response.success(cached));
+                callback.onSuccess(cached);
 
                 if (strategy == FetchStrategy.CACHE_ONLY) return;
             }
         }
 
-        bookApi.getBookingById(bookingId).enqueue(new Callback<Booking>() {
+        bookApi.getBookingById(bookingId).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<Booking> call, @NonNull Response<Booking> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     updateCache(response.body());
                 }
-                callback.onResponse(call, response);
+                callback.onSuccess(response.body());
             }
 
             @Override
             public void onFailure(@NonNull Call<Booking> call, @NonNull Throwable t) {
-                callback.onFailure(call, t);
+                callback.onError(t.getMessage());
             }
         });
     }
@@ -130,5 +130,17 @@ public class BookRepository {
             accumulated.add(updatedBooking);
             return;
         }
+    }
+
+    public List<Booking> getAllCachedBookings(String employeeId, String startDate, String endDate) {
+        String key = buildKey(employeeId, startDate, endDate);
+        PaginationState state = cachedBookings.get(key);
+        if (state == null) return List.of();
+        return state.getAccumulated();
+    }
+
+    public interface BookingCallback {
+        void onSuccess(Booking data);
+        void onError(String message);
     }
 }

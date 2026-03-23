@@ -1,4 +1,4 @@
-package handworks_cleaning_service.handworks_mobile.data.remote
+package handworks_cleaning_service.handworks_mobile.data.remote.api
 
 import com.clerk.api.network.serialization.ClerkResult
 import com.clerk.api.session.Session
@@ -14,9 +14,9 @@ interface AuthApi {
     suspend fun signOut(): ClerkResult<Unit, Throwable>
 
     // Session
-    fun isClerkInitialized(): kotlin.Boolean
+    fun isClerkInitialized(): Boolean
     fun getSession(): Session?
-    fun isSignedIn(): kotlin.Boolean
+    fun isSignedIn(): Boolean
     fun getUser(): User?
 
     // Forgot Password/Reset Password

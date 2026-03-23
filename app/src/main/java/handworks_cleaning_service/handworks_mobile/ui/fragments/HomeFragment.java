@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,6 +23,8 @@ import android.widget.Toast;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -95,9 +98,9 @@ public class HomeFragment extends Fragment {
         setupTimeSheetBotton();
 
         binding.swipeRefresh.setOnRefreshListener(() -> {
-            Log.d("HTTPs", "refresh swiped");
             userViewModel.loadEmployee(employeeId, FetchStrategy.NETWORK_ONLY);
             userViewModel.loadTodayTimeSheet(employeeId, FetchStrategy.NETWORK_ONLY);
+            bookViewModel.resetPagination(employeeId, today.toString(), endDate.toString());
             bookViewModel.loadNextPage(employeeId, today.toString(), endDate.toString(), FetchStrategy.NETWORK_ONLY);
         });
 
@@ -169,18 +172,41 @@ public class HomeFragment extends Fragment {
                 case LOADING:
                     binding.btnTimeIn.setEnabled(false);
                     binding.btnTimeOut.setEnabled(false);
+                    binding.timeSheetStatus.setText(R.string.loading);
+                    binding.clockInAtValue.setText("...");
+                    binding.clockOutAtValue.setText("...");
                     break;
 
                 case SUCCESS:
                     binding.swipeRefresh.setRefreshing(false);
 
-                    binding.btnTimeIn.setEnabled(true);
-                    binding.btnTimeOut.setEnabled(true);
-
                     var todayTimeSheet = state.getData();
-                    binding.clockInAtValue.setText(DateUtil.extractDateFromISO8601TimeStamps(todayTimeSheet.getTimeIn()));
-                    binding.clockOutAtValue.setText(DateUtil.extractDateFromISO8601TimeStamps(todayTimeSheet.getTimeOut()));
+                    String timeIn = todayTimeSheet.getTimeIn();
+                    if (!timeIn.isEmpty()) {
+                        binding.btnTimeIn.setEnabled(false);
+                        binding.btnTimeIn.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray));
+                        binding.clockInAtValue.setText(DateUtil.extractTimeFromISO8601TimeStamps(timeIn));
+                    } else {
+                        binding.btnTimeIn.setEnabled(true);
+                        binding.clockInAtValue.setText("-");
+                    }
+
+                    String timeOut = todayTimeSheet.getTimeOut();
+                    if (!timeOut.isEmpty()) {
+                        binding.btnTimeOut.setEnabled(false);
+                        binding.btnTimeOut.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray));
+                        binding.clockOutAtValue.setText(DateUtil.extractTimeFromISO8601TimeStamps(timeOut));
+                    } else {
+                        binding.btnTimeOut.setEnabled(true);
+                        binding.clockOutAtValue.setText("-");
+                    }
+
                     binding.timeSheetStatus.setText(todayTimeSheet.getStatus());
+                    if (todayTimeSheet.getStatus().equals("LATE")){
+                        binding.timeSheetStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.red));
+                    } else {
+                        binding.timeSheetStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.green));
+                    }
 
                     TimeSheet sheet = state.getData();
                     if (sheet.getTimeOut() == null) {
@@ -224,7 +250,7 @@ public class HomeFragment extends Fragment {
 
     private void setupTimeSheetBotton() {
         binding.btnTimeIn.setOnClickListener(v -> {
-            String timestamp = Instant.now().toString();
+            String timestamp = OffsetDateTime.now(ZoneId.systemDefault()).toString();
             TimeInRequest request = new TimeInRequest(employeeId, timestamp);
             userViewModel.timeIn(request);
         });
@@ -233,7 +259,7 @@ public class HomeFragment extends Fragment {
                 .setTitle("Time out")
                 .setMessage("Are you sure you want to time out?")
                 .setPositiveButton("Yes", (dialog, which) -> {
-                    String timestamp = Instant.now().toString();
+                    String timestamp = OffsetDateTime.now(ZoneId.systemDefault()).toString();
                     TimeOutRequest request = new TimeOutRequest(employeeId, timestamp);
                     userViewModel.timeOut(request);
                 })

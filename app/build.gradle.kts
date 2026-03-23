@@ -29,6 +29,11 @@ android {
 //                value = "\"http://10.14.35.240:8080/api/\"",
                 value = "\"https://qa-handworks-api.onrender.com/api/\"",
             )
+            buildConfigField(
+                "String",
+                "WS_BASE_URL",
+//                "\"ws://10.14.35.240:8080/\""
+                "\"wss://qa-handworks-api.onrender.com/\"")
         }
         release {
             isMinifyEnabled = false
@@ -40,6 +45,11 @@ android {
                 type = "String",
                 name = "BASE_URL",
                 value = "\"https://qa-handworks-api.onrender.com/api/\"",
+            )
+            buildConfigField(
+                "String",
+                "WS_BASE_URL",
+                "\"wss://qa-handworks-api.onrender.com/\"",
             )
         }
     }
@@ -80,5 +90,6 @@ dependencies {
     implementation(libs.google.flexbox)
     implementation(libs.glide.v4151)
     implementation(libs.swiperefreshlayout)
+    implementation(libs.okhttp)
     ksp(libs.hilt.android.compiler)
 }

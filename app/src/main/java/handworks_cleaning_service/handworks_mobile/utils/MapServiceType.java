@@ -21,7 +21,7 @@ import handworks_cleaning_service.handworks_mobile.data.models.bookings.cleaning
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.cleanings.mattress.MattressCleaningSpecification;
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.cleanings.postconstruction.PostConstructionDetails;
 
-public class EnumHelper {
+public class MapServiceType {
     public static String getReadableServiceType(Context context, String type) {
         return switch (type) {
             case GENERAL_CLEANING -> context.getString(R.string.service_general_cleaning);

@@ -11,8 +11,6 @@ import com.bumptech.glide.Glide;
 
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.infos.Cleaner;
-import handworks_cleaning_service.handworks_mobile.data.models.bookings.services.Addon;
-import handworks_cleaning_service.handworks_mobile.utils.EnumHelper;
 
 public class CleanerViewHolder extends RecyclerView.ViewHolder {
     private final ImageView cleanerProfilePicture;

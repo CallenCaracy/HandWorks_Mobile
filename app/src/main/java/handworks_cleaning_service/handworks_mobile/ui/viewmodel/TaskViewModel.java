@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -29,14 +28,15 @@ public class TaskViewModel extends ViewModel {
     public TaskViewModel(TaskRepository taskRepository) { this.taskRepository = taskRepository; }
 
     public void loadTasksForEmployee(String employeeId, boolean useFakeData) {
-        UUID[] taskIDs = {
-                UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
-                UUID.fromString("123e4567-e89b-12d3-a456-426614174001"),
-                UUID.fromString("123e4567-e89b-12d3-a456-426614174002"),
-                UUID.fromString("123e4567-e89b-12d3-a456-426614174003"),
-                UUID.fromString("123e4567-e89b-12d3-a456-426614174004"),
+        String[] taskIDs = {
+                "123e4567-e89b-12d3-a456-426614174000",
+                "123e4567-e89b-12d3-a456-426614174001",
+                "123e4567-e89b-12d3-a456-426614174002",
+                "123e4567-e89b-12d3-a456-426614174003",
+                "123e4567-e89b-12d3-a456-426614174004",
         };
-        String[] taskNames = {"Floor Cleaning", "Window Washing", "Carpet Shampoo", "Bathroom Disinfection", "Testing 123"};
+        String[] taskNames = {"Clarence", "John", "Mark", "Jayme", "Charles"};
+        String[] taskTypes = {"General", "Car", "Bed", "Post Construction", "General"};
         LocalDate[] taskDates = {
                 LocalDate.of(2026, 2, 12),
                 LocalDate.of(2025, 12, 30),
@@ -61,6 +61,10 @@ public class TaskViewModel extends ViewModel {
                 LocalTime.of(5, 30),
         };
 
+        int[] taskExtraHours = {
+                0, 0, 3, 2, 1
+        };
+
         if (useFakeData) {
             List<Task> fakeTasks = new ArrayList<>();
             for(int i = 0; i < 5; i++){
@@ -68,9 +72,11 @@ public class TaskViewModel extends ViewModel {
                         new Task(
                                 taskIDs[i],
                                 taskNames[i],
+                                taskTypes[i],
                                 taskDates[i],
                                 taskTimeStarts[i],
-                                taskTimeEnds[i]
+                                taskTimeEnds[i],
+                                taskExtraHours[i]
                         )
                 );
             }
