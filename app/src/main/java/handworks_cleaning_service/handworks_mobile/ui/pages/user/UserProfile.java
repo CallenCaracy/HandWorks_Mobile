@@ -52,6 +52,7 @@ import handworks_cleaning_service.handworks_mobile.ui.viewmodel.UserViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.Constant;
 import handworks_cleaning_service.handworks_mobile.utils.DateUtil;
 import handworks_cleaning_service.handworks_mobile.utils.NavigationUtil;
+import handworks_cleaning_service.handworks_mobile.utils.StringUtil;
 import handworks_cleaning_service.handworks_mobile.utils.ThemeUtil;
 import handworks_cleaning_service.handworks_mobile.utils.uistate.AuthUIState;
 
@@ -138,7 +139,7 @@ public class UserProfile extends AppCompatActivity {
 
                             binding.employeeEmailValue.setText(employee.getAccount().getEmail());
                             binding.employeeHireDateValue.setText(formattedDate);
-                            binding.employeePositionValue.setText(employee.getPosition());
+                            binding.employeePositionValue.setText(StringUtil.capitalizeFirstLetter(employee.getPosition()));
                             binding.employeeStatus.setText(
                                     getString(R.string.status_colon, employee.getStatus())
                             );

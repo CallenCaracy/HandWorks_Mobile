@@ -6,7 +6,9 @@ import static android.widget.Toast.LENGTH_SHORT;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.transition.TransitionManager;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -38,11 +40,13 @@ import handworks_cleaning_service.handworks_mobile.ui.adapters.AddonAdapter;
 import handworks_cleaning_service.handworks_mobile.ui.adapters.AssetAdapter;
 import handworks_cleaning_service.handworks_mobile.ui.adapters.CleanerAdapter;
 import handworks_cleaning_service.handworks_mobile.ui.models.BookingStatus;
+import handworks_cleaning_service.handworks_mobile.ui.models.PaymentStatus;
 import handworks_cleaning_service.handworks_mobile.ui.pages.index.FullscreenImageView;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.BookViewModel;
 import handworks_cleaning_service.handworks_mobile.ui.viewmodel.OrderViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.DateUtil;
 import handworks_cleaning_service.handworks_mobile.utils.MapServiceType;
+import handworks_cleaning_service.handworks_mobile.utils.StringUtil;
 
 @AndroidEntryPoint
 public class BookingDetails extends AppCompatActivity {
@@ -73,6 +77,18 @@ public class BookingDetails extends AppCompatActivity {
 
         binding.bookingDetailsHeader.titlePageTxt.setText(getString(R.string.booking_details));
         binding.bookingDetailsHeader.btnExit.setOnClickListener(v -> finish());
+
+        binding.toggleDetails.setText(R.string.view_details);
+        binding.toggleDetails.setOnClickListener(v -> {
+            TransitionManager.beginDelayedTransition((ViewGroup) binding.toggleDetails.getParent());
+            if (binding.detailsContainer.getVisibility() == View.GONE) {
+                binding.detailsContainer.setVisibility(View.VISIBLE);
+                binding.toggleDetails.setText(R.string.hide_details);
+            } else {
+                binding.detailsContainer.setVisibility(View.GONE);
+                binding.toggleDetails.setText(R.string.view_details);
+            }
+        });
 
         Booking bookingFromIntent = (Booking) getIntent().getSerializableExtra("booking");
         if (bookingFromIntent != null) {
@@ -116,14 +132,26 @@ public class BookingDetails extends AppCompatActivity {
                     break;
                 case SUCCESS:
                     Order order = state.getData();
-                    binding.orderNumber.setText(order.getOrder_number());
-                    binding.paymentStatus.setText(order.getPayment_status());
-                    binding.paymentMethod.setText(order.getPayment_method());
-                    binding.addonTotal.setText(String.valueOf(order.getAddon_total()));
-                    binding.downpaymentRequired.setText(String.valueOf(order.getDownpayment_required()));
-                    binding.subtotal.setText(String.valueOf(order.getSubtotal()));
-                    binding.totalAmount.setText(String.valueOf(order.getTotal_amount()));
-                    binding.remainingBalance.setText(String.valueOf(order.getRemaining_balance()));
+                    binding.orderNumber.setText(
+                            getString(R.string.order_number, order.getOrder_number())
+                    );
+
+                    PaymentStatus status = PaymentStatus.fromBackend(order.getPayment_status());
+                    binding.paymentStatus.setText(status.label);
+                    binding.paymentStatus.setBackgroundTintList(
+                            ContextCompat.getColorStateList(this, status.colorRes)
+                    );
+
+                    binding.paymentMethod.setText(
+                            getString(R.string.payment_method, StringUtil.capitalizeFirstLetter(order.getPayment_method()))
+                    );
+                    binding.addonValue.setText(
+                            getString(R.string.addons_total, order.getAddon_total())
+                    );
+                    binding.downpaymentValue.setText(String.valueOf(order.getDownpayment_required()));
+                    binding.subtotalValue.setText(String.valueOf(order.getSubtotal()));
+                    binding.totalValue.setText(String.valueOf(order.getTotal_amount()));
+                    binding.remainingValue.setText(String.valueOf(order.getRemaining_balance()));
                     break;
 
                 case ERROR:

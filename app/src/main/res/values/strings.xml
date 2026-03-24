@@ -25,12 +25,15 @@
     <string name="booking_details">Booking Details</string>
     <string name="no_cleaning_site_provided">No cleaning site provided</string>
     <string name="dirty_scale">Dirty Scale: %1$d/5</string>
+    <string name="payment_method">Method: %s</string>
+    <string name="order_number">Order #: %s</string>
     <string name="scheduled_at">Scheduled at: %1$s</string>
     <string name="time_range">%1$s - %2$s%3$s</string>
     <string name="cleaning_site">Cleaning Site: %1$s</string>
     <string name="customer_number">Phone Number: %1$s</string>
     <string name="total_price_label">Total Price:</string>
     <string name="total_price_value">₱%1$.2f</string>
+    <string name="addons_total">₱%1$.2f</string>
     <string name="extra_hours_cost_label">Extra Hours Cost:</string>
     <string name="extra_hours_cost_value">₱%1$.2f</string>
     <string name="allocated_resource">Allocated Resource:</string>
@@ -38,6 +41,16 @@
     <string name="assigned_cleaners">Assigned Cleaners:</string>
     <string name="addons">Addons:</string>
     <string name="main_service">Main Service:</string>
+    <string name="add_ons">Add-ons</string>
+    <string name="subtotal">Subtotal</string>
+    <string name="total">Total</string>
+    <string name="downpayment">Downpayment</string>
+    <string name="remaining_balance">Remaining Balance</string>
+    <string name="start_session">Start Session</string>
+    <string name="end_session">End Session</string>
+    <string name="proceed_to_payment">Proceed to payment</string>
+    <string name="hide_details">Hide Details ▼</string>
+    <string name="view_details">View Details ▲</string>
     <!--  Booking Details Activity EndRegion  -->
 
     <!--  User Profile Activity StartRegion  -->

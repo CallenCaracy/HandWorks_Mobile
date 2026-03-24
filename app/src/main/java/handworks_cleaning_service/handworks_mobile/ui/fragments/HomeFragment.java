@@ -173,7 +173,7 @@ public class HomeFragment extends Fragment {
                     binding.timeSheetStatus.setText(R.string.loading);
                     binding.clockInAtValue.setText("...");
                     binding.clockOutAtValue.setText("...");
-                    binding.timeSheetStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.green));
+                    binding.timeSheetStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.textPrimary));
                     break;
 
                 case SUCCESS:

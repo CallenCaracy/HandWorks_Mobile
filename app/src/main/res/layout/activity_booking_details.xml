@@ -299,86 +299,233 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="12dp">
 
             <TextView
-                android:id="@+id/orderNumber"
-                android:layout_width="match_parent"
+                android:id="@+id/toggleDetails"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Extra Hours: $20" />
-
-            <TextView
-                android:id="@+id/paymentStatus"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/status_badge_bg"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="6dp"
-                android:text="Extra Hours: $20" />
-
-            <TextView
-                android:id="@+id/paymentMethod"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Extra Hours: $20" />
-
-            <TextView
-                android:id="@+id/addonTotal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Extra Hours: $20" />
-
-            <TextView
-                android:id="@+id/downpaymentRequired"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Extra Hours: $20" />
-
-            <TextView
-                android:id="@+id/subtotal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Extra Hours: $20" />
-
-            <TextView
-                android:id="@+id/totalAmount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Total: $120"
                 android:textStyle="bold"
-                android:textSize="18sp" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/remainingBalance"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/detailsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Extra Hours: $20" />
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/toggleDetails"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
+                <!-- Order + Status -->
+                <TextView
+                    android:id="@+id/orderNumber"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/paymentStatus"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/paymentStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/status_badge_bg"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="6dp"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- Payment Method -->
+                <TextView
+                    android:id="@+id/paymentMethod"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/gray"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@id/orderNumber"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <!-- Divider -->
+                <View
+                    android:id="@+id/dividerTop"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="#EEEEEE"
+                    android:layout_marginVertical="12dp"
+                    app:layout_constraintTop_toBottomOf="@id/paymentMethod"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <!-- ROW: Addons -->
+                <TextView
+                    android:id="@+id/addonLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_ons"
+                    android:textColor="@color/gray"
+                    app:layout_constraintTop_toBottomOf="@id/dividerTop"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/addonValue" />
+
+                <TextView
+                    android:id="@+id/addonValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@id/addonLabel"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <!-- ROW: Subtotal -->
+                <TextView
+                    android:id="@+id/subtotalLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/subtotal"
+                    android:textColor="@color/gray"
+                    android:layout_marginTop="6dp"
+                    app:layout_constraintTop_toBottomOf="@id/addonLabel"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/subtotalValue" />
+
+                <TextView
+                    android:id="@+id/subtotalValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    app:layout_constraintTop_toTopOf="@id/subtotalLabel"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <!-- ROW: Total -->
+                <TextView
+                    android:id="@+id/totalLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/total"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintTop_toBottomOf="@id/subtotalLabel"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/totalValue" />
+
+                <TextView
+                    android:id="@+id/totalValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintTop_toTopOf="@id/totalLabel"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <!-- Divider -->
+                <View
+                    android:id="@+id/dividerBottom"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="#EEEEEE"
+                    android:layout_marginVertical="12dp"
+                    app:layout_constraintTop_toBottomOf="@id/totalLabel"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <!-- ROW: Downpayment -->
+                <TextView
+                    android:id="@+id/downpaymentLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/downpayment"
+                    android:textColor="@color/gray"
+                    app:layout_constraintEnd_toStartOf="@id/downpaymentValue"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/dividerBottom" />
+
+                <TextView
+                    android:id="@+id/downpaymentValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/green"
+                    app:layout_constraintTop_toTopOf="@id/downpaymentLabel"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- ROW: Remaining -->
+            <TextView
+                android:id="@+id/remainingLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/remaining_balance"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/detailsContainer"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/remainingValue" />
+
+            <TextView
+                android:id="@+id/remainingValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/red"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/remainingLabel"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/remainingLabel" />
+
+            <!-- Button -->
             <Button
                 android:id="@+id/startCleaningSessionBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Start Session" />
+                android:layout_marginTop="9dp"
+                android:layout_marginBottom="4dp"
+                android:text="@string/start_session"
+                android:textColor="@color/textPrimary"
+                app:cornerRadius="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/remainingValue" />
 
             <Button
                 android:id="@+id/endCleaningSessionBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:layout_marginBottom="4dp"
                 android:visibility="gone"
-                android:text="End Session" />
+                android:text="@string/end_session"
+                android:textColor="@color/textPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <Button
                 android:id="@+id/payButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:layout_marginBottom="4dp"
                 android:visibility="gone"
-                android:text="Proceed to payment" />
-
-        </LinearLayout>
-
+                android:text="@string/proceed_to_payment"
+                android:textColor="@color/textPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

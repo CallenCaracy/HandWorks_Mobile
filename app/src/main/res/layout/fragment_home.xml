@@ -100,11 +100,13 @@
                         android:id="@+id/clockInAtText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:paddingVertical="4dp"
                         android:text="@string/clocked_in_at"
                         android:textColor="@color/textPrimary"
                         android:textSize="12sp"
-                        android:paddingVertical="4dp"
                         android:textStyle="bold"
+                        android:layout_marginBottom="2dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -114,11 +116,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="3dp"
                         android:paddingVertical="4dp"
+                        android:text="@string/na"
                         android:textColor="@color/textPrimary"
                         android:textSize="12sp"
                         android:textStyle="bold"
-                        android:text="@string/na"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintBottom_toBottomOf="@+id/clockInAtText"
                         app:layout_constraintStart_toEndOf="@+id/clockInAtText"
                         app:layout_constraintTop_toTopOf="@+id/clockInAtText" />
 
@@ -154,12 +156,12 @@
                         android:id="@+id/timeSheetStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingVertical="4dp"
                         android:layout_marginStart="10dp"
+                        android:paddingVertical="4dp"
                         android:textColor="@color/textPrimary"
                         android:textSize="12sp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintBottom_toBottomOf="@+id/clockOutAtValue"
                         app:layout_constraintStart_toEndOf="@+id/clockOutAtValue"
                         app:layout_constraintTop_toTopOf="@+id/clockOutAtValue" />
 
