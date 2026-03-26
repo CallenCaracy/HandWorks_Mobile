@@ -14,9 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,14 +27,15 @@ import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.databinding.FragmentCalendarBinding;
 import handworks_cleaning_service.handworks_mobile.ui.adapters.CalendarAdapter;
 import handworks_cleaning_service.handworks_mobile.ui.models.Task;
-import handworks_cleaning_service.handworks_mobile.ui.viewmodel.TaskViewModel;
+import handworks_cleaning_service.handworks_mobile.ui.viewmodel.CalendarViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.CalendarUtils;
 
 @AndroidEntryPoint
 public class CalendarFragment extends Fragment implements CalendarAdapter.OnItemListener {
     private FragmentCalendarBinding binding;
-    private TaskViewModel taskViewModel;
+    private CalendarViewModel calendarViewModel;
     private CalendarAdapter calendarAdapter;
+    Map<LocalDate, List<Task>> monthEvents = new HashMap<>();
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -46,17 +49,37 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
                              Bundle savedInstanceState) {
         binding = FragmentCalendarBinding.inflate(inflater, container, false);
 
-        taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
+        calendarViewModel = new ViewModelProvider(this).get(CalendarViewModel.class);
 
         if (CalendarUtils.selectedDate == null) {
             CalendarUtils.selectedDate = LocalDate.now();
         }
 
+        // InitMonthView
+        setMonthView();
+
         binding.previousMonthBtn.setOnClickListener(v -> previousMonthAction());
         binding.nextMonthBtn.setOnClickListener(v -> nextMonthAction());
         binding.hideMonthBtn.setOnClickListener(v -> hideMonth());
 
-        setMonthView();
+        calendarViewModel.getCalendarTasks().observe(getViewLifecycleOwner(), state -> {
+            switch (state.getStatus()) {
+                case LOADING:
+                    break;
+                case SUCCESS:
+                    List<Task> tasks = state.getData();
+                    if (tasks == null) tasks = List.of();
+
+                    monthEvents = calendarViewModel.getEventsForMonth(tasks);
+
+                    calendarAdapter.updateDays(daysInMonthArray(CalendarUtils.selectedDate));
+                    calendarAdapter.updateEvents(monthEvents);
+                    break;
+                case ERROR:
+                    Toast.makeText(requireContext(), "An error occurred: " + state.getMessage(), Toast.LENGTH_LONG).show();
+                    break;
+            }
+        });
 
         return binding.getRoot();
     }
@@ -64,8 +87,6 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
     private void setMonthView() {
         binding.monthYearTV.setText(monthYearFromDate(CalendarUtils.selectedDate));
         ArrayList<LocalDate> daysInMonth = daysInMonthArray(CalendarUtils.selectedDate);
-
-        Map<LocalDate, List<Task>> monthEvents = taskViewModel.getMonthEvents(CalendarUtils.selectedDate);
 
         calendarAdapter = new CalendarAdapter(daysInMonth, monthEvents, this, CalendarUtils.selectedDate);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(requireContext(), 7);

@@ -3,6 +3,7 @@ package handworks_cleaning_service.handworks_mobile.ui.fragments;
 import static handworks_cleaning_service.handworks_mobile.utils.CalendarUtils.daysInWeekArray;
 import static handworks_cleaning_service.handworks_mobile.utils.CalendarUtils.monthYearFromDate;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,11 +15,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import handworks_cleaning_service.handworks_mobile.R;
@@ -26,14 +30,16 @@ import handworks_cleaning_service.handworks_mobile.databinding.FragmentWeekViewB
 import handworks_cleaning_service.handworks_mobile.ui.adapters.CalendarAdapter;
 import handworks_cleaning_service.handworks_mobile.ui.adapters.TaskAdapter;
 import handworks_cleaning_service.handworks_mobile.ui.models.Task;
-import handworks_cleaning_service.handworks_mobile.ui.viewmodel.TaskViewModel;
+import handworks_cleaning_service.handworks_mobile.ui.viewmodel.CalendarViewModel;
 import handworks_cleaning_service.handworks_mobile.utils.CalendarUtils;
 
 @AndroidEntryPoint
 public class WeekViewFragment extends Fragment implements CalendarAdapter.OnItemListener {
     private FragmentWeekViewBinding binding;
     private CalendarAdapter calendarAdapter;
-    private TaskViewModel taskViewModel;
+    private CalendarViewModel calendarViewModel;
+    @Inject
+    SharedPreferences prefs;
 
     public WeekViewFragment() {
         // Required empty public constructor
@@ -46,16 +52,27 @@ public class WeekViewFragment extends Fragment implements CalendarAdapter.OnItem
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentWeekViewBinding.inflate(inflater, container, false);
-
-        taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
+        calendarViewModel = new ViewModelProvider(this).get(CalendarViewModel.class);
 
         if (CalendarUtils.selectedDate == null) {
             CalendarUtils.selectedDate = LocalDate.now();
         }
 
-        taskViewModel.getEvents().observe(getViewLifecycleOwner(), events -> {
-            if (events != null) {
-                updateUI(events);
+        String employeeId = prefs.getString("EMP_ID", null);
+        calendarViewModel.loadCachedTasks(employeeId);
+
+        calendarViewModel.getCalendarTasks().observe(getViewLifecycleOwner(), state -> {
+            switch (state.getStatus()) {
+                case LOADING:
+                    break;
+                case SUCCESS:
+                    List<Task> allTasks = state.getData();
+                    Map<LocalDate, List<Task>> weekEvents = calendarViewModel.getEventsForWeek(allTasks);
+                    updateUI(weekEvents);
+                    break;
+                case ERROR:
+                    Toast.makeText(requireContext(), "Error: " + state.getMessage(), Toast.LENGTH_LONG).show();
+                    break;
             }
         });
 
@@ -66,35 +83,26 @@ public class WeekViewFragment extends Fragment implements CalendarAdapter.OnItem
         return binding.getRoot();
     }
 
-    private void setWeekView() {
-        taskViewModel.loadTasksForEmployee("placeholder", true);
-    }
-
-    public void previousWeekAction() {
+    private void previousWeekAction() {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusWeeks(1);
-        setWeekView();
+        calendarAdapter.setSelectedDate(CalendarUtils.selectedDate);
+        refreshWeekView();
     }
 
-    public void nextWeekAction() {
+    private void nextWeekAction() {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusWeeks(1);
-        setWeekView();
+        calendarAdapter.setSelectedDate(CalendarUtils.selectedDate);
+        refreshWeekView();
     }
 
-    @Override
-    public void onItemClick(int position, LocalDate date) {
-        CalendarUtils.selectedDate = date;
-        calendarAdapter.setSelectedDate(date);
-        setWeekView();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        setWeekView();
+    private void refreshWeekView() {
+        String employeeId = prefs.getString("EMP_ID", null);
+        calendarViewModel.loadCachedTasks(employeeId);
     }
 
     private void updateUI(Map<LocalDate, List<Task>> events) {
         binding.monthYearTV.setText(monthYearFromDate(CalendarUtils.selectedDate));
+
         ArrayList<LocalDate> days = daysInWeekArray(CalendarUtils.selectedDate);
 
         if (calendarAdapter == null) {
@@ -106,13 +114,18 @@ public class WeekViewFragment extends Fragment implements CalendarAdapter.OnItem
             calendarAdapter.updateEvents(events);
         }
 
-        List<Task> dailyTasks = events.get(CalendarUtils.selectedDate);
-        if (dailyTasks == null) dailyTasks = new ArrayList<>();
-
+        List<Task> dailyTasks = events.getOrDefault(CalendarUtils.selectedDate, new ArrayList<>());
         TaskAdapter taskAdapter = new TaskAdapter();
         binding.taskTimeScheduleRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.taskTimeScheduleRecyclerView.setAdapter(taskAdapter);
         taskAdapter.submitList(dailyTasks);
+    }
+
+    @Override
+    public void onItemClick(int position, LocalDate date) {
+        CalendarUtils.selectedDate = date;
+        calendarAdapter.setSelectedDate(date);
+        refreshWeekView();
     }
 
     public void showWholeCalendar() {

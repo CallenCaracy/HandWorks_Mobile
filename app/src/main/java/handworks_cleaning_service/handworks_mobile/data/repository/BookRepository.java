@@ -4,10 +4,13 @@ import static handworks_cleaning_service.handworks_mobile.utils.Constant.PAGE_LI
 
 import androidx.annotation.NonNull;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -17,6 +20,7 @@ import handworks_cleaning_service.handworks_mobile.data.models.wrappers.BookingW
 import handworks_cleaning_service.handworks_mobile.data.remote.api.BookApi;
 import handworks_cleaning_service.handworks_mobile.data.repository.config.FetchStrategy;
 import handworks_cleaning_service.handworks_mobile.data.repository.config.PaginationState;
+import handworks_cleaning_service.handworks_mobile.utils.DateUtil;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -132,11 +136,24 @@ public class BookRepository {
         }
     }
 
-    public List<Booking> getAllCachedBookings(String employeeId, String startDate, String endDate) {
-        String key = buildKey(employeeId, startDate, endDate);
-        PaginationState state = cachedBookings.get(key);
-        if (state == null) return List.of();
-        return state.getAccumulated();
+    public List<Booking> getAllCachedBookingsForEmployee(String employeeId) {
+        LocalDate today = LocalDate.now();
+        List<Booking> allBookings = new ArrayList<>();
+
+        for (PaginationState state : cachedBookings.values()) {
+            for (Booking booking : state.getAccumulatedSet()) {
+                boolean isCleanerAssigned = booking.getCleaners().stream()
+                        .anyMatch(c -> c.getId().equals(employeeId));
+
+                LocalDate bookingDate = DateUtil.extractLocalDate(booking.getBase().getStartSched());
+
+                if (isCleanerAssigned && !bookingDate.isBefore(today)) {
+                    allBookings.add(booking);
+                }
+            }
+        }
+
+        return allBookings;
     }
 
     public interface BookingCallback {

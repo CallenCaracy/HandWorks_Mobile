@@ -19,8 +19,8 @@ public interface BookApi {
     Call<Booking> getBookingById(@Query("bookingId") String bookingId);
 
     @GET("booking/session/end")
-    Call<> endBookSession(@Query("bookingId") String bookingId);
+    Call<Booking> endBookSession(@Query("bookingId") String bookingId);
 
     @GET("booking/session/start")
-    Call<> startBookSession(@Query("bookingId") String bookingId);
+    Call<Booking> startBookSession(@Query("bookingId") String bookingId);
 }

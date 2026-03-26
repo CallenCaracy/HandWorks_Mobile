@@ -61,4 +61,20 @@ public class Task {
     public void setTimeStart(LocalTime timeStart) {this.timeStart = timeStart;}
     public LocalTime getTimeEnd() {return timeEnd;}
     public void setTimeEnd(LocalTime timeEnd) {this.timeEnd = timeEnd;}
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public int getExtraHours() {
+        return extraHours;
+    }
+
+    public void setExtraHours(int extraHours) {
+        this.extraHours = extraHours;
+    }
 }

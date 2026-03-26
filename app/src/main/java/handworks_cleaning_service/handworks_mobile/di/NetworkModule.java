@@ -13,7 +13,6 @@ import javax.inject.Singleton;
 import handworks_cleaning_service.handworks_mobile.BuildConfig;
 import handworks_cleaning_service.handworks_mobile.data.remote.api.BookApi;
 import handworks_cleaning_service.handworks_mobile.data.remote.api.OrderApi;
-import handworks_cleaning_service.handworks_mobile.data.remote.api.TaskApi;
 import handworks_cleaning_service.handworks_mobile.data.remote.api.UserApi;
 import handworks_cleaning_service.handworks_mobile.data.repository.AuthRepository;
 import okhttp3.OkHttpClient;
@@ -73,8 +72,4 @@ public class NetworkModule {
     @Provides
     @Singleton
     public OrderApi provideOrderApi(Retrofit retrofit) { return retrofit.create(OrderApi.class); }
-
-    @Provides
-    @Singleton
-    public TaskApi provideTaskApi(Retrofit retrofit) { return retrofit.create(TaskApi.class); }
 }

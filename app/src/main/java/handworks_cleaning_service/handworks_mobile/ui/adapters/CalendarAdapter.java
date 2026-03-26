@@ -123,6 +123,13 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
     }
 
     public void updateEvents(Map<LocalDate, List<Task>> newEvents) {
+        this.eventsByDate.clear();
+        if (newEvents != null) this.eventsByDate.putAll(newEvents);
+
+        notifyDataSetChanged();
+    }
+
+    public void updateEventsLegacy(Map<LocalDate, List<Task>> newEvents) {
         Map<LocalDate, List<Task>> oldEvents = new HashMap<>(this.eventsByDate);
 
         this.eventsByDate.clear();

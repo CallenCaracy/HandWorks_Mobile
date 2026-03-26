@@ -1,10 +1,12 @@
 package handworks_cleaning_service.handworks_mobile.ui.viewmodel;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -26,22 +28,26 @@ public class CalendarViewModel extends ViewModel {
         this.bookRepository = bookRepository;
     }
 
+    public LiveData<UIState<List<Task>>> getCalendarTasks() {
+        return calendarTasks;
+    }
+
+    public void loadCachedTasks(String employeeId) {
+        calendarTasks.setValue(UIState.loading());
+
+        List<Booking> cached = bookRepository.getAllCachedBookingsForEmployee(employeeId);
+        if (cached != null && !cached.isEmpty()) {
+            List<Task> tasks = mapList(filterFutureBookings(cached));
+            calendarTasks.setValue(UIState.success(tasks));
+        } else {
+            calendarTasks.setValue(UIState.success(List.of()));
+        }
+    }
+
     private List<Task> mapList(List<Booking> bookings) {
         return bookings.stream()
                 .map(this::mapBookingToTask)
                 .collect(Collectors.toList());
-    }
-
-    public void initCalendarTasks(String employeeId, LocalDate startDate, LocalDate endDate) {
-        calendarTasks.setValue(UIState.loading());
-
-        List<Booking> cached = bookRepository.getAllCachedBookings(employeeId, startDate.toString(), endDate.toString());
-
-        if (cached.isEmpty()) {
-            calendarTasks.setValue(UIState.success(null));
-        } else {
-            calendarTasks.setValue(UIState.success(mapList(cached)));
-        }
     }
 
     private Task mapBookingToTask(Booking booking) {
@@ -54,5 +60,22 @@ public class CalendarViewModel extends ViewModel {
                 DateUtil.extractLocalTime(booking.getBase().getEndSched()),
                 booking.getBase().getExtraHours()
         );
+    }
+
+    private List<Booking> filterFutureBookings(List<Booking> bookings) {
+        LocalDate today = LocalDate.now();
+        return bookings.stream()
+                .filter(b -> !DateUtil.extractLocalDate(b.getBase().getStartSched()).isBefore(today))
+                .collect(Collectors.toList());
+    }
+
+    public Map<LocalDate, List<Task>> getEventsForWeek(List<Task> allTasks) {
+        return allTasks.stream()
+                .collect(Collectors.groupingBy(Task::getDate));
+    }
+
+    public Map<LocalDate, List<Task>> getEventsForMonth(List<Task> allTasks) {
+        return allTasks.stream()
+                .collect(Collectors.groupingBy(Task::getDate));
     }
 }

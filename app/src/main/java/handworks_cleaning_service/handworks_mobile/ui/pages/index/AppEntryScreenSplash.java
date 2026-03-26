@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -126,6 +127,7 @@ public class AppEntryScreenSplash extends AppCompatActivity {
                     binding.progressBarLoading.setVisibility(View.GONE);
                     if ("timeout".equalsIgnoreCase(errorMessage)) {
                         Toast.makeText(this, errorMessage + ": Taking longer than usual.", Toast.LENGTH_LONG).show();
+                        Log.d("HTTPs", "timed out");
                         if (retryCount < MAX_RETRIES) {
                             retryCount++;
                             new Handler(Looper.getMainLooper()).postDelayed(() -> {
@@ -163,6 +165,7 @@ public class AppEntryScreenSplash extends AppCompatActivity {
         binding.tvRetryMessage.setVisibility(View.GONE);
         binding.btnRetry.setVisibility(View.GONE);
 
+        binding.errorUI.getRoot().setVisibility(View.VISIBLE);
         binding.errorUI.imgError.setVisibility(View.VISIBLE);
         binding.errorUI.txtTitle.setVisibility(View.VISIBLE);
 
@@ -172,6 +175,7 @@ public class AppEntryScreenSplash extends AppCompatActivity {
             binding.errorUI.imgError.setVisibility(View.GONE);
             binding.errorUI.txtTitle.setVisibility(View.GONE);
             binding.errorUI.errorBtntnRetry.setVisibility(View.GONE);
+            binding.errorUI.getRoot().setVisibility(View.GONE);
             showRetryUI();
         });
     }

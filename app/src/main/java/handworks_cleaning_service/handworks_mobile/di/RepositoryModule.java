@@ -8,12 +8,10 @@ import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
 import handworks_cleaning_service.handworks_mobile.data.remote.api.BookApi;
 import handworks_cleaning_service.handworks_mobile.data.remote.api.OrderApi;
-import handworks_cleaning_service.handworks_mobile.data.remote.api.TaskApi;
 import handworks_cleaning_service.handworks_mobile.data.remote.api.UserApi;
 import handworks_cleaning_service.handworks_mobile.data.repository.AuthRepository;
 import handworks_cleaning_service.handworks_mobile.data.repository.BookRepository;
 import handworks_cleaning_service.handworks_mobile.data.repository.OrderRepository;
-import handworks_cleaning_service.handworks_mobile.data.repository.TaskRepository;
 import handworks_cleaning_service.handworks_mobile.data.repository.UserRepository;
 
 @Module
@@ -35,9 +33,5 @@ public class RepositoryModule {
     @Provides
     @Singleton
     public OrderRepository provideOrderRepository(OrderApi orderApi) { return new OrderRepository(orderApi); }
-
-    @Provides
-    @Singleton
-    public TaskRepository provideTaskRepository(TaskApi taskApi) { return new TaskRepository(taskApi); }
 }
 

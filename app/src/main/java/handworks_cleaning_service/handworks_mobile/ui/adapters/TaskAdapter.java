@@ -49,22 +49,23 @@ public class TaskAdapter extends ListAdapter<Task, TaskViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         Task task = getItem(position);
-        Duration duration = Duration.between(task.getTimeStart(), task.getTimeEnd());
+
+        Duration duration = Duration.between(task.getTimeStart(), task.getTimeEnd()).plusHours(task.getExtraHours());
         long hours = duration.toHours();
         long minutes = duration.toMinutes() % 60;
 
         String taskText = String.format(Locale.getDefault(),
-                holder.itemView.getContext().getString(R.string.task_with_duration),
+                "%s (%s) - %dh %dm",
                 task.getName(),
+                task.getType(),
                 hours,
-                minutes);
-
+                minutes
+        );
         holder.taskNameTV.setText(taskText);
 
         String timeText = CalendarUtils.formattedTime(task.getTimeStart())
-                + "\n"
+                + " - "
                 + CalendarUtils.formattedTime(task.getTimeEnd());
-
         holder.timeTV.setText(timeText);
     }
 }

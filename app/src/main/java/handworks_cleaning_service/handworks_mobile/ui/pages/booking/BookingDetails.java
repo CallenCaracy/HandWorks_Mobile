@@ -7,8 +7,8 @@ import static android.widget.Toast.LENGTH_SHORT;
 import android.content.Intent;
 import android.os.Bundle;
 import android.transition.TransitionManager;
+import android.transition.TransitionSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -80,7 +81,15 @@ public class BookingDetails extends AppCompatActivity {
 
         binding.toggleDetails.setText(R.string.view_details);
         binding.toggleDetails.setOnClickListener(v -> {
-            TransitionManager.beginDelayedTransition((ViewGroup) binding.toggleDetails.getParent());
+            TransitionSet set = new TransitionSet();
+            set.setDuration(200);
+            set.setInterpolator(new FastOutSlowInInterpolator());
+
+            TransitionManager.beginDelayedTransition(
+                    binding.detailsContainer,
+                    set
+            );
+
             if (binding.detailsContainer.getVisibility() == View.GONE) {
                 binding.detailsContainer.setVisibility(View.VISIBLE);
                 binding.toggleDetails.setText(R.string.hide_details);
