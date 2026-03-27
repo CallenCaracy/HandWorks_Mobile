@@ -32,8 +32,8 @@ android {
             buildConfigField(
                 type = "String",
                 name = "WS_BASE_URL",
-//                value = "\"ws://10.14.35.240:8080/\""
-                value = "\"wss://qa-handworks-api.onrender.com/\"")
+//                value = "\"ws://10.14.35.240:8080/api/\""
+                value = "\"wss://qa-handworks-api.onrender.com/api/\"")
         }
         release {
             isMinifyEnabled = false
@@ -49,7 +49,7 @@ android {
             buildConfigField(
                 type = "String",
                 name ="WS_BASE_URL",
-                value = "\"wss://qa-handworks-api.onrender.com/\"",
+                value = "\"wss://qa-handworks-api.onrender.com/api/\"",
             )
         }
     }
