@@ -7,6 +7,7 @@ import static handworks_cleaning_service.handworks_mobile.utils.Constant.MATTRES
 import static handworks_cleaning_service.handworks_mobile.utils.Constant.POST;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 
 import java.util.List;
 
@@ -30,6 +31,17 @@ public class MapServiceType {
             case CAR -> context.getString(R.string.service_car);
             case POST -> context.getString(R.string.service_post);
             default -> context.getString(R.string.service_unknown);
+        };
+    }
+
+    public static int getIconServiceType(String type) {
+        return switch (type) {
+            case GENERAL_CLEANING -> R.drawable.general_icon;
+            case COUCH -> R.drawable.couch_icon;
+            case MATTRESS -> R.drawable.bed_icon;
+            case CAR -> R.drawable.car_icon;
+            case POST -> R.drawable.post_construction_icon;
+            default -> R.drawable.circle_background;
         };
     }
 

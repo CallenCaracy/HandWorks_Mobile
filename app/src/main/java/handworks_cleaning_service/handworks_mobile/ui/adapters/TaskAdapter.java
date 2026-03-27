@@ -1,5 +1,6 @@
 package handworks_cleaning_service.handworks_mobile.ui.adapters;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import java.util.Objects;
 
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.ui.models.Task;
+import handworks_cleaning_service.handworks_mobile.ui.pages.booking.BookingDetails;
 import handworks_cleaning_service.handworks_mobile.utils.CalendarUtils;
 
 public class TaskAdapter extends ListAdapter<Task, TaskViewHolder> {
@@ -50,22 +52,12 @@ public class TaskAdapter extends ListAdapter<Task, TaskViewHolder> {
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         Task task = getItem(position);
 
-        Duration duration = Duration.between(task.getTimeStart(), task.getTimeEnd()).plusHours(task.getExtraHours());
-        long hours = duration.toHours();
-        long minutes = duration.toMinutes() % 60;
+        holder.bind(task);
 
-        String taskText = String.format(Locale.getDefault(),
-                "%s (%s) - %dh %dm",
-                task.getName(),
-                task.getType(),
-                hours,
-                minutes
-        );
-        holder.taskNameTV.setText(taskText);
-
-        String timeText = CalendarUtils.formattedTime(task.getTimeStart())
-                + " - "
-                + CalendarUtils.formattedTime(task.getTimeEnd());
-        holder.timeTV.setText(timeText);
+        holder.container.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), BookingDetails.class);
+            intent.putExtra("BOOKING_ID", task.getId());
+            v.getContext().startActivity(intent);
+        });
     }
 }

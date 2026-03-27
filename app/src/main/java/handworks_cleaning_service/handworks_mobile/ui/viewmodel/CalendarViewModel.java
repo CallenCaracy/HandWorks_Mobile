@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -37,6 +38,12 @@ public class CalendarViewModel extends ViewModel {
 
         List<Booking> cached = bookRepository.getAllCachedBookingsForEmployee(employeeId);
         if (cached != null && !cached.isEmpty()) {
+            cached = cached.stream()
+                    .collect(Collectors.toMap(Booking::getId, Function.identity()))
+                    .values()
+                    .stream()
+                    .toList();
+
             List<Task> tasks = mapList(filterFutureBookings(cached));
             calendarTasks.setValue(UIState.success(tasks));
         } else {
@@ -66,6 +73,7 @@ public class CalendarViewModel extends ViewModel {
         LocalDate today = LocalDate.now();
         return bookings.stream()
                 .filter(b -> !DateUtil.extractLocalDate(b.getBase().getStartSched()).isBefore(today))
+                .distinct()
                 .collect(Collectors.toList());
     }
 

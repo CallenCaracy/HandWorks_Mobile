@@ -1,10 +1,15 @@
 package handworks_cleaning_service.handworks_mobile.ui.adapters;
 
+import static handworks_cleaning_service.handworks_mobile.utils.CalendarUtils.selectedDate;
+
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.time.LocalDate;
 
 import handworks_cleaning_service.handworks_mobile.R;
 
@@ -29,5 +34,20 @@ public class CalendarViewHolder extends RecyclerView.ViewHolder implements View.
         if (position == RecyclerView.NO_POSITION) return;
 
         onItemListener.onItemClick(position, null);
+    }
+
+    public void bind(LocalDate date) {
+        if (date == null) {
+            dayOfMonth.setText("");
+            dot.setVisibility(View.GONE);
+            parentView.setBackgroundColor(
+                    ContextCompat.getColor(parentView.getContext(), R.color.backgroundLightTransition)
+            );
+            return;
+        }
+
+        dayOfMonth.setText(String.valueOf(date.getDayOfMonth()));
+
+        parentView.setBackgroundColor(ContextCompat.getColor(parentView.getContext(), (date.equals(selectedDate) ? R.color.colorSecondary : R.color.background)));
     }
 }

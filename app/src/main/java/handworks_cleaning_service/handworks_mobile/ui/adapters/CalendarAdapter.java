@@ -50,19 +50,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
     public void onBindViewHolder(@NonNull CalendarViewHolder holder, int position) {
         final LocalDate date = days.get(position);
 
-        if (date == null) {
-            holder.dayOfMonth.setText("");
-            holder.dot.setVisibility(View.GONE);
-            holder.parentView.setBackgroundColor(
-                    ContextCompat.getColor(holder.parentView.getContext(), R.color.backgroundLightTransition)
-            );
-            return;
-        }
-
-        holder.dayOfMonth.setText(String.valueOf(date.getDayOfMonth()));
-
-        holder.parentView.setBackgroundColor(ContextCompat.getColor(holder.parentView.getContext(), (date.equals(selectedDate) ? R.color.colorSecondary : R.color.background)));
-
+        holder.bind(date);
         holder.dot.setVisibility((eventsByDate.containsKey(date) && eventsByDate.get(date) != null) ? View.VISIBLE :  View.GONE);
 
         holder.parentView.setOnClickListener(v -> {

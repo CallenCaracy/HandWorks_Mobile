@@ -52,6 +52,7 @@ import handworks_cleaning_service.handworks_mobile.utils.StringUtil;
 @AndroidEntryPoint
 public class BookingDetails extends AppCompatActivity {
     private ActivityBookingDetailsBinding binding;
+    private BookViewModel bookViewModel;
     private AddonAdapter addonAdapter;
     private CleanerAdapter cleanerAdapter;
     private AssetAdapter equipmentAdapter;
@@ -68,7 +69,7 @@ public class BookingDetails extends AppCompatActivity {
             return insets;
         });
 
-        BookViewModel bookViewModel = new ViewModelProvider(this).get(BookViewModel.class);
+        bookViewModel = new ViewModelProvider(this).get(BookViewModel.class);
         OrderViewModel orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
 
         binding = ActivityBookingDetailsBinding.inflate(getLayoutInflater());
@@ -107,9 +108,9 @@ public class BookingDetails extends AppCompatActivity {
         }
 
         // Passed from calendar
-        Booking bookingFromTaskIntent = (Booking) getIntent().getSerializableExtra("booking");
-        if (bookingFromIntent != null) {
-            bindBooking(bookingFromTaskIntent);
+        String bookingId = getIntent().getStringExtra("BOOKING_ID");
+        if (bookingId != null && !bookingId.isEmpty()) {
+            bookViewModel.loadBookingById(bookingId, FetchStrategy.CACHE_FIRST);
         }
 
         binding.swipeRefresh.setOnRefreshListener(() -> {
@@ -155,7 +156,7 @@ public class BookingDetails extends AppCompatActivity {
                             getString(R.string.payment_method, StringUtil.capitalizeFirstLetter(order.getPayment_method()))
                     );
                     binding.addonValue.setText(
-                            getString(R.string.addons_total, order.getAddon_total())
+                            getString(R.string.price_format, order.getAddon_total())
                     );
                     binding.downpaymentValue.setText(String.valueOf(order.getDownpayment_required()));
                     binding.subtotalValue.setText(String.valueOf(order.getSubtotal()));
@@ -171,6 +172,7 @@ public class BookingDetails extends AppCompatActivity {
     }
 
     private void bindBooking(Booking booking) {
+
         if (booking != null){
             String customerFullName = booking.getBase().getCustomerFirstName() + ' ' + booking.getBase().getCustomerLastName();
             binding.customerNameText.setText(customerFullName);
@@ -200,7 +202,7 @@ public class BookingDetails extends AppCompatActivity {
                 );
 
                 binding.extraHourCostText.setText(
-                        getString(R.string.extra_hours_cost_value, booking.getBase().getExtraHourCost())
+                        getString(R.string.price_format, booking.getBase().getExtraHourCost())
                 );
             } else {
                 binding.startAndEndTimeText.setText(
@@ -218,7 +220,7 @@ public class BookingDetails extends AppCompatActivity {
                     getString(R.string.cleaning_site, booking.getBase().getAddress().getAddressHuman())
             );
             binding.totalPriceText.setText(
-                    getString(R.string.total_price_value, booking.getTotalPrice())
+                    getString(R.string.price_format, booking.getTotalPrice())
             );
 
             setupImages(booking.getBase().getPhotos());

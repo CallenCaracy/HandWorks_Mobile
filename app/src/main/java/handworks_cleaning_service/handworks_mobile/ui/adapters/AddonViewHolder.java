@@ -27,6 +27,6 @@ public class AddonViewHolder extends RecyclerView.ViewHolder {
         } else {
             addonServiceDetails.setText("N/A");
         }
-        addonServicePrice.setText("₱" + addon.getPrice());
+        addonServicePrice.setText(String.valueOf(addon.getPrice()));
     }
 }

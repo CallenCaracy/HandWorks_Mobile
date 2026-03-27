@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +39,7 @@ public class WeekViewFragment extends Fragment implements CalendarAdapter.OnItem
     private FragmentWeekViewBinding binding;
     private CalendarAdapter calendarAdapter;
     private CalendarViewModel calendarViewModel;
+    private TaskAdapter taskAdapter;
     @Inject
     SharedPreferences prefs;
 
@@ -53,6 +55,10 @@ public class WeekViewFragment extends Fragment implements CalendarAdapter.OnItem
                              Bundle savedInstanceState) {
         binding = FragmentWeekViewBinding.inflate(inflater, container, false);
         calendarViewModel = new ViewModelProvider(this).get(CalendarViewModel.class);
+
+        taskAdapter = new TaskAdapter();
+        binding.taskTimeScheduleRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.taskTimeScheduleRecyclerView.setAdapter(taskAdapter);
 
         if (CalendarUtils.selectedDate == null) {
             CalendarUtils.selectedDate = LocalDate.now();
@@ -115,9 +121,6 @@ public class WeekViewFragment extends Fragment implements CalendarAdapter.OnItem
         }
 
         List<Task> dailyTasks = events.getOrDefault(CalendarUtils.selectedDate, new ArrayList<>());
-        TaskAdapter taskAdapter = new TaskAdapter();
-        binding.taskTimeScheduleRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        binding.taskTimeScheduleRecyclerView.setAdapter(taskAdapter);
         taskAdapter.submitList(dailyTasks);
     }
 

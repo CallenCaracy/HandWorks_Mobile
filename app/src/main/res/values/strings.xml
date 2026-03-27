@@ -19,6 +19,7 @@
     <string name="image">Image</string>
     <string name="loading">Loading…</string>
     <string name="na">N/A</string>
+    <string name="price_format">₱%1$.2f</string>
     <!--  General Strings EndRegion  -->
 
     <!--  Booking Details Activity StartRegion  -->
@@ -32,10 +33,7 @@
     <string name="cleaning_site">Cleaning Site: %1$s</string>
     <string name="customer_number">Phone Number: %1$s</string>
     <string name="total_price_label">Total Price:</string>
-    <string name="total_price_value">₱%1$.2f</string>
-    <string name="addons_total">₱%1$.2f</string>
     <string name="extra_hours_cost_label">Extra Hours Cost:</string>
-    <string name="extra_hours_cost_value">₱%1$.2f</string>
     <string name="allocated_resource">Allocated Resource:</string>
     <string name="allocated_equipments">Allocated Equipments:</string>
     <string name="assigned_cleaners">Assigned Cleaners:</string>
@@ -161,7 +159,7 @@
     <string name="weekly">Weekly</string>
     <string name="temp_btn">Temp BTN</string>
     <string name="show_whole_calendar">Show Whole Calendar</string>
-    <string name="_08_00_10_00">08:00 – 10:00</string>
+    <string name="_08_00_10_00">08:00\n10:00</string>
     <string name="cleaning_service">Cleaning Service</string>
     <string name="task_with_duration">%1$s (%2$d:%3$02d)</string>
     <!--  Calendar Components Activity EndRegion  -->
