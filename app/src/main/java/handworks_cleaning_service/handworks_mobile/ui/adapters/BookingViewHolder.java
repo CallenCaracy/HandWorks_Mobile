@@ -9,10 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-
-import java.time.LocalDate;
-
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.Booking;
 import handworks_cleaning_service.handworks_mobile.ui.models.BookingStatus;
@@ -42,12 +38,9 @@ public class BookingViewHolder extends RecyclerView.ViewHolder {
 
     void bind(Booking booking) {
         Context context = itemView.getContext();
-        LocalDate today = LocalDate.now();
 
         String isoDate = booking.getBase().getStartSched();
         String workDateStr = DateUtil.extractDateFromISO8601TimeStamps(isoDate);
-
-        LocalDate workDate = LocalDate.parse(workDateStr);
 
         String startTime = DateUtil.extractTimeFromISO8601TimeStamps(isoDate);
         String endTime = DateUtil.extractTimeFromISO8601TimeStamps(
