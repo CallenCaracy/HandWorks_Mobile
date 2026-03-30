@@ -68,7 +68,7 @@ public class Base implements Serializable {
         return status;
     }
 
-    public void setStatus(String paymentStatus) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

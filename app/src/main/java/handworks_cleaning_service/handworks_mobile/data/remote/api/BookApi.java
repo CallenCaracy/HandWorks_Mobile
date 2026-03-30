@@ -1,9 +1,11 @@
 package handworks_cleaning_service.handworks_mobile.data.remote.api;
 
+import handworks_cleaning_service.handworks_mobile.data.dto.book.BookingSessionResponse;
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.Booking;
 import handworks_cleaning_service.handworks_mobile.data.models.wrappers.BookingWrapper;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface BookApi {
@@ -18,9 +20,9 @@ public interface BookApi {
     @GET("booking/")
     Call<Booking> getBookingById(@Query("bookingId") String bookingId);
 
-    @GET("booking/session/end")
-    Call<Booking> endBookSession(@Query("bookingId") String bookingId);
+    @POST("booking/session/start")
+    Call<BookingSessionResponse> startBookSession(@Query("bookingId") String bookingId);
 
-    @GET("booking/session/start")
-    Call<Booking> startBookSession(@Query("bookingId") String bookingId);
+    @POST("booking/session/end")
+    Call<BookingSessionResponse> endBookSession(@Query("bookingId") String bookingId);
 }

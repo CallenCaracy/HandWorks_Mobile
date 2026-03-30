@@ -168,6 +168,48 @@ public class BookViewModel extends ViewModel {
         });
     }
 
+    public void beginBookingSession(String bookingId) {
+        if (bookingId == null || bookingId.isEmpty()) {
+            bookingByIdState.setValue(UIState.error("Invalid booking id"));
+            return;
+        }
+
+        bookingByIdState.setValue(UIState.loading());
+
+        bookRepository.startBookingSession(bookingId, new BookRepository.BookingCallback() {
+            @Override
+            public void onSuccess(Booking updatedBooking) {
+                bookingByIdState.postValue(UIState.success(updatedBooking));
+            }
+
+            @Override
+            public void onError(String message) {
+                bookingByIdState.postValue(UIState.error(message));
+            }
+        });
+    }
+
+    public void stopBookingSession(String bookingId) {
+        if (bookingId == null || bookingId.isEmpty()) {
+            bookingByIdState.setValue(UIState.error("Invalid booking id"));
+            return;
+        }
+
+        bookingByIdState.setValue(UIState.loading());
+
+        bookRepository.endBookingSession(bookingId, new BookRepository.BookingCallback() {
+            @Override
+            public void onSuccess(Booking updatedBooking) {
+                bookingByIdState.postValue(UIState.success(updatedBooking));
+            }
+
+            @Override
+            public void onError(String message) {
+                bookingByIdState.postValue(UIState.error(message));
+            }
+        });
+    }
+
     public int getTotalBookings() {
         return totalBookings;
     }

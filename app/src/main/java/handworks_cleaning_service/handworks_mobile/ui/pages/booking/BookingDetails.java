@@ -4,6 +4,8 @@ import static android.view.View.GONE;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.widget.Toast.LENGTH_SHORT;
 
+import static handworks_cleaning_service.handworks_mobile.ui.models.BookingStatus.NOT_STARTED;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.transition.TransitionManager;
@@ -13,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
@@ -28,6 +31,7 @@ import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Locale;
 
@@ -172,9 +176,9 @@ public class BookingDetails extends AppCompatActivity {
     }
 
     private void bindBooking(Booking booking) {
-
         if (booking != null){
             String customerFullName = booking.getBase().getCustomerFirstName() + ' ' + booking.getBase().getCustomerLastName();
+            binding.bookingDetailsHeader.titlePageTxt.setText(booking.getId());
             binding.customerNameText.setText(customerFullName);
 
             BookingStatus status = BookingStatus.fromBackend(booking.getBase().getStatus());
@@ -245,6 +249,58 @@ public class BookingDetails extends AppCompatActivity {
             if (booking.getEquipments() != null) {
                 resourceAdapter.setAsset(booking.getResources());
             }
+
+            BookingStatus bookingStatus;
+            try {
+                bookingStatus = BookingStatus.valueOf(booking.getBase().getStatus());
+            } catch (Exception e) {
+                bookingStatus = NOT_STARTED;
+            }
+
+            binding.startCleaningSessionBtn.setVisibility(View.GONE);
+            binding.endCleaningSessionBtn.setVisibility(View.GONE);
+            binding.payButton.setVisibility(View.GONE);
+
+            switch (bookingStatus) {
+                case ONGOING:
+                    binding.endCleaningSessionBtn.setVisibility(View.VISIBLE);
+                    break;
+                case COMPLETED:
+                    binding.payButton.setVisibility(View.VISIBLE);
+                    break;
+                default:
+                    binding.startCleaningSessionBtn.setVisibility(View.VISIBLE);
+                    break;
+            }
+
+            binding.startCleaningSessionBtn.setOnClickListener(v -> {
+                Instant start = Instant.parse(booking.getBase().getStartSched());
+                Instant now = Instant.now();
+
+                if (now.isBefore(start)) {
+                    Toast.makeText(v.getContext(), "Too early to start session", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                bookViewModel.beginBookingSession(booking.getId());
+            });
+
+            binding.endCleaningSessionBtn.setOnClickListener(v -> {
+                Instant end = Instant.parse(booking.getBase().getStartSched());
+                Instant now = Instant.now();
+
+                new AlertDialog.Builder(this)
+                    .setTitle("End Cleaning Session")
+                    .setMessage("Are you sure you want to end cleaning session?")
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        if (now.isBefore(end)) {
+                            Toast.makeText(v.getContext(), "Too early to end session", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        bookViewModel.stopBookingSession(booking.getId());
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
+            });
         }
     }
 

@@ -1,5 +1,6 @@
 package handworks_cleaning_service.handworks_mobile.ui.adapters;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -26,6 +27,7 @@ public class TaskViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(Task task) {
+        Log.d("HTTPs", task.toString());
         Duration duration = Duration.between(task.getTimeStart(), task.getTimeEnd()).plusHours(task.getExtraHours());
         long hours = duration.toHours();
         long minutes = duration.toMinutes() % 60;

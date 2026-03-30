@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 
 import handworks_cleaning_service.handworks_mobile.R;
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.Booking;
+import handworks_cleaning_service.handworks_mobile.ui.models.BookingStatus;
 import handworks_cleaning_service.handworks_mobile.utils.DateUtil;
 import handworks_cleaning_service.handworks_mobile.utils.MapServiceType;
 
@@ -52,14 +54,11 @@ public class BookingViewHolder extends RecyclerView.ViewHolder {
                 booking.getBase().getEndSched()
         );
 
-        if (today.equals(workDate)) {
-            status.setText(R.string.today);
-        } else if (today.isAfter(workDate)) {
-            status.setText(R.string.past);
-        } else {
-            status.setText(R.string.upcoming);
-        }
-
+        BookingStatus bookingStatus = BookingStatus.fromBackend(booking.getBase().getStatus());
+        status.setText(bookingStatus.label);
+        status.setBackgroundTintList(
+                ContextCompat.getColorStateList(itemView.getContext(), bookingStatus.colorRes)
+        );
 
         bookingTypeIcon.setImageResource(MapServiceType.getIconServiceType(booking.getMainService().getServiceType()));
         totalPrice.setText(context.getString(R.string.price_format, booking.getTotalPrice()));

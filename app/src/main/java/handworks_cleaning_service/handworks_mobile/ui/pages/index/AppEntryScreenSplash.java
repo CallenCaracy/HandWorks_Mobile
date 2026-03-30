@@ -141,7 +141,7 @@ public class AppEntryScreenSplash extends AppCompatActivity {
                         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
                         binding.handworksLogo.setVisibility(View.GONE);
                         binding.errorUI.getRoot().setVisibility(View.VISIBLE);
-                        binding.errorUI.errorBtntnRetry.setOnClickListener(v -> {
+                        binding.errorUI.errorBtnRetry.setOnClickListener(v -> {
                             retryCount = 0;
                             showRetryUI();
                         });
@@ -169,12 +169,12 @@ public class AppEntryScreenSplash extends AppCompatActivity {
         binding.errorUI.imgError.setVisibility(View.VISIBLE);
         binding.errorUI.txtTitle.setVisibility(View.VISIBLE);
 
-        binding.errorUI.errorBtntnRetry.setVisibility(View.VISIBLE);
+        binding.errorUI.errorBtnRetry.setVisibility(View.VISIBLE);
 
-        binding.errorUI.errorBtntnRetry.setOnClickListener(v -> {
+        binding.errorUI.errorBtnRetry.setOnClickListener(v -> {
             binding.errorUI.imgError.setVisibility(View.GONE);
             binding.errorUI.txtTitle.setVisibility(View.GONE);
-            binding.errorUI.errorBtntnRetry.setVisibility(View.GONE);
+            binding.errorUI.errorBtnRetry.setVisibility(View.GONE);
             binding.errorUI.getRoot().setVisibility(View.GONE);
             showRetryUI();
         });

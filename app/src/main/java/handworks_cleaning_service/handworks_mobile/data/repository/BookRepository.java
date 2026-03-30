@@ -10,12 +10,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import handworks_cleaning_service.handworks_mobile.data.dto.book.BookingSessionResponse;
 import handworks_cleaning_service.handworks_mobile.data.dto.book.BooksByEmployeeIdRequest;
 import handworks_cleaning_service.handworks_mobile.data.models.bookings.Booking;
+import handworks_cleaning_service.handworks_mobile.data.models.bookings.infos.Base;
 import handworks_cleaning_service.handworks_mobile.data.models.wrappers.BookingWrapper;
 import handworks_cleaning_service.handworks_mobile.data.remote.api.BookApi;
 import handworks_cleaning_service.handworks_mobile.data.repository.config.FetchStrategy;
@@ -154,6 +155,78 @@ public class BookRepository {
         }
 
         return allBookings;
+    }
+
+    public void startBookingSession(String bookingId, BookingCallback callback) {
+        bookApi.startBookSession(bookingId).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<BookingSessionResponse> call, @NonNull Response<BookingSessionResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+
+                    Booking booking = findInCache(bookingId);
+                    if (booking == null) {
+                        callback.onError("Booking not found in cache");
+                        return;
+                    }
+
+                    Base baseBooking = booking.getBase();
+                    if (baseBooking == null) {
+                        callback.onError("Base booking is null");
+                        return;
+                    }
+
+                    baseBooking.setStatus(response.body().getStatus());
+
+                    updateCache(booking);
+
+                    callback.onSuccess(booking);
+
+                } else {
+                    callback.onError("Response unsuccessful");
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<BookingSessionResponse> call, @NonNull Throwable t) {
+                callback.onError(t.getMessage());
+            }
+        });
+    }
+
+    public void endBookingSession(String bookingId, BookingCallback callback) {
+        bookApi.endBookSession(bookingId).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<BookingSessionResponse> call, @NonNull Response<BookingSessionResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+
+                    Booking booking = findInCache(bookingId);
+                    if (booking == null) {
+                        callback.onError("Booking not found in cache");
+                        return;
+                    }
+
+                    Base baseBooking = booking.getBase();
+                    if (baseBooking == null) {
+                        callback.onError("Base booking is null");
+                        return;
+                    }
+
+                    baseBooking.setStatus(response.body().getStatus());
+
+                    updateCache(booking);
+
+                    callback.onSuccess(booking);
+
+                } else {
+                    callback.onError("Response unsuccessful");
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<BookingSessionResponse> call, @NonNull Throwable t) {
+                callback.onError(t.getMessage());
+            }
+        });
     }
 
     public interface BookingCallback {

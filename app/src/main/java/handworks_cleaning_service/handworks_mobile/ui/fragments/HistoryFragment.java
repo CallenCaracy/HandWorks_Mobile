@@ -142,8 +142,7 @@ public class HistoryFragment extends Fragment {
     private void initSpinnerFilter() {
         List<String> options = Arrays.asList(
                 "Past Week",
-                "Past 2 Weeks",
-                "Past Month",
+                "Past 3 Weeks",
                 "Past 6 Months"
         );
 
@@ -212,9 +211,8 @@ public class HistoryFragment extends Fragment {
 
     private LocalDate dayDistance(int distance, LocalDate starter) {
         return switch (distance) {
-            case 1 -> starter.minusDays(14);
-            case 2 -> starter.minusMonths(1);
-            case 3 -> starter.minusMonths(6);
+            case 1 -> starter.minusDays(21);
+            case 2 -> starter.minusMonths(6);
             default -> starter.minusDays(7);
         };
     }

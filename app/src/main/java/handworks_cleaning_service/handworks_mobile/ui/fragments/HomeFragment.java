@@ -233,7 +233,7 @@ public class HomeFragment extends Fragment {
                     binding.clockInAtValue.setText("...");
                     binding.clockOutAtValue.setText("...");
                     binding.timeSheetStatus.setText("...");
-                    Toast.makeText(requireContext(), "Error: " + state.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), state.getMessage(), Toast.LENGTH_SHORT).show();
                     break;
             }
         });

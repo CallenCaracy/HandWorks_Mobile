@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -38,11 +39,13 @@ public class CalendarViewModel extends ViewModel {
 
         List<Booking> cached = bookRepository.getAllCachedBookingsForEmployee(employeeId);
         if (cached != null && !cached.isEmpty()) {
-            cached = cached.stream()
-                    .collect(Collectors.toMap(Booking::getId, Function.identity()))
-                    .values()
-                    .stream()
-                    .toList();
+            cached = new ArrayList<>(cached.stream()
+                    .collect(Collectors.toMap(
+                            Booking::getId,
+                            Function.identity(),
+                            (a, b) -> b
+                    ))
+                    .values());
 
             List<Task> tasks = mapList(filterFutureBookings(cached));
             calendarTasks.setValue(UIState.success(tasks));
