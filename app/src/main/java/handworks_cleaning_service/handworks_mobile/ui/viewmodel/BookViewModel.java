@@ -65,6 +65,7 @@ public class BookViewModel extends ViewModel {
         List<Booking> cached = bookRepository.getCachedPage(employeeId, startDate, endDate, 0);
 
         if (cached != null && !cached.isEmpty()) {
+            totalBookings = state.getTotalBookings();
             state.append(cached);
             state.nextPage();
             bookingsState.setValue(UIState.success(state.getAccumulated()));

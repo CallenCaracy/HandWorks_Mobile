@@ -44,6 +44,7 @@
             android:background="@drawable/status_badge_bg"
             android:paddingHorizontal="16dp"
             android:paddingVertical="6dp"
+            android:textColor="@color/darken"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -59,17 +60,19 @@
             android:id="@+id/rowTwoVLine"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/vertical_line"
             android:layout_marginStart="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/bookingWorkDate" />
+            android:text="@string/vertical_line"
+            app:layout_constraintBottom_toBottomOf="@+id/bookingWorkDate"
+            app:layout_constraintStart_toEndOf="@id/bookingWorkDate"
+            app:layout_constraintTop_toTopOf="@+id/bookingWorkDate" />
 
         <TextView
             android:id="@+id/bookingStartTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/rowTwoVLine"
+            app:layout_constraintTop_toTopOf="@+id/rowTwoVLine"
             app:layout_constraintStart_toEndOf="@+id/rowTwoVLine"/>
 
         <TextView
@@ -78,7 +81,8 @@
             android:layout_height="wrap_content"
             android:text="@string/dash"
             android:layout_marginStart="4dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/bookingStartTime"
+            app:layout_constraintTop_toTopOf="@+id/bookingStartTime"
             app:layout_constraintStart_toEndOf="@+id/bookingStartTime" />
 
         <TextView
@@ -86,7 +90,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/dash"
+            app:layout_constraintTop_toTopOf="@+id/dash"
             app:layout_constraintStart_toEndOf="@+id/dash"/>
 
         <TextView

@@ -232,7 +232,7 @@ public class HomeFragment extends Fragment {
                     binding.btnTimeOut.setEnabled(true);
                     binding.clockInAtValue.setText("...");
                     binding.clockOutAtValue.setText("...");
-                    binding.timeSheetStatus.setText("...");
+                    binding.timeSheetStatus.setText(R.string.an_error_occurred);
                     Toast.makeText(requireContext(), state.getMessage(), Toast.LENGTH_SHORT).show();
                     break;
             }

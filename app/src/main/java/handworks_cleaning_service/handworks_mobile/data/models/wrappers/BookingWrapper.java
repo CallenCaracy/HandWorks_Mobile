@@ -1,9 +1,6 @@
 package handworks_cleaning_service.handworks_mobile.data.models.wrappers;
 
-import java.util.List;
-
 import handworks_cleaning_service.handworks_mobile.data.dto.book.BookingListResponse;
-import handworks_cleaning_service.handworks_mobile.data.models.bookings.Booking;
 
 public class BookingWrapper {
     BookingListResponse data;

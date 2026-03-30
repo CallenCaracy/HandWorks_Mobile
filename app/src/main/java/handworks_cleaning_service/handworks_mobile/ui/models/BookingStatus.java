@@ -4,7 +4,7 @@ import handworks_cleaning_service.handworks_mobile.R;
 
 public enum BookingStatus {
     NOT_STARTED("Not Started", R.color.gray, 0),
-    ONGOING("Ongoing", R.color.orange, 0),
+    ONGOING("Ongoing", R.color.colorSecondary, 0),
     COMPLETED("Completed", R.color.green, 0);
 
     public final String label;

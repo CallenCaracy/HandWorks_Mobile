@@ -20,6 +20,7 @@
     <string name="loading">Loading…</string>
     <string name="na">N/A</string>
     <string name="price_format">₱%1$.2f</string>
+    <string name="an_error_occurred">An error occurred</string>
     <!--  General Strings EndRegion  -->
 
     <!--  Booking Details Activity StartRegion  -->
@@ -223,6 +224,8 @@
 
     <!--  New Strings StartRegion  -->
     <string name="placeholder">Placeholder</string>
+    <string name="session_started">Session Started</string>
+    <string name="you_are_now_in_an_active_cleaning_session">You are now in an active cleaning session</string>
     <!--  New Strings EndRegion  -->
 
 </resources>

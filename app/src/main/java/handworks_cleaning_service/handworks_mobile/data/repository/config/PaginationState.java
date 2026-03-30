@@ -1,5 +1,6 @@
 package handworks_cleaning_service.handworks_mobile.data.repository.config;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -11,13 +12,37 @@ public class PaginationState {
     private boolean isLastPage = false;
     private int totalBookings = 0;
     private boolean loading = false;
-    private final Set<Booking> accumulated = new LinkedHashSet<>();
-
-    public List<Booking> getAccumulated() { return List.copyOf(accumulated); }
-    public Set<Booking> getAccumulatedSet() {
-        return accumulated;
+    private final List<Booking> accumulated = new ArrayList<>();
+    public List<Booking> getAccumulated() {
+        return List.copyOf(accumulated);
     }
-    public void append(List<Booking> bookings) { accumulated.addAll(bookings); }
+    public void append(List<Booking> bookings) {
+        for (Booking b : bookings) {
+            if (!containsId(b.getId())) {
+                accumulated.add(b);
+            }
+        }
+    }
+
+    boolean containsId(String id) {
+        for (Booking b : accumulated) {
+            if (b.getId().equals(id)) return true;
+        }
+        return false;
+    }
+
+    public void upsert(Booking booking) {
+        accumulated.removeIf(b -> b.getId().equals(booking.getId()));
+        accumulated.add(booking);
+    }
+    public boolean contains(String bookingId) {
+        for (Booking b : accumulated) {
+            if (b.getId().equals(bookingId)) {
+                return true;
+            }
+        }
+        return false;
+    }
     public void nextPage() {
         currentPage++;
     }

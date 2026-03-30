@@ -282,6 +282,11 @@ public class BookingDetails extends AppCompatActivity {
                     return;
                 }
                 bookViewModel.beginBookingSession(booking.getId());
+
+                binding.sessionStartPopUp.getRoot().setAlpha(0f);
+                binding.sessionStartPopUp.getRoot().setVisibility(View.VISIBLE);
+
+                binding.sessionStartPopUp.getRoot().animate().alpha(1f).setDuration(300).withEndAction(() -> binding.sessionStartPopUp.getRoot().postDelayed(() -> binding.sessionStartPopUp.getRoot().animate().alpha(0f).setDuration(300).withEndAction(() -> binding.sessionStartPopUp.getRoot().setVisibility(View.GONE)), 3000));
             });
 
             binding.endCleaningSessionBtn.setOnClickListener(v -> {

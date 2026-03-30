@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -119,7 +118,7 @@ public class BookRepository {
 
     private Booking findInCache(String bookingId) {
         for (PaginationState state : cachedBookings.values()) {
-            for (Booking booking : state.getAccumulatedSet()) {
+            for (Booking booking : state.getAccumulated()) {
                 if (booking.getId().equals(bookingId)) {
                     return booking;
                 }
@@ -130,10 +129,10 @@ public class BookRepository {
 
     private void updateCache(Booking updatedBooking) {
         for (PaginationState state : cachedBookings.values()) {
-            Set<Booking> accumulated = state.getAccumulatedSet();
-            accumulated.removeIf(b -> b.getId().equals(updatedBooking.getId()));
-            accumulated.add(updatedBooking);
-            return;
+            if (state.contains(updatedBooking.getId())) {
+                state.upsert(updatedBooking);
+                return;
+            }
         }
     }
 
@@ -142,7 +141,7 @@ public class BookRepository {
         List<Booking> allBookings = new ArrayList<>();
 
         for (PaginationState state : cachedBookings.values()) {
-            for (Booking booking : state.getAccumulatedSet()) {
+            for (Booking booking : state.getAccumulated()) {
                 boolean isCleanerAssigned = booking.getCleaners().stream()
                         .anyMatch(c -> c.getId().equals(employeeId));
 

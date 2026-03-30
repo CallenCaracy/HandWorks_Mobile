@@ -14,7 +14,7 @@
         android:text="@string/handworks_cleaning"
         android:textSize="22sp"
         android:textStyle="bold"
-        android:textColor="@color/background"
+        android:textColor="@color/textPrimary"
         android:textAllCaps="true"
         android:fontFamily="sans-serif-medium"
         app:layout_constraintStart_toStartOf="parent"
